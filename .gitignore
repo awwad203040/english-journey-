@@ -1,0 +1,5 @@
+﻿extracted-apk/
+android-apk/build/
+android-apk/.gradle/
+*.keystore
+release.keystore

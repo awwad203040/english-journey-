@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>English Journey - رحلتي للإنجليزية</title>
+  <meta name="description" content="تطبيق رحلتي للإنجليزية - تعلّم الإنجليزية من الصفر حتى الاحتراف بمستويات CEFR، ومحادثات السفر، والقصص التفاعلية، ومدرّب الذكاء الاصطناعي لومي.">
+  <meta name="theme-color" content="#0b1b3d">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+<body>
+<div class="viewport-wrapper">
+
+  <!-- Desktop Presentation Controls -->
+  <div class="desktop-controls">
+    <button class="desktop-pill-btn" onclick="app.toggleDesktopFrame()" title="تبديل حجم العرض">
+      <span>📱 / 🖥️</span> تبديل وضع العرض
+    </button>
+    <button class="desktop-pill-btn" onclick="app.toggleTheme()" title="تبديل الوضع الليلي والنهاري">
+      <span>🌓</span> المظهر
+    </button>
+    <button class="desktop-pill-btn" onclick="app.testAudioVoices()" title="فحص محرك الأصوات">
+      <span>🔊</span> فحص الأصوات
+    </button>
+  </div>
+
+  <div class="app-container" id="appRoot">
+
+    <!-- SCREEN 1: SPLASH -->
+    <div class="screen active" id="screen-splash" style="align-items:center; justify-content:center; background:linear-gradient(160deg, var(--navy), var(--navy-light)); color:#ffffff; padding:32px; text-align:center;">
+      <div style="width:110px; height:110px; border-radius:50%; background:#ffffff; display:flex; align-items:center; justify-content:center; font-size:56px; margin-bottom:20px; box-shadow:0 12px 36px rgba(0,0,0,0.35); border:3px solid rgba(255,255,255,0.4);">
+        🎓
+      </div>
+      <h1 style="font-size:26px; font-weight:900; margin-bottom:6px; letter-spacing:0.5px;">English Journey</h1>
+      <div style="font-size:18px; font-weight:700; color:var(--gold); margin-bottom:8px;">رحلتي للإنجليزية</div>
+      <div style="font-size:13.5px; opacity:0.88; margin-bottom:28px;">ابدأ من الصفر... وتحدث بثقة</div>
+      <div class="progress-outer" style="width:72%; height:7px; background:rgba(255,255,255,0.2);">
+        <div class="progress-inner" id="splashBar" style="background:linear-gradient(90deg, var(--gold), #fef08a);"></div>
+      </div>
+      <div style="font-size:11.5px; opacity:0.75; margin-top:24px;">الإصدار المطور • CEFR Standards</div>
+    </div>
+
+    <!-- SCREEN 2: LOGIN -->
+    <div class="screen" id="screen-login" style="padding:32px 24px; justify-content:center;">
+      <div class="center" style="text-align:center; margin-bottom:26px;">
+        <div style="width:84px; height:84px; border-radius:50%; background:var(--card); display:flex; align-items:center; justify-content:center; font-size:42px; margin:0 auto 16px; box-shadow:var(--shadow-md); border:2px solid var(--border);">
+          🎓
+        </div>
+        <h2 style="font-size:20px; font-weight:800; margin-bottom:6px;">مرحباً بك في رحلتك للإنجليزية</h2>
+        <div style="font-size:13px; color:var(--text-muted);">سجّل اسمك أو بريدك للمتابعة وحفظ تقدمك</div>
+      </div>
+      <input class="input-field" id="loginUser" placeholder="الاسم أو البريد الإلكتروني" value="سعود">
+      <input class="input-field" id="loginPass" type="password" placeholder="كلمة المرور" value="••••••••">
+      <div id="loginErr" style="display:none; color:var(--red); font-size:12.5px; margin:-6px 0 10px; font-weight:700;">يرجى إدخال اسمك للمتابعة</div>
+      <button class="btn btn-primary" onclick="app.doLogin()">دخول ومتابعة التعلّم</button>
+      <button class="btn btn-ghost" style="margin-top:10px;" onclick="storageService.saveProfile({name:'ضيف'}); app.showScreen('home');">المتابعة كضيف زائر</button>
+      <div style="text-align:center; font-size:11.5px; color:var(--text-muted); margin-top:18px;">
+        نسخة مجهزة لحفظ تقدمك ومستواك محلياً على جهازك
+      </div>
+    </div>
+
+    <!-- SCREEN 3: ONBOARDING -->
+    <div class="screen" id="screen-onboarding">
+      <div class="scroll-content" style="padding-top:28px;">
+        <div style="text-align:center; margin-bottom:22px;">
+          <div style="font-size:44px; margin-bottom:8px;">🎯</div>
+          <h2 style="font-size:20px; font-weight:800; margin-bottom:6px;">خطوتك الأولى نحو الإتقان</h2>
+          <div style="font-size:13px; color:var(--text-muted);">أخبرنا قليلاً عنك لنخصص لك تجربة تناسب مستواك تماماً</div>
+        </div>
+        <input class="input-field" id="onbNameInput" placeholder="ما اسمك الكريم؟ (اختياري)">
+        <div style="font-size:13px; font-weight:800; margin-bottom:8px; color:var(--text);">ما أسلوب التعلّم الأنسب لك؟</div>
+        <div class="tabs-scroll" id="onbStyleChips" style="margin-bottom:16px;"></div>
+        <div style="font-size:13px; font-weight:800; margin-bottom:8px; color:var(--text);">هل تحضّر لسفر قريب؟</div>
+        <div class="tabs-scroll" id="onbTravelChips" style="margin-bottom:22px;"></div>
+        <button class="btn btn-primary" style="margin-bottom:12px;" onclick="app.finishOnboarding()">🚀 ابدأ من الصفر (المستوى الأول)</button>
+        <button class="btn btn-ghost" onclick="app.startPlacementTest()">📊 اختبار تحديد المستوى السريع (6 أسئلة)</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: HOME DASHBOARD -->
+    <div class="screen" id="screen-home">
+      <div class="topbar">
+        <div class="logo-badge">🎓</div>
+        <div>
+          <h1>English Journey</h1>
+          <div class="subtitle">رحلتي للإنجليزية</div>
+        </div>
+        <button class="action-btn" onclick="app.showScreen('search')" title="بحث شامل">🔍</button>
+        <button class="action-btn" onclick="app.toggleTheme()" title="تبديل المظهر">🌓</button>
+      </div>
+      <div class="scroll-content">
+        <!-- Top Stats Row -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div id="homeGreeting" style="font-weight:800; font-size:15px; color:var(--text);">أهلاً بك 👋</div>
+          <div style="display:flex; gap:8px;">
+            <span class="pill" id="homeStreakBadge">🔥 1 يوم</span>
+            <span class="pill" id="homeLevelPill">🌱 مبتدئ</span>
+          </div>
+        </div>
+
+        <!-- Continue Card (Conditional) -->
+        <div class="card card-hero" id="homeContinueCard" style="display:none; cursor:pointer;" onclick="app.continueLastLesson()">
+          <div style="font-size:12px; opacity:0.9; font-weight:700;">↩️ تابع من حيث توقفت</div>
+          <div style="font-weight:800; font-size:15px; margin-top:4px;" id="homeContinueTitle">-</div>
+        </div>
+
+        <!-- Hero Card -->
+        <div class="card card-hero">
+          <div style="font-size:18px; font-weight:900; margin-bottom:6px;">تعلّم الإنجليزية بثقة 🎓</div>
+          <div style="font-size:13px; opacity:0.92; line-height:1.6; margin-bottom:16px;">
+            منهج متكامل يغطي 6 مستويات CEFR، محادثات سفر واقعية، وقصص تفاعلية ومدرّب ذكي يدعمك خطوة بخطوة.
+          </div>
+          <button class="btn btn-gold" onclick="app.openLesson('greet', 'home')">ابدأ رحلتك الآن</button>
+        </div>
+
+        <!-- AI Tutor Lumi Banner -->
+        <button class="card card-interactive" onclick="app.showScreen('lumi')">
+          <div class="icon-box" style="background:#e0e7ff; color:var(--blue); font-size:26px;">🤖</div>
+          <div class="grow">
+            <div style="font-weight:800; font-size:14.5px; color:var(--text);">تحدث مع لومي الآن</div>
+            <div class="sub">مدرّبك الشخصي بالذكاء الاصطناعي — اسأل أو تدرّب على محادثة حية</div>
+          </div>
+          <div class="arrow-icon">‹</div>
+        </button>
+
+        <!-- Travel Scenarios Banner -->
+        <button class="card card-interactive" onclick="app.showScreen('travelhub')">
+          <div class="icon-box" style="background:#fef3c7; color:var(--gold-dark); font-size:26px;">✈️</div>
+          <div class="grow">
+            <div style="font-weight:800; font-size:14.5px; color:var(--text);">عِش الموقف قبل أن تسافر</div>
+            <div class="sub">تدرّب على مواقف السفر: المطار، الفندق، المطعم، والطوارئ</div>
+          </div>
+          <div class="arrow-icon">‹</div>
+        </button>
+
+        <!-- Personalized Plan Banner -->
+        <button class="card card-interactive" onclick="app.showScreen('lumiplan')">
+          <div class="icon-box" style="background:#dbeafe; color:var(--blue); font-size:26px;">📅</div>
+          <div class="grow">
+            <div style="font-weight:800; font-size:14.5px; color:var(--text);">خطة لومي الأسبوعية</div>
+            <div class="sub">جدول تعلّم مخصص لهدفك ووقتك اليومي المتاح</div>
+          </div>
+          <div class="arrow-icon">‹</div>
+        </button>
+
+        <!-- What to Say Now Banner -->
+        <button class="card card-interactive" onclick="app.showScreen('whatsay')">
+          <div class="icon-box" style="background:#fce7f3; color:#db2777; font-size:26px;">💬</div>
+          <div class="grow">
+            <div style="font-weight:800; font-size:14.5px; color:var(--text);">ماذا أقول الآن؟</div>
+            <div class="sub">صف موقفك بالعربي واحصل على الجملة الإنجليزية الأنسب فوراً</div>
+          </div>
+          <div class="arrow-icon">‹</div>
+        </button>
+
+        <!-- Error Memory Banner -->
+        <button class="card card-interactive" onclick="app.showScreen('errors')">
+          <div class="icon-box" style="background:#ede9fe; color:#7c3aed; font-size:26px;">🧠</div>
+          <div class="grow">
+            <div style="font-weight:800; font-size:14.5px; color:var(--text);">ذاكرة أخطائي</div>
+            <div class="sub">تكرار متباعد للأسئلة التي تعثرت بها لتثبيتها نهائياً</div>
+          </div>
+          <div class="arrow-icon">‹</div>
+        </button>
+
+        <!-- One Minute Challenge Banner -->
+        <button class="card card-interactive" onclick="app.showScreen('challenge')">
+          <div class="icon-box" style="background:#ccfbf1; color:#0f766e; font-size:26px;">⏱️</div>
+          <div class="grow">
+            <div style="font-weight:800; font-size:14.5px; color:var(--text);">تحدي الدقيقة الواحدة</div>
+            <div class="sub">تحدي كتابة سريع لمدة 60 ثانية مع تقييم فوري للطلاقة</div>
+          </div>
+          <div class="arrow-icon">‹</div>
+        </button>
+
+        <!-- Speaking & Listening Banner -->
+        <button class="card card-interactive" onclick="app.startSpeakListen()">
+          <div class="icon-box" style="background:#e0f2fe; color:#0284c7; font-size:26px;">🗣️</div>
+          <div class="grow">
+            <div style="font-weight:800; font-size:14.5px; color:var(--text);">التحدث والاستماع</div>
+            <div class="sub">استمع واختر الجملة، ثم تحدّث وقارن دقة نطقك الصوتي</div>
+          </div>
+          <div class="arrow-icon">‹</div>
+        </button>
+
+        <!-- 6 Main Hub Tiles -->
+        <div class="tiles">
+          <button class="tile" style="background:#2563eb;" onclick="app.showScreen('lessons')">
+            <span class="tile-icon">📖</span>الدروس والمحادثات
+          </button>
+          <button class="tile" style="background:#f97316;" onclick="app.showScreen('grammar')">
+            <span class="tile-icon">📘</span>شجرة القواعد
+          </button>
+          <button class="tile" style="background:#10b981;" onclick="app.showScreen('world')">
+            <span class="tile-icon">🌍</span>عالم الإنجليزية
+          </button>
+          <button class="tile" style="background:#8b5cf6;" onclick="app.showScreen('storyhub')">
+            <span class="tile-icon">📚</span>القصص التفاعلية
+          </button>
+          <button class="tile" style="background:#ef4444;" onclick="app.showScreen('games')">
+            <span class="tile-icon">🎮</span>ألعاب لغوية
+          </button>
+          <button class="tile" style="background:#06b6d4;" onclick="app.showScreen('quizhub')">
+            <span class="tile-icon">📝</span>الاختبار والتقييم
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <button class="nav-item active" data-target="home" onclick="app.showScreen('home')">
+          <span class="nav-icon">🏠</span>الرئيسية
+        </button>
+        <button class="nav-item" data-target="lessons" onclick="app.showScreen('lessons')">
+          <span class="nav-icon">📖</span>الدروس
+        </button>
+        <button class="nav-item" data-target="grammar" onclick="app.showScreen('grammar')">
+          <span class="nav-icon">📘</span>القواعد
+        </button>
+        <button class="nav-item" data-target="sub" onclick="app.showScreen('sub')">
+          <span class="nav-icon">👑</span>الاشتراك
+        </button>
+        <button class="nav-item" data-target="profile" onclick="app.showScreen('profile')">
+          <span class="nav-icon">👤</span>حسابي
+        </button>
+      </div>
+    </div>
+
+    <!-- SCREEN 5: LESSONS LIST -->
+    <div class="screen" id="screen-lessons">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>الدروس والمحادثات</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="tabs-scroll">
+          <button class="tab-btn active" id="lvlTab1" onclick="app.setLevelTab(1)">المستوى 1 (A1 أساسي)</button>
+          <button class="tab-btn" id="lvlTab2" onclick="app.setLevelTab(2)">المستوى 2 (A2 مجتمع)</button>
+          <button class="tab-btn" id="lvlTab3" onclick="app.setLevelTab(3)">المستوى 3 (B1 سفر)</button>
+          <button class="tab-btn" id="lvlTab4" onclick="app.setLevelTab(4)">المستوى 4 (B2 مهني)</button>
+          <button class="tab-btn" id="lvlTab5" onclick="app.setLevelTab(5)">المستوى 5 (C1 متقدم)</button>
+          <button class="tab-btn" id="lvlTab6" onclick="app.setLevelTab(6)">المستوى 6 (C2 إتقان)</button>
+        </div>
+        <div id="lessonsListContainer"></div>
+      </div>
+    </div>
+
+    <!-- SCREEN 6: GRAMMAR HUB -->
+    <div class="screen" id="screen-grammar">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>شجرة القواعد اللغوية</h1>
+      </div>
+      <div class="scroll-content" id="grammarContainer"></div>
+    </div>
+
+    <!-- SCREEN 7: LESSON DETAIL VIEW -->
+    <div class="screen" id="screen-detail">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen(app.detailBackScreen)">→</button>
+        <h1 id="detTitle">-</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="card">
+          <div class="sub" id="detSub" style="margin-bottom:8px; font-weight:700;"></div>
+          <!-- Formula Box -->
+          <div id="detFormulaBox" style="display:none; background:var(--card-subtle); border:1.5px dashed var(--border); border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+            <div style="font-size:11.5px; font-weight:800; color:var(--blue); margin-bottom:4px;">🧩 التركيب النحوي</div>
+            <div id="detFormulaText" style="font-weight:700; font-size:14px; direction:ltr; text-align:left; color:var(--text);"></div>
+          </div>
+          <!-- Common Mistake Box -->
+          <div id="detMistakeBox" style="display:none; background:#fee2e2; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+            <div style="font-size:11.5px; font-weight:800; color:var(--red); margin-bottom:4px;">⚠️ تجنّب هذا الخطأ الشائع</div>
+            <div id="detMistakeWrong" style="font-size:13.5px; text-decoration:line-through; color:var(--red); direction:ltr; text-align:left;"></div>
+            <div id="detMistakeRight" style="font-size:13.5px; font-weight:700; color:var(--green); direction:ltr; text-align:left; margin-top:4px;"></div>
+            <div id="detMistakeNote" class="sub" style="font-size:12px; margin-top:6px; color:#7f1d1d;"></div>
+          </div>
+          <div id="detRule" style="line-height:1.85; font-size:14.5px; color:var(--text);"></div>
+          <button class="btn btn-ghost" style="margin-top:14px;" onclick="app.playRuleExplanation()">🔊 استمع لشرح القاعدة بصوت المعلم</button>
+        </div>
+
+        <!-- Vocabulary Section -->
+        <div id="detVocabBox" style="display:none; margin-bottom:16px;">
+          <div style="font-weight:800; font-size:14.5px; margin:0 4px 8px;">📋 أهم المفردات الأساسية</div>
+          <div id="detVocabList"></div>
+        </div>
+
+        <!-- Examples / Dialogues -->
+        <div style="font-weight:800; font-size:14.5px; margin:16px 4px 8px;">محادثات وأمثلة عملية</div>
+        <div id="detPairsContainer"></div>
+
+        <button class="btn btn-gold" style="margin-top:8px;" onclick="app.openQuiz(app.currentLessonKey, 'detail')">🧪 اختبر نفسك في هذا الدرس</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 8: QUIZ HUB -->
+    <div class="screen" id="screen-quizhub">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>مركز الاختبارات والتقييم</h1>
+      </div>
+      <div class="scroll-content" id="quizHubContainer"></div>
+    </div>
+
+    <!-- SCREEN 9: QUIZ PLAYER -->
+    <div class="screen" id="screen-quiz">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen(app.quizBackScreen)">→</button>
+        <h1 id="quizScreenTitle">اختبار تفاعلي</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="progress-outer"><div class="progress-inner" id="quizProgressBar"></div></div>
+        <div class="sub center" id="quizCountLabel" style="margin-bottom:12px; text-align:center;">سؤال 1 من 10</div>
+        <div class="card">
+          <div id="quizQuestionText" style="font-weight:800; font-size:16px; margin-bottom:16px; line-height:1.6;">-</div>
+          <div id="quizOptionsBox"></div>
+          <!-- Word Ordering Area -->
+          <div id="quizOrderBox" style="display:none;">
+            <div class="sub" style="margin-bottom:6px;">رتّب كلمات السؤال:</div>
+            <div id="orderQBank" class="chips-bank"></div>
+            <div id="orderQZone" class="drop-zone"></div>
+            <div class="sub" style="margin-bottom:6px;">رتّب كلمات الإجابة:</div>
+            <div id="orderABank" class="chips-bank"></div>
+            <div id="orderAZone" class="drop-zone"></div>
+          </div>
+          <div id="quizExplainBox" style="display:none; font-size:13px; margin-top:12px; line-height:1.6; padding:10px; border-radius:10px; background:var(--card-subtle);"></div>
+          <button class="btn btn-primary" id="quizNextBtn" style="margin-top:16px; display:none;" onclick="app.nextQuizStep()">السؤال التالي ←</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 10: STORY HUB -->
+    <div class="screen" id="screen-storyhub">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>القصص التفاعلية</h1>
+      </div>
+      <div class="scroll-content" id="storyHubContainer"></div>
+    </div>
+
+    <!-- SCREEN 11: STORY VIEWER -->
+    <div class="screen" id="screen-story">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('storyhub')">→</button>
+        <h1 id="storyTitleText">مشهد القصة</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="card">
+          <div class="sub center" id="storySceneCount" style="text-align:center; margin-bottom:8px;"></div>
+          <div id="storySceneIcon" style="font-size:58px; text-align:center; padding:16px 0;">🏫</div>
+          <div class="pair-en" id="storyEnText" style="text-align:center; font-size:17px; margin-bottom:8px;"></div>
+          <div class="pair-ar" id="storyArText" style="text-align:center; font-size:14.5px; margin-bottom:16px;"></div>
+          <div style="display:flex; justify-content:center; margin-bottom:14px;">
+            <button class="icon-btn" onclick="app.playStoryAudio()">🔊 استمع للسرد الصوتي</button>
+          </div>
+          <div id="storyChoicesBox" style="display:none;"></div>
+          <button class="btn btn-primary" id="storyAdvanceBtn" onclick="app.advanceStory()">المشهد التالي ←</button>
+          <button class="btn btn-gold" id="storyRestartBtn" style="display:none; margin-top:10px;" onclick="app.openStory(app.currentStoryId)">إعادة القصة من البداية 🔁</button>
+          <button class="btn btn-ghost" style="margin-top:12px;" onclick="app.openQuiz(app.currentStoryId, 'story')">🧪 اختبر فهمك لهذه القصة</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 12: TRAVEL HUB -->
+    <div class="screen" id="screen-travelhub">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>عِش الموقف قبل أن تسافر</h1>
+      </div>
+      <div class="scroll-content" id="travelHubContainer"></div>
+    </div>
+
+    <!-- SCREEN 13: TRAVEL PLAYER -->
+    <div class="screen" id="screen-travel">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('travelhub')">→</button>
+        <h1>محاكاة موقف سفر</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="progress-outer"><div class="progress-inner" id="travelProgressBar"></div></div>
+        <div class="sub center" id="travelStageCount" style="text-align:center; margin-bottom:10px;">الموقف 1</div>
+        <div class="card">
+          <div id="travelSceneIcon" style="font-size:52px; text-align:center; padding:10px 0;">🛫</div>
+          <div class="sub center" id="travelSituationAr" style="text-align:center; font-weight:700; margin-bottom:12px; color:var(--text);"></div>
+          <div class="pair-en" id="travelNpcEn" style="text-align:center; font-size:16px; color:var(--blue);"></div>
+          <div class="pair-ar" id="travelNpcAr" style="text-align:center; margin-top:4px; margin-bottom:12px;"></div>
+          <div style="display:flex; justify-content:center; margin-bottom:14px;">
+            <button class="icon-btn" onclick="app.playTravelNpcSpeech()">🔊 استمع للموظف</button>
+          </div>
+          <div style="font-size:12.5px; font-weight:800; margin-bottom:8px; color:var(--text);">ماذا تقول أنت الآن؟</div>
+          <div id="travelOptionsBox"></div>
+          <div id="travelFeedbackBox" style="display:none; margin-top:10px; font-size:13px; line-height:1.6; padding:10px; border-radius:10px; background:var(--card-subtle);"></div>
+          <button class="btn btn-primary" id="travelNextBtn" style="margin-top:14px; display:none;" onclick="app.nextTravelStage()">الموقف التالي ←</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 14: LUMI AI TUTOR CHAT -->
+    <div class="screen" id="screen-lumi">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <div>
+          <h1>🤖 لومي — المدرّب الذكي</h1>
+          <div class="subtitle">متصل ومستعد للمحادثة</div>
+        </div>
+      </div>
+      <div class="scroll-content" id="lumiChatContainer"></div>
+      <div style="position:absolute; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border); padding:10px 14px calc(10px + var(--safe-bottom)); display:flex; gap:8px; z-index:15;">
+        <input class="input-field" id="lumiInput" placeholder="اكتب رسالتك أو جملتك للومي..." style="margin:0;">
+        <button class="btn btn-primary btn-sm" onclick="app.sendLumi()">إرسال</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 15: PERSONAL STUDY PLAN -->
+    <div class="screen" id="screen-lumiplan">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>خطة لومي الشخصية</h1>
+      </div>
+      <div class="scroll-content" id="lumiPlanContainer"></div>
+    </div>
+
+    <!-- SCREEN 16: WHAT TO SAY NOW -->
+    <div class="screen" id="screen-whatsay">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>ماذا أقول الآن؟</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="card">
+          <div class="sub" style="margin-bottom:8px;">صف موقفك بالعربي، وسيعطيك لومي الجملة الإنجليزية المناسبة فوراً:</div>
+          <input class="input-field" id="whatsayInput" placeholder="مثال: أريد حجز غرفة هادئة مطلة على الحديقة">
+          <button class="btn btn-primary" onclick="app.generateSay('عادي وطبيعي')">أعطني الجملة المناسبة 💡</button>
+        </div>
+        <div class="sub center" id="whatsayLoading" style="display:none; text-align:center; margin:16px 0;">لومي يفكر في أفضل صياغة طبيعية... ⏳</div>
+        <div id="whatsayResultBox" style="display:none; margin-top:14px;">
+          <div class="pair-card">
+            <div class="pair-en" id="whatsayEnText" style="font-size:17px;"></div>
+            <div class="pair-ar" id="whatsayArText" style="font-size:15px; margin-top:6px;"></div>
+            <div class="pair-audio-row">
+              <button class="icon-btn" onclick="app.playWhatSaySpeech()">🔊 استمع للنطق الصحيح</button>
+            </div>
+          </div>
+          <div class="sub" style="margin:12px 4px 6px;">خيارات إعادة الصياغة بنبرات مختلفة:</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="icon-btn" onclick="app.generateSay('أسهل وأبسط')">🌱 أسهل وأبسط</button>
+            <button class="icon-btn" onclick="app.generateSay('أكثر طبيعية للناطقين الأصليين')">🌟 كمتحدث أصلي</button>
+            <button class="icon-btn" onclick="app.generateSay('أكثر تهذيباً ورسمية')">👔 رسمية ومهذبة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 17: ONE MINUTE CHALLENGE -->
+    <div class="screen" id="screen-challenge">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>تحدي الدقيقة الواحدة</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="card" id="challengeIntroCard">
+          <div style="font-weight:800; font-size:16px; margin-bottom:8px;">⏱️ تحدي الكتابة والطلاقة السريعة</div>
+          <div class="sub" style="margin-bottom:12px; line-height:1.7;">
+            ستحصل على 60 ثانية لكتابة كل ما تستطيع بالإنجليزية عن موضوع محدد، ثم ستحلل المنظومة طلاقتك وتنوع مفرداتك وتقدم لك تقييماً بناءً.
+          </div>
+          <div id="challengeTopicText" style="font-weight:800; font-size:15px; color:var(--blue); margin-bottom:16px;"></div>
+          <button class="btn btn-gold" onclick="app.startChallenge()">ابدأ التحدي الآن</button>
+        </div>
+
+        <div class="card" id="challengePlayCard" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div class="sub" id="challengeTopicPlay" style="font-weight:700;"></div>
+            <div class="pill" id="challengeTimerBadge" style="font-size:16px; padding:6px 14px; background:#dbeafe; color:var(--blue);">60s</div>
+          </div>
+          <textarea class="input-field" id="challengeTextArea" rows="6" placeholder="Start writing in English here..." style="direction:ltr; text-align:left; font-family:'Outfit',sans-serif; font-size:15px;"></textarea>
+          <button class="btn btn-primary" onclick="app.finishChallenge()">انتهيت، قيّم كتابتي 📊</button>
+        </div>
+
+        <div class="sub center" id="challengeLoading" style="display:none; text-align:center; margin:16px 0;">جاري تحليل النص والمفردات والطلاقة... ⏳</div>
+        <div id="challengeResultCard" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- SCREEN 18: SPEAKING & LISTENING -->
+    <div class="screen" id="screen-speaklisten">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>التحدث والاستماع</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="progress-outer"><div class="progress-inner" id="slProgressBar"></div></div>
+        <div class="sub center" id="slCountLabel" style="text-align:center; margin-bottom:12px;">الجملة 1 من 6</div>
+
+        <!-- Listening Step -->
+        <div class="card" id="slListenBox">
+          <div style="font-weight:800; font-size:15px; margin-bottom:8px;">🎧 الخطوة 1: الاستماع الدقيق</div>
+          <div class="sub" style="margin-bottom:12px;">استمع للجملة جيداً، ثم حدد ما سمعته من الخيارات:</div>
+          <button class="btn btn-ghost" style="margin-bottom:14px;" onclick="app.playSLTargetSpeech()">🔊 اضغط للاستماع للجملة</button>
+          <div id="slListenOptionsWrap"></div>
+          <div id="slListenFeedback" style="display:none; color:var(--red); font-size:12.5px; margin-top:8px;"></div>
+        </div>
+
+        <!-- Speaking Step -->
+        <div class="card" id="slSpeakBox" style="display:none;">
+          <div style="font-weight:800; font-size:15px; margin-bottom:8px;">🎤 الخطوة 2: التحدث والنطق</div>
+          <div class="sub" style="margin-bottom:12px;">اقرأ هذه الجملة بصوت واضح ليقيس النظام تطابق نطقك:</div>
+          <div class="pair-en" id="slSpeakTargetEn" style="text-align:center; font-size:18px; margin-bottom:4px; color:var(--blue);"></div>
+          <div class="pair-ar" id="slSpeakTargetAr" style="text-align:center; margin-bottom:16px;"></div>
+          <button class="btn btn-gold" id="slRecordBtn" onclick="app.startSLRecording()">🎤 اضغط وتحدث بالإنجليزية</button>
+          <div class="sub" id="slSpeakFallbackMsg" style="display:none; color:var(--text-muted); margin-top:8px; line-height:1.6;">
+            ميزة التعرف الصوتي غير مفعلة في هذا المتصفح. كرر الجملة بصوت عالٍ واضغط متابعة.
+          </div>
+          <div id="slSpeakResultBox" style="display:none; margin-top:12px;"></div>
+        </div>
+
+        <button class="btn btn-primary" id="slNextBtn" style="margin-top:16px; display:none;" onclick="app.nextSLItem()">الجملة التالية ←</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 19: ENGLISH WORLD MAP -->
+    <div class="screen" id="screen-world">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>عالم الإنجليزية</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="sub center" id="worldVisitedCount" style="text-align:center; margin-bottom:14px;"></div>
+        <div class="tiles" id="worldGridContainer"></div>
+      </div>
+    </div>
+
+    <!-- SCREEN 20: GAMES (GUESS TRANSLATION) -->
+    <div class="screen" id="screen-games">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>خمّن الترجمة الصحيحة</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="card" id="gameIntroCard">
+          <div style="font-weight:800; font-size:16px; margin-bottom:8px;">🎮 لعبة التحدي السريع</div>
+          <div class="sub" style="margin-bottom:12px; line-height:1.7;">
+            10 جولات سريعة — تظهر أمامك عبارة إنجليزية وعليك اختيار الترجمة العربية الدقيقة في أقل وقت ممكن.
+          </div>
+          <div class="sub" style="margin-bottom:16px;">أعلى رقم قياسي لك: <span id="gameBestScore" style="font-weight:800; color:var(--gold-dark);">0</span> نقاط</div>
+          <button class="btn btn-gold" onclick="app.startGame()">ابدأ جولة جديدة</button>
+        </div>
+
+        <div class="card" id="gamePlayCard" style="display:none;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <span class="sub" id="gameRoundLabel">الجولة 1</span>
+            <span class="sub" id="gameScoreLabel">النقاط: 0</span>
+          </div>
+          <div class="pair-en" id="gameWordPrompt" style="text-align:center; font-size:19px; margin:16px 0; color:var(--blue);"></div>
+          <div id="gameOptionsWrap"></div>
+        </div>
+
+        <div id="gameResultCard" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- SCREEN 21: MISTAKE MEMORY -->
+    <div class="screen" id="screen-errors">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>ذاكرة أخطائي</h1>
+      </div>
+      <div class="scroll-content" id="errorsListContainer"></div>
+    </div>
+
+    <!-- SCREEN 22: USER PROFILE & STATS -->
+    <div class="screen" id="screen-profile">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>الملف الشخصي والإحصاءات</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="card center" style="text-align:center; padding:22px 16px;">
+          <div style="font-size:46px; margin-bottom:6px;">🧑‍🎓</div>
+          <div id="profileUserName" style="font-weight:900; font-size:18px; margin-bottom:2px;">-</div>
+          <div class="pill" id="profileLevelBadge" style="margin-top:6px;">-</div>
+        </div>
+
+        <!-- Key Metrics Grid -->
+        <div class="tiles" style="margin-top:0; margin-bottom:14px;">
+          <div class="card" style="margin:0; text-align:center; padding:12px;">
+            <div style="font-size:22px;">🔥</div>
+            <div style="font-size:18px; font-weight:800; color:var(--gold-dark);" id="profileStreakCount">0 يوم</div>
+            <div class="sub">المثابرة المتواصلة</div>
+          </div>
+          <div class="card" style="margin:0; text-align:center; padding:12px;">
+            <div style="font-size:22px;">⭐</div>
+            <div style="font-size:18px; font-weight:800; color:var(--blue);" id="profileXpCount">0 XP</div>
+            <div class="sub">نقاط الخبرة الكلية</div>
+          </div>
+          <div class="card" style="margin:0; text-align:center; padding:12px;">
+            <div style="font-size:22px;">📚</div>
+            <div style="font-size:18px; font-weight:800; color:var(--green);" id="profileVisitedCount">0 درس</div>
+            <div class="sub">الدروس المنجزة</div>
+          </div>
+          <div class="card" style="margin:0; text-align:center; padding:12px;">
+            <div style="font-size:22px;">📝</div>
+            <div style="font-size:18px; font-weight:800; color:#8b5cf6;" id="profileQuizzesCount">0 اختبار</div>
+            <div class="sub">الاختبارات المجتازة</div>
+          </div>
+        </div>
+
+        <div style="font-weight:800; font-size:14.5px; margin:16px 4px 8px;">شارات الإنجاز 🏅</div>
+        <div class="tiles" id="profileBadgesWrap" style="margin-top:0; margin-bottom:14px;"></div>
+
+        <div class="card">
+          <div style="font-weight:800; font-size:14.5px; margin-bottom:6px;">🏅 شهادة الإتمام التقديرية</div>
+          <div class="sub" style="margin-bottom:12px;">اطّلع على شهادتك الرسمية المعتمدة على إنجازاتك واطبعها بصيغة PDF.</div>
+          <button class="btn btn-gold" onclick="app.showScreen('certificate')">عرض وطباعة شهادتي 🎓</button>
+        </div>
+
+        <div class="card">
+          <div style="font-weight:800; font-size:14.5px; margin-bottom:6px;">⚙️ إعدادات التطبيق والأصوات</div>
+          <div style="display:flex; gap:8px; margin-top:10px;">
+            <button class="icon-btn" onclick="app.toggleTheme()">🌓 تبديل المظهر</button>
+            <button class="icon-btn" onclick="app.testAudioVoices()">🔊 فحص الأصوات</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 23: CERTIFICATE OF COMPLETION -->
+    <div class="screen" id="screen-certificate">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('profile')">→</button>
+        <h1>شهادة الإتمام والتقدير</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="cert-frame">
+          <div style="font-size:44px;">🎓</div>
+          <div style="font-weight:900; font-size:11px; color:var(--text-muted); letter-spacing:3px; margin-top:6px;">ENGLISH JOURNEY ACADEMY</div>
+          <div style="font-weight:900; font-size:22px; color:var(--navy); margin-top:14px;">شهادة تقدير وإنجاز</div>
+          <div class="sub" style="font-size:12.5px;">Certificate of Completion & Excellence</div>
+          <div class="sub" style="margin:20px 0 4px;">تُمنح هذه الشهادة بفخر لـ:</div>
+          <div id="certUserName" style="font-weight:900; font-size:24px; color:var(--gold-dark); margin-bottom:12px;">-</div>
+          <div id="certStatsText" style="font-size:13.5px; line-height:1.8; color:var(--text); margin-bottom:16px;"></div>
+          <div class="sub" id="certDateText" style="font-size:11.5px;"></div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:16px;" onclick="window.print()">🖨️ طباعة الشهادة / حفظ كـ PDF</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 24: SEARCH SCREEN -->
+    <div class="screen" id="screen-search">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>البحث الشامل</h1>
+      </div>
+      <div class="scroll-content">
+        <input class="input-field" id="searchInput" placeholder="ابحث في جميع الدروس والقواعد والقصص..." autofocus>
+        <div id="searchResultsBox"></div>
+      </div>
+    </div>
+
+    <!-- SCREEN 25: SUBSCRIPTION & FEATURES -->
+    <div class="screen" id="screen-sub">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>مزايا العضوية والاشتراك</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="card center" style="border:2px solid var(--gold); text-align:center;">
+          <div style="font-size:42px; margin-bottom:6px;">👑</div>
+          <div style="font-weight:900; font-size:17px; margin-bottom:4px;">العضوية الكاملة — وصول غير محدود</div>
+          <div class="pill" style="margin:8px 0 12px; background:#ecfdf5; color:var(--green); font-size:13px;">
+            🎉 جميع المستويات والميزات مجانية ومفتوحة بالكامل
+          </div>
+          <div style="text-align:right; margin:16px 0;">
+            <div class="lesson-row" style="padding:8px 12px; margin-bottom:6px;"><span>✔</span> جميع المستويات الستة (من Pre-A1 إلى C2)</div>
+            <div class="lesson-row" style="padding:8px 12px; margin-bottom:6px;"><span>✔</span> أكثر من 450 محادثة وجملة مدعومة بالنطق الصوتي</div>
+            <div class="lesson-row" style="padding:8px 12px; margin-bottom:6px;"><span>✔</span> محاكاة مواقف السفر الواقعية التفاعلية</div>
+            <div class="lesson-row" style="padding:8px 12px; margin-bottom:6px;"><span>✔</span> مدرّب المحادثة الذكي لومي وخطة المذاكرة الشخصية</div>
+            <div class="lesson-row" style="padding:8px 12px; margin-bottom:6px;"><span>✔</span> بنك الاختبارات، لعبة الترجمة، وتحدي الدقيقة</div>
+          </div>
+          <button class="btn btn-gold" onclick="app.showScreen('home')">متابعة الاستخدام والاستمتاع بالتطبيق</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Overlay -->
+    <div class="toast-notice" id="toastNotice"></div>
+
+  </div>
+</div>
+
+<!-- Application Dependencies -->
+<script src="js/data/lessons.js"></script>
+<script src="js/data/quizzes.js"></script>
+<script src="js/data/stories.js"></script>
+<script src="js/data/travel.js"></script>
+<script src="js/data/world.js"></script>
+<script src="js/services/audio.js"></script>
+<script src="js/services/storage.js"></script>
+<script src="js/services/lumi.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
