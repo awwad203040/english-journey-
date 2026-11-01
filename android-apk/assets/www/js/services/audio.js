@@ -26,7 +26,8 @@ class AudioService {
     return (
       typeof window !== "undefined" &&
       typeof window.AndroidNativeTTS !== "undefined" &&
-      typeof window.AndroidNativeTTS.speak === "function"
+      typeof window.AndroidNativeTTS.speak === "function" &&
+      (typeof window.AndroidNativeTTS.isAvailable !== "function" || window.AndroidNativeTTS.isAvailable())
     );
   }
 
@@ -132,19 +133,26 @@ class AudioService {
       const uid = "tts_" + Math.random().toString(36).substring(2, 9);
       let finished = false;
 
-      const finish = () => {
+      const finish = (failed = false) => {
         if (finished) return;
         finished = true;
         clearTimeout(timer);
         delete this._nativeCallbacks[uid];
-        resolve();
+        if (failed && tok === this.currentToken) {
+          // If native TTS fails (e.g. language voice data missing on device), fallback to high quality online audio
+          this.speakOnlineAudio(text, isAr ? "ar" : "en", tok).then(resolve);
+        } else {
+          resolve();
+        }
       };
 
-      const timeoutMs = Math.max(3000, text.length * 130);
-      const timer = setTimeout(finish, timeoutMs);
+      const timeoutMs = Math.max(3500, text.length * 140);
+      const timer = setTimeout(() => finish(false), timeoutMs);
 
-      this._nativeCallbacks[uid] = () => {
-        if (tok === this.currentToken) finish();
+      this._nativeCallbacks[uid] = (isError = false) => {
+        if (tok === this.currentToken) {
+          finish(isError);
+        }
       };
 
       try {
@@ -152,12 +160,12 @@ class AudioService {
         const rate = customRate > 0 ? customRate : this.speechRate;
         window.AndroidNativeTTS.speak(this.cleanText(text), lang, rate, uid);
       } catch (e) {
-        finish();
+        finish(true);
       }
     });
   }
 
-  // --- Fallback Online Audio Speech (if browser lacks local Arabic voice) ---
+  // --- Fallback Online Audio Speech (if browser or engine lacks voice) ---
   speakOnlineAudio(text, langCode, tok) {
     return new Promise(resolve => {
       try {
@@ -211,9 +219,9 @@ class AudioService {
 
     const picked = isAr ? this.getArabicVoice() : this.getEnglishVoice();
 
-    // If Arabic is requested in browser but no Arabic voice is installed at all:
-    if (isAr && !picked.voice) {
-      return this.speakOnlineAudio(text, "ar", tok);
+    // If local voice for the requested language is missing, fallback immediately to online audio
+    if (!picked.voice) {
+      return this.speakOnlineAudio(text, isAr ? "ar" : "en", tok);
     }
 
     const chunks = (text.match(/[^.!?؟،؛…]+[.!?؟،؛…]*/g) || [text]).map(s => s.trim()).filter(Boolean);
@@ -236,19 +244,25 @@ class AudioService {
           u.rate = effRate;
 
           let done = false;
-          const advance = () => {
+          const advance = (hasError = false) => {
             if (done) return;
             done = true;
             clearTimeout(timeoutId);
+            if (hasError && tok === this.currentToken) {
+              this.speakOnlineAudio(chunkStr, isAr ? "ar" : "en", tok).then(() => {
+                idx++;
+                speakNext();
+              });
+              return;
+            }
             idx++;
             speakNext();
           };
 
-          // Anti-hang protection
-          const timeoutId = setTimeout(advance, Math.max(3000, chunkStr.length * 120));
+          const timeoutId = setTimeout(() => advance(false), Math.max(3500, chunkStr.length * 130));
 
-          u.onend = advance;
-          u.onerror = advance;
+          u.onend = () => advance(false);
+          u.onerror = () => advance(true);
 
           window._activeUtterance = u;
           window.speechSynthesis.speak(u);
@@ -265,15 +279,16 @@ class AudioService {
   // --- Speak English Phrase Directly ---
   speakEn(enText) {
     if (!enText) return Promise.resolve();
-    return this.speakSeq("", enText, "en");
+    this.unlockAudio();
+    const tok = this.stopSpeech();
+    return this.speakOne(enText, false, tok);
   }
 
   // --- Speak English Phrase Slowly for Learning ---
   speakSlow(enText) {
     if (!enText) return Promise.resolve();
     this.unlockAudio();
-    const tok = ++this.currentToken;
-    this.stopSpeech();
+    const tok = this.stopSpeech();
     return this.speakOne(enText, false, tok, 0.65);
   }
 
@@ -293,8 +308,7 @@ class AudioService {
   // --- Speak Linked Arabic + English Pair (Question or Answer) ---
   speakPair(arText, enText, delayMs = 280, customRate = 0) {
     this.unlockAudio();
-    const tok = ++this.currentToken;
-    this.stopSpeech();
+    const tok = this.stopSpeech();
 
     const ar = this.cleanText(arText);
     const en = this.cleanText(enText);
@@ -318,8 +332,7 @@ class AudioService {
   // --- Speak Question (Ar + En) linked with Answer (Ar + En) ---
   speakQuestionAndAnswer(qAr, qEn, aAr, aEn, delayBetween = 420) {
     this.unlockAudio();
-    const tok = ++this.currentToken;
-    this.stopSpeech();
+    const tok = this.stopSpeech();
 
     const playQ = () => {
       const qA = this.cleanText(qAr);
@@ -371,10 +384,7 @@ class AudioService {
   // --- Speak sequence (Arabic then English or either) ---
   speakSeq(arText, enText, mode = "both") {
     this.unlockAudio();
-    const tok = ++this.currentToken;
-
-    // Stop previous utterances
-    this.stopSpeech();
+    const tok = this.stopSpeech();
 
     if (mode === "ar" && arText) {
       return this.speakOne(arText, true, tok);
@@ -383,25 +393,40 @@ class AudioService {
       return this.speakOne(enText, false, tok);
     }
     if (mode === "both") {
-      return this.speakPair(arText, enText, 260);
+      const ar = this.cleanText(arText);
+      const en = this.cleanText(enText);
+      if (ar && en) {
+        return this.speakOne(ar, true, tok).then(() => {
+          if (tok !== this.currentToken) return;
+          return new Promise(r => setTimeout(r, 260)).then(() => {
+            if (tok !== this.currentToken) return;
+            return this.speakOne(en, false, tok);
+          });
+        });
+      } else if (ar) {
+        return this.speakOne(ar, true, tok);
+      } else if (en) {
+        return this.speakOne(en, false, tok);
+      }
     }
     return Promise.resolve();
   }
 
   stopSpeech() {
     this.currentToken++;
-    if (this.isNativeAndroid()) {
+    if (typeof window !== "undefined" && typeof window.AndroidNativeTTS !== "undefined" && typeof window.AndroidNativeTTS.stop === "function") {
       try { window.AndroidNativeTTS.stop(); } catch (e) {}
     }
     if (this.audioElement) {
       try { this.audioElement.pause(); } catch (e) {}
       this.audioElement = null;
     }
-    if ("speechSynthesis" in window) {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
       try {
         window.speechSynthesis.cancel();
       } catch (e) {}
     }
+    return this.currentToken;
   }
 
   // --- Web Audio API Synthesizer (Sound Effects) ---
@@ -544,13 +569,13 @@ const audioService = new AudioService();
 // Global Window Callbacks for Native Android TTS Events
 window.onNativeTTSDone = function(uid) {
   if (typeof audioService !== "undefined" && audioService._nativeCallbacks && audioService._nativeCallbacks[uid]) {
-    audioService._nativeCallbacks[uid]();
+    audioService._nativeCallbacks[uid](false);
   }
 };
 
 window.onNativeTTSError = function(uid) {
   if (typeof audioService !== "undefined" && audioService._nativeCallbacks && audioService._nativeCallbacks[uid]) {
-    audioService._nativeCallbacks[uid]();
+    audioService._nativeCallbacks[uid](true);
   }
 };
 

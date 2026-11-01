@@ -386,25 +386,34 @@ class App {
         card.className = "pair-card";
 
         if (p.qEn) {
+          const safeQEn = (p.qEn || "").replace(/'/g, "\\'");
+          const safeAEn = (p.aEn || "").replace(/'/g, "\\'");
           card.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap; gap:4px;">
               <span style="font-size:11.5px; font-weight:800; color:var(--blue);">سؤال Q</span>
-              <button class="btn btn-ghost btn-sm" style="font-size:11px; padding:3px 9px;" onclick="app.playLessonQuestion(${idx})">🔊 نطق السؤال (عربي + English)</button>
+              <div style="display:flex; gap:4px;">
+                <button class="btn btn-ghost btn-sm" style="font-size:11px; padding:3px 8px;" onclick="app.playLessonQuestion(${idx})">🔊 نطق السؤال (عربي + English)</button>
+                <button class="btn btn-ghost btn-sm" style="font-size:11px; padding:3px 8px;" onclick="audioService.speakEn('${safeQEn}')" title="نطق إنجليزي فقط">🇬🇧 English</button>
+              </div>
             </div>
-            <div class="pair-en" style="font-size:16px;">${p.qEn}</div>
+            <div class="pair-en" style="font-size:16px; cursor:pointer;" onclick="audioService.speakEn('${safeQEn}')" title="اضغط للاستماع للإنجليزي">${p.qEn} <span style="font-size:13px; opacity:0.8;">🔊</span></div>
             <div class="pair-ar" style="font-size:14px; margin-bottom:12px;">${p.qAr}</div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; margin-bottom:4px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; margin-bottom:4px; flex-wrap:wrap; gap:4px;">
               <span style="font-size:11.5px; font-weight:800; color:var(--green);">إجابة A</span>
-              <button class="btn btn-ghost btn-sm" style="font-size:11px; padding:3px 9px;" onclick="app.playLessonAnswer(${idx})">🔊 نطق الإجابة (عربي + English)</button>
+              <div style="display:flex; gap:4px;">
+                <button class="btn btn-ghost btn-sm" style="font-size:11px; padding:3px 8px;" onclick="app.playLessonAnswer(${idx})">🔊 نطق الإجابة (عربي + English)</button>
+                <button class="btn btn-ghost btn-sm" style="font-size:11px; padding:3px 8px;" onclick="audioService.speakEn('${safeAEn}')" title="نطق إنجليزي فقط">🇬🇧 English</button>
+              </div>
             </div>
-            <div class="pair-en" style="font-size:16px;">${p.aEn}</div>
+            <div class="pair-en" style="font-size:16px; cursor:pointer;" onclick="audioService.speakEn('${safeAEn}')" title="اضغط للاستماع للإنجليزي">${p.aEn} <span style="font-size:13px; opacity:0.8;">🔊</span></div>
             <div class="pair-ar" style="font-size:14px;">${p.aAr}</div>
 
             <div class="pair-audio-row" style="margin-top:12px; display:flex; gap:6px; flex-wrap:wrap;">
               <button class="icon-btn" onclick="app.playLessonQuestion(${idx})">🔊 السؤال (عربي + English)</button>
               <button class="icon-btn" onclick="app.playLessonAnswer(${idx})">🔊 الإجابة (عربي + English)</button>
-              <button class="icon-btn" onclick="app.playLessonPairFull(${idx})">🔊 المحادثة كاملة (السؤال ثم الإجابة)</button>
+              <button class="icon-btn" onclick="audioService.speakEn('${safeQEn} ... ${safeAEn}')">🇬🇧 English فقط</button>
+              <button class="icon-btn" onclick="app.playLessonPairFull(${idx})">🔊 المحادثة كاملة</button>
             </div>
           `;
         } else {
@@ -733,10 +742,12 @@ class App {
       const explainEl = document.getElementById("quizExplainBox");
       explainEl.style.display = "block";
       explainEl.style.color = "var(--green)";
+      const safeOptText = optText.replace(/'/g, "\\'");
       explainEl.innerHTML = `
         <div>✅ ${item.explain || "إجابة صحيحة وذكية!"}</div>
-        <div style="margin-top:6px;">
+        <div style="margin-top:6px; display:flex; gap:6px; flex-wrap:wrap;">
           <button class="icon-btn" onclick="app.playQuizOptionSpeech(${choiceIdx})">🔊 أعد الاستماع للإجابة (عربي + English)</button>
+          <button class="icon-btn" onclick="audioService.speakEn('${safeOptText}')">🇬🇧 English فقط</button>
         </div>
       `;
 
@@ -1053,7 +1064,10 @@ class App {
           <div style="direction:ltr; text-align:left; font-weight:700; color:var(--text); font-size:14.5px;">${opt.en}</div>
           <div style="font-size:12.5px; color:var(--text-muted); margin-top:3px;">${opt.ar}</div>
         </div>
-        <button class="opt-speaker-btn" title="استمع للإجابة (عربي + English)" onclick="event.stopPropagation(); audioService.speakPair('${safeAr}', '${safeEn}')">🔊</button>
+        <div style="display:flex; gap:4px;">
+          <button class="opt-speaker-btn" title="استمع للإجابة (عربي + English)" onclick="event.stopPropagation(); audioService.speakPair('${safeAr}', '${safeEn}')">🔊</button>
+          <button class="opt-speaker-btn" title="استمع بالإنجليزية فقط" onclick="event.stopPropagation(); audioService.speakEn('${safeEn}')">🇬🇧</button>
+        </div>
       `;
       b.onclick = () => this.answerTravelChoice(idx, b, opt);
       optWrap.appendChild(b);
@@ -1091,8 +1105,9 @@ class App {
       exp.style.color = "var(--green)";
       exp.innerHTML = `
         <div>✅ ${opt.feedback}</div>
-        <div style="margin-top:8px;">
+        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
           <button class="icon-btn" onclick="audioService.speakPair('${safeAr}', '${safeEn}')">🔊 أعد الاستماع للإجابة (عربي + English)</button>
+          <button class="icon-btn" onclick="audioService.speakEn('${safeEn}')">🇬🇧 English فقط</button>
         </div>
       `;
 
@@ -1175,17 +1190,26 @@ class App {
       const safeAr = (opt.ar || "").replace(/'/g, "\\'");
       b.innerHTML = `
         <div style="flex:1; direction:ltr; text-align:left; font-weight:700;">${opt.en}</div>
-        <button class="opt-speaker-btn" title="استمع للخيار (عربي + English)" onclick="event.stopPropagation(); audioService.speakPair('${safeAr}', '${safeEn}')">🔊</button>
+        <div style="display:flex; gap:4px;">
+          <button class="opt-speaker-btn" title="استمع للخيار (عربي + English)" onclick="event.stopPropagation(); audioService.speakPair('${safeAr}', '${safeEn}')">🔊</button>
+          <button class="opt-speaker-btn" title="استمع بالإنجليزية فقط" onclick="event.stopPropagation(); audioService.speakEn('${safeEn}')">🇬🇧</button>
+        </div>
       `;
       b.onclick = () => this.answerSLListen(opt === item, b, opt);
       wrap.appendChild(b);
     });
   }
 
-  playSLTargetSpeech(speed = "normal") {
+  playSLTargetSpeech(mode = "both") {
     const item = this.slPool[this.slIndex];
     if (!item) return;
-    audioService.speakPair(item.ar, item.en, 280, speed === "slow" ? 0.65 : 0);
+    if (mode === "slow") {
+      audioService.speakSlow(item.en);
+    } else if (mode === "en") {
+      audioService.speakEn(item.en);
+    } else {
+      audioService.speakPair(item.ar, item.en);
+    }
   }
 
   answerSLListen(isCorrect, btnEl, opt) {
@@ -1467,9 +1491,10 @@ class App {
           <div style="direction:ltr; text-align:left; font-weight:800; color:var(--blue); font-size:14px;">${item.en}</div>
           <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${item.ar}</div>
         </div>
-        <div style="display:flex; gap:6px;">
+        <div style="display:flex; gap:5px;">
           <button class="opt-speaker-btn" title="استمع للجملة (عربي + English)" onclick="audioService.speakPair('${safeAr}', '${safeEn}')">🔊</button>
-          <button class="opt-speaker-btn" title="نطق بطيء (عربي + English)" onclick="audioService.speakPair('${safeAr}', '${safeEn}', 280, 0.65)">🐢</button>
+          <button class="opt-speaker-btn" title="استمع بالإنجليزية فقط" onclick="audioService.speakEn('${safeEn}')">🇬🇧</button>
+          <button class="opt-speaker-btn" title="نطق بطيء بالإنجليزي" onclick="audioService.speakSlow('${safeEn}')">🐢</button>
         </div>
       `;
       container.appendChild(card);
@@ -1506,7 +1531,9 @@ class App {
   playWhatSaySpeech(mode = "normal") {
     if (!this.currentSayEn) return;
     if (mode === "slow") {
-      audioService.speakPair(this.currentSayAr, this.currentSayEn, 280, 0.65);
+      audioService.speakSlow(this.currentSayEn);
+    } else if (mode === "normal" || mode === "en") {
+      audioService.speakEn(this.currentSayEn);
     } else {
       audioService.speakPair(this.currentSayAr, this.currentSayEn);
     }

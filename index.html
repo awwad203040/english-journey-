@@ -521,7 +521,8 @@
           <div style="font-weight:800; font-size:15px; margin-bottom:8px;">🎧 الخطوة 1: الاستماع الدقيق</div>
           <div class="sub" style="margin-bottom:12px;">استمع للجملة جيداً، ثم حدد ما سمعته من الخيارات:</div>
           <div style="display:flex; justify-content:center; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
-            <button class="btn btn-ghost" onclick="app.playSLTargetSpeech('normal')">🔊 استمع للجملة</button>
+            <button class="btn btn-ghost" onclick="app.playSLTargetSpeech('both')">🔊 عربي + English</button>
+            <button class="btn btn-ghost" onclick="app.playSLTargetSpeech('en')">🇬🇧 English فقط</button>
             <button class="btn btn-ghost" onclick="app.playSLTargetSpeech('slow')">🐢 نطق بطيء</button>
           </div>
           <div id="slListenOptionsWrap"></div>
@@ -540,7 +541,8 @@
           <div id="slWordChipsWrap" style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:16px;"></div>
 
           <div style="display:flex; justify-content:center; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
-            <button class="icon-btn" onclick="app.playSLTargetSpeech('normal')">🔊 الجملة كاملة</button>
+            <button class="icon-btn" onclick="app.playSLTargetSpeech('both')">🔊 عربي + English</button>
+            <button class="icon-btn" onclick="app.playSLTargetSpeech('en')">🇬🇧 English فقط</button>
             <button class="icon-btn" onclick="app.playSLTargetSpeech('slow')">🐢 نطق بطيء</button>
           </div>
 

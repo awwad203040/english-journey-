@@ -122,38 +122,58 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         }
 
         @JavascriptInterface
-        public void speak(String text, String langCode, float rate, String utteranceId) {
-            if (!mTTSReady || mTTS == null || text == null || text.trim().isEmpty()) {
-                return;
-            }
-            Locale targetLocale;
-            if ("ar".equalsIgnoreCase(langCode) || "ar-SA".equalsIgnoreCase(langCode)) {
-                targetLocale = new Locale("ar", "SA");
-            } else {
-                targetLocale = Locale.US;
-            }
+        public void speak(final String text, final String langCode, final float rate, final String utteranceId) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mTTSReady || mTTS == null || text == null || text.trim().isEmpty()) {
+                        mWebView.evaluateJavascript("if (window.onNativeTTSError) window.onNativeTTSError('" + utteranceId + "');", null);
+                        return;
+                    }
+                    try {
+                        Locale targetLocale;
+                        if ("ar".equalsIgnoreCase(langCode) || "ar-SA".equalsIgnoreCase(langCode)) {
+                            targetLocale = new Locale("ar", "SA");
+                            int res = mTTS.setLanguage(targetLocale);
+                            if (res < TextToSpeech.LANG_AVAILABLE) {
+                                mTTS.setLanguage(new Locale("ar"));
+                            }
+                        } else {
+                            targetLocale = Locale.US;
+                            int res = mTTS.setLanguage(targetLocale);
+                            if (res < TextToSpeech.LANG_AVAILABLE) {
+                                res = mTTS.setLanguage(Locale.ENGLISH);
+                                if (res < TextToSpeech.LANG_AVAILABLE) {
+                                    mTTS.setLanguage(Locale.UK);
+                                }
+                            }
+                        }
 
-            int res = mTTS.setLanguage(targetLocale);
-            if (res == TextToSpeech.LANG_MISSING_DATA || res == TextToSpeech.LANG_NOT_SUPPORTED) {
-                if ("ar".equalsIgnoreCase(langCode)) {
-                    mTTS.setLanguage(new Locale("ar"));
-                } else {
-                    mTTS.setLanguage(Locale.ENGLISH);
+                        mTTS.setSpeechRate(rate > 0 ? rate : 0.9f);
+
+                        Bundle params = new Bundle();
+                        params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, utteranceId);
+                        int speakRes = mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, params, utteranceId);
+                        if (speakRes != TextToSpeech.SUCCESS) {
+                            mWebView.evaluateJavascript("if (window.onNativeTTSError) window.onNativeTTSError('" + utteranceId + "');", null);
+                        }
+                    } catch (Exception e) {
+                        mWebView.evaluateJavascript("if (window.onNativeTTSError) window.onNativeTTSError('" + utteranceId + "');", null);
+                    }
                 }
-            }
-
-            mTTS.setSpeechRate(rate > 0 ? rate : 0.9f);
-
-            Bundle params = new Bundle();
-            params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, utteranceId);
-            mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, params, utteranceId);
+            });
         }
 
         @JavascriptInterface
         public void stop() {
-            if (mTTSReady && mTTS != null) {
-                mTTS.stop();
-            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mTTSReady && mTTS != null) {
+                        mTTS.stop();
+                    }
+                }
+            });
         }
     }
 
