@@ -313,7 +313,10 @@
         <div class="progress-outer"><div class="progress-inner" id="quizProgressBar"></div></div>
         <div class="sub center" id="quizCountLabel" style="margin-bottom:12px; text-align:center;">سؤال 1 من 10</div>
         <div class="card">
-          <div id="quizQuestionText" style="font-weight:800; font-size:16px; margin-bottom:16px; line-height:1.6;">-</div>
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:14px;">
+            <div id="quizQuestionText" style="font-weight:800; font-size:16px; line-height:1.6; flex:1;">-</div>
+            <button class="icon-btn" onclick="app.playQuizQuestionSpeech()" title="استمع للسؤال (عربي + English)">🔊 السؤال</button>
+          </div>
           <div id="quizOptionsBox"></div>
           <!-- Word Ordering Area -->
           <div id="quizOrderBox" style="display:none;">

@@ -387,26 +387,33 @@ class App {
 
         if (p.qEn) {
           card.innerHTML = `
-            <div style="font-size:11px; font-weight:800; color:var(--blue); margin-bottom:2px;">سؤال Q</div>
-            <div class="pair-en">${p.qEn}</div>
-            <div class="pair-ar">${p.qAr}</div>
-            <div style="font-size:11px; font-weight:800; color:var(--green); margin-top:10px; margin-bottom:2px;">إجابة A</div>
-            <div class="pair-en">${p.aEn}</div>
-            <div class="pair-ar">${p.aAr}</div>
-            <div class="pair-audio-row">
-              <button class="icon-btn" onclick="app.playPair(${idx}, 'ar')">🔊 عربي</button>
-              <button class="icon-btn" onclick="app.playPair(${idx}, 'en')">🔊 English</button>
-              <button class="icon-btn" onclick="app.playPair(${idx}, 'both')">🔊 الاستماع للاثنين</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-size:11.5px; font-weight:800; color:var(--blue);">سؤال Q</span>
+              <button class="btn btn-ghost btn-sm" style="font-size:11px; padding:3px 9px;" onclick="app.playLessonQuestion(${idx})">🔊 نطق السؤال (عربي + English)</button>
+            </div>
+            <div class="pair-en" style="font-size:16px;">${p.qEn}</div>
+            <div class="pair-ar" style="font-size:14px; margin-bottom:12px;">${p.qAr}</div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; margin-bottom:4px;">
+              <span style="font-size:11.5px; font-weight:800; color:var(--green);">إجابة A</span>
+              <button class="btn btn-ghost btn-sm" style="font-size:11px; padding:3px 9px;" onclick="app.playLessonAnswer(${idx})">🔊 نطق الإجابة (عربي + English)</button>
+            </div>
+            <div class="pair-en" style="font-size:16px;">${p.aEn}</div>
+            <div class="pair-ar" style="font-size:14px;">${p.aAr}</div>
+
+            <div class="pair-audio-row" style="margin-top:12px; display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="icon-btn" onclick="app.playLessonQuestion(${idx})">🔊 السؤال (عربي + English)</button>
+              <button class="icon-btn" onclick="app.playLessonAnswer(${idx})">🔊 الإجابة (عربي + English)</button>
+              <button class="icon-btn" onclick="app.playLessonPairFull(${idx})">🔊 المحادثة كاملة (السؤال ثم الإجابة)</button>
             </div>
           `;
         } else {
           card.innerHTML = `
             <div class="pair-en">${p.en}</div>
             <div class="pair-ar">${p.ar}</div>
-            <div class="pair-audio-row">
-              <button class="icon-btn" onclick="app.playPair(${idx}, 'ar')">🔊 عربي</button>
-              <button class="icon-btn" onclick="app.playPair(${idx}, 'en')">🔊 English</button>
-              <button class="icon-btn" onclick="app.playPair(${idx}, 'both')">🔊 الاستماع للاثنين</button>
+            <div class="pair-audio-row" style="margin-top:12px; display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="icon-btn" onclick="app.playPair(${idx}, 'both')">🔊 عربي + English</button>
+              <button class="icon-btn" onclick="app.playPair(${idx}, 'en')">🔊 English فقط</button>
             </div>
           `;
         }
@@ -417,13 +424,42 @@ class App {
     this.showScreen("detail");
   }
 
-  playPair(index, mode) {
+  playLessonQuestion(index) {
     const item = LESSONS[this.currentLessonKey];
     if (!item || !item.pairs[index]) return;
     const p = item.pairs[index];
-    const ar = p.qAr ? `${p.qAr} ... ${p.aAr}` : p.ar;
-    const en = p.qEn ? `${p.qEn} ... ${p.aEn}` : p.en;
-    audioService.speakSeq(ar, en, mode);
+    audioService.speakPair(p.qAr, p.qEn);
+  }
+
+  playLessonAnswer(index) {
+    const item = LESSONS[this.currentLessonKey];
+    if (!item || !item.pairs[index]) return;
+    const p = item.pairs[index];
+    audioService.speakPair(p.aAr, p.aEn);
+  }
+
+  playLessonPairFull(index) {
+    const item = LESSONS[this.currentLessonKey];
+    if (!item || !item.pairs[index]) return;
+    const p = item.pairs[index];
+    audioService.speakQuestionAndAnswer(p.qAr, p.qEn, p.aAr, p.aEn);
+  }
+
+  playPair(index, mode = "both") {
+    const item = LESSONS[this.currentLessonKey];
+    if (!item || !item.pairs[index]) return;
+    const p = item.pairs[index];
+    if (p.qEn) {
+      if (mode === "both") {
+        this.playLessonPairFull(index);
+      } else if (mode === "ar") {
+        audioService.speakSeq(`${p.qAr} ... ${p.aAr}`, "", "ar");
+      } else {
+        audioService.speakSeq("", `${p.qEn} ... ${p.aEn}`, "en");
+      }
+    } else {
+      audioService.speakPair(p.ar, p.en);
+    }
   }
 
   playRuleExplanation() {
@@ -512,13 +548,69 @@ class App {
     optWrap.innerHTML = "";
 
     item.options.forEach((optText, idx) => {
-      const btn = document.createElement("button");
-      btn.className = "btn btn-ghost";
-      btn.style.cssText = "margin-bottom:9px; text-align:right; justify-content:flex-start; direction:ltr;";
-      btn.textContent = optText;
+      const btn = document.createElement("div");
+      btn.className = "travel-opt-btn";
+      btn.style.cssText = "margin-bottom:9px; cursor:pointer;";
+      btn.innerHTML = `
+        <div style="flex:1; direction:ltr; text-align:left; font-weight:700; font-size:14.5px; color:var(--text);">${optText}</div>
+        <button class="opt-speaker-btn" title="استمع للإجابة (عربي + English)" onclick="event.stopPropagation(); app.playQuizOptionSpeech(${idx})">🔊</button>
+      `;
       btn.onclick = () => this.answerQuiz(idx, btn);
       optWrap.appendChild(btn);
     });
+  }
+
+  playQuizQuestionSpeech() {
+    const item = this.quizList[this.quizIndex];
+    if (!item) return;
+    if (item.type === "order") {
+      audioService.speakPair(item.qAr, item.qEn);
+      return;
+    }
+    if (item.qAr && item.qEn) {
+      audioService.speakPair(item.qAr, item.qEn);
+      return;
+    }
+    const parts = audioService.splitArAndEn(item.q);
+    if (parts.ar && parts.en) {
+      audioService.speakPair(parts.ar, parts.en);
+    } else if (parts.ar) {
+      audioService.speakSeq(parts.ar, "", "ar");
+    } else {
+      audioService.speakSeq("", parts.en, "en");
+    }
+  }
+
+  playQuizOptionSpeech(choiceIdx) {
+    const item = this.quizList[this.quizIndex];
+    if (!item || !item.options || !item.options[choiceIdx]) return;
+    const optText = item.options[choiceIdx];
+
+    const dict = {
+      "he": "هو للمذكر", "she": "هي للمؤنث", "it": "هو أو هي لغير العاقل",
+      "i": "أنا", "we": "نحن", "they": "هم", "you": "أنت",
+      "go": "يذهب", "goes": "يذهب للمفرد", "going": "ذاهب",
+      "watch": "يشاهد", "watched": "شاهد بالماضي", "watches": "يشاهد للمفرد",
+      "big": "كبير", "bigger": "أكبر", "biggest": "الأكبر",
+      "should": "ينبغي للنصيحة", "must to": "صياغة غير دقيقة", "can to": "صياغة غير دقيقة",
+      "be": "يكون", "was": "كان", "been": "كان تصريف ثالث",
+      "play": "يلعب", "plays": "يلعب للمفرد", "playing": "يلعب مستمر"
+    };
+
+    let arMeaning = (item.optionsAr && item.optionsAr[choiceIdx]) ||
+                    (choiceIdx === item.correct ? item.explain : "") ||
+                    dict[optText.toLowerCase().trim()] || "";
+
+    if (arMeaning) {
+      audioService.speakPair(arMeaning, optText);
+    } else {
+      const parts = audioService.splitArAndEn(optText);
+      if (parts.ar && parts.en) {
+        audioService.speakPair(parts.ar, parts.en);
+      } else {
+        audioService.speakPair(item.explain || "الإجابة", optText);
+      }
+    }
   }
 
   renderOrderUI() {
@@ -606,10 +698,14 @@ class App {
       this.orderState.aPlaced.every((t, i) => t.w === this.orderState.aCorrect[i]);
 
     if (qDone && aDone && !this.quizAnswered) {
+      const item = this.quizList[this.quizIndex];
       this.quizAnswered = true;
       this.quizScore++;
       audioService.playCorrect();
       storageService.addXP(5);
+      if (item && item.qAr && item.qEn) {
+        audioService.speakQuestionAndAnswer(item.qAr, item.qEn, item.aAr, item.aEn);
+      }
       const nb = document.getElementById("quizNextBtn");
       nb.style.display = "block";
       nb.textContent = this.quizIndex === this.quizList.length - 1 ? "عرض النتيجة 🏆" : "السؤال التالي ←";
@@ -619,6 +715,7 @@ class App {
   answerQuiz(choiceIdx, btnEl) {
     if (this.quizAnswered) return;
     const item = this.quizList[this.quizIndex];
+    const optText = item.options[choiceIdx];
 
     if (choiceIdx === item.correct) {
       this.quizAnswered = true;
@@ -627,9 +724,21 @@ class App {
       btnEl.style.background = "var(--green)";
       btnEl.style.color = "#ffffff";
       btnEl.style.borderColor = "var(--green)";
+      const enDiv = btnEl.querySelector("div");
+      if (enDiv) enDiv.style.color = "#ffffff";
+
+      // Linked pronunciation of Arabic meaning/explanation and English answer
+      audioService.speakPair(item.explain || "إجابة صحيحة", optText);
 
       const explainEl = document.getElementById("quizExplainBox");
-      explainEl.style.display = "none";
+      explainEl.style.display = "block";
+      explainEl.style.color = "var(--green)";
+      explainEl.innerHTML = `
+        <div>✅ ${item.explain || "إجابة صحيحة وذكية!"}</div>
+        <div style="margin-top:6px;">
+          <button class="icon-btn" onclick="app.playQuizOptionSpeech(${choiceIdx})">🔊 أعد الاستماع للإجابة (عربي + English)</button>
+        </div>
+      `;
 
       const nb = document.getElementById("quizNextBtn");
       nb.style.display = "block";
@@ -938,12 +1047,13 @@ class App {
       const b = document.createElement("div");
       b.className = "travel-opt-btn";
       const safeEn = (opt.en || "").replace(/'/g, "\\'");
+      const safeAr = (opt.ar || "").replace(/'/g, "\\'");
       b.innerHTML = `
         <div style="flex:1; text-align:right;">
           <div style="direction:ltr; text-align:left; font-weight:700; color:var(--text); font-size:14.5px;">${opt.en}</div>
           <div style="font-size:12.5px; color:var(--text-muted); margin-top:3px;">${opt.ar}</div>
         </div>
-        <button class="opt-speaker-btn" title="استمع لنطق هذا الخيار" onclick="event.stopPropagation(); audioService.speakEn('${safeEn}')">🔊</button>
+        <button class="opt-speaker-btn" title="استمع للإجابة (عربي + English)" onclick="event.stopPropagation(); audioService.speakPair('${safeAr}', '${safeEn}')">🔊</button>
       `;
       b.onclick = () => this.answerTravelChoice(idx, b, opt);
       optWrap.appendChild(b);
@@ -963,11 +1073,13 @@ class App {
     const exp = document.getElementById("travelFeedbackBox");
     const nextBtn = document.getElementById("travelNextBtn");
     const safeEn = (opt.en || "").replace(/'/g, "\\'");
+    const safeAr = (opt.ar || "").replace(/'/g, "\\'");
 
     if (opt.best) {
       this.travelDone = true;
       audioService.playCorrect();
-      audioService.speakEn(opt.en);
+      // Linked pronunciation of Arabic meaning and English sentence
+      audioService.speakPair(opt.ar, opt.en);
 
       btnEl.style.background = "var(--green)";
       btnEl.style.color = "#ffffff";
@@ -980,7 +1092,7 @@ class App {
       exp.innerHTML = `
         <div>✅ ${opt.feedback}</div>
         <div style="margin-top:8px;">
-          <button class="icon-btn" onclick="audioService.speakEn('${safeEn}')">🔊 أعد الاستماع للجملة الصحيحة</button>
+          <button class="icon-btn" onclick="audioService.speakPair('${safeAr}', '${safeEn}')">🔊 أعد الاستماع للإجابة (عربي + English)</button>
         </div>
       `;
 
@@ -1014,11 +1126,7 @@ class App {
   playTravelNpcSpeech(speed = "normal") {
     const stage = TRAVEL[this.travelKey].stages[this.travelIndex];
     if (stage) {
-      if (speed === "slow") {
-        audioService.speakSlow(stage.npcEn);
-      } else {
-        audioService.speakSeq(stage.npcAr, stage.npcEn, "both");
-      }
+      audioService.speakPair(stage.npcAr, stage.npcEn, 280, speed === "slow" ? 0.65 : 0);
     }
   }
 
@@ -1060,11 +1168,16 @@ class App {
     const wrap = document.getElementById("slListenOptionsWrap");
     wrap.innerHTML = "";
     options.forEach(opt => {
-      const b = document.createElement("button");
-      b.className = "btn btn-ghost";
-      b.style.cssText = "margin-bottom:8px; text-align:right; direction:ltr;";
-      b.textContent = opt.en;
-      b.onclick = () => this.answerSLListen(opt === item, b);
+      const b = document.createElement("div");
+      b.className = "travel-opt-btn";
+      b.style.cssText = "margin-bottom:8px; cursor:pointer;";
+      const safeEn = (opt.en || "").replace(/'/g, "\\'");
+      const safeAr = (opt.ar || "").replace(/'/g, "\\'");
+      b.innerHTML = `
+        <div style="flex:1; direction:ltr; text-align:left; font-weight:700;">${opt.en}</div>
+        <button class="opt-speaker-btn" title="استمع للخيار (عربي + English)" onclick="event.stopPropagation(); audioService.speakPair('${safeAr}', '${safeEn}')">🔊</button>
+      `;
+      b.onclick = () => this.answerSLListen(opt === item, b, opt);
       wrap.appendChild(b);
     });
   }
@@ -1072,21 +1185,21 @@ class App {
   playSLTargetSpeech(speed = "normal") {
     const item = this.slPool[this.slIndex];
     if (!item) return;
-    if (speed === "slow") {
-      audioService.speakSlow(item.en);
-    } else {
-      audioService.speakEn(item.en);
-    }
+    audioService.speakPair(item.ar, item.en, 280, speed === "slow" ? 0.65 : 0);
   }
 
-  answerSLListen(isCorrect, btnEl) {
+  answerSLListen(isCorrect, btnEl, opt) {
     if (this.slListenDone) return;
+    const item = this.slPool[this.slIndex];
     if (isCorrect) {
       this.slListenDone = true;
       this.slScore++;
       audioService.playCorrect();
+      audioService.speakPair(item.ar, item.en);
       btnEl.style.background = "var(--green)";
       btnEl.style.color = "#ffffff";
+      const enDiv = btnEl.querySelector("div");
+      if (enDiv) enDiv.style.color = "#ffffff";
       storageService.addXP(4);
       setTimeout(() => this.showSLSpeakBox(), 400);
     } else {
@@ -1095,7 +1208,7 @@ class App {
       btnEl.style.color = "var(--red)";
       const exp = document.getElementById("slListenFeedback");
       exp.style.display = "block";
-      exp.textContent = "استمع بدقة للجملة الإنجليزية وحاول مجدداً 🎧";
+      exp.textContent = "استمع بدقة للجملة وحاول مجدداً 🎧";
     }
   }
 
@@ -1345,6 +1458,7 @@ class App {
       const card = document.createElement("div");
       card.className = "quick-situation-card";
       const safeEn = item.en.replace(/'/g, "\\'");
+      const safeAr = item.ar.replace(/'/g, "\\'");
       card.innerHTML = `
         <div style="flex:1;">
           <div style="font-weight:700; font-size:13.5px; color:var(--text); margin-bottom:2px;">
@@ -1354,8 +1468,8 @@ class App {
           <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${item.ar}</div>
         </div>
         <div style="display:flex; gap:6px;">
-          <button class="opt-speaker-btn" title="استمع للنطق" onclick="audioService.speakEn('${safeEn}')">🔊</button>
-          <button class="opt-speaker-btn" title="نطق بطيء" onclick="audioService.speakSlow('${safeEn}')">🐢</button>
+          <button class="opt-speaker-btn" title="استمع للجملة (عربي + English)" onclick="audioService.speakPair('${safeAr}', '${safeEn}')">🔊</button>
+          <button class="opt-speaker-btn" title="نطق بطيء (عربي + English)" onclick="audioService.speakPair('${safeAr}', '${safeEn}', 280, 0.65)">🐢</button>
         </div>
       `;
       container.appendChild(card);
@@ -1385,18 +1499,16 @@ class App {
     loader.style.display = "none";
     resBox.style.display = "block";
     audioService.playCorrect();
-    // Auto-pronounce English sentence immediately
-    audioService.speakEn(res.en);
+    // Auto-pronounce linked Arabic translation + English sentence
+    audioService.speakPair(res.ar, res.en);
   }
 
   playWhatSaySpeech(mode = "normal") {
     if (!this.currentSayEn) return;
     if (mode === "slow") {
-      audioService.speakSlow(this.currentSayEn);
-    } else if (mode === "both") {
-      audioService.speakSeq(this.currentSayAr, this.currentSayEn, "both");
+      audioService.speakPair(this.currentSayAr, this.currentSayEn, 280, 0.65);
     } else {
-      audioService.speakEn(this.currentSayEn);
+      audioService.speakPair(this.currentSayAr, this.currentSayEn);
     }
   }
 

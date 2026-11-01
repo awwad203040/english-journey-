@@ -277,6 +277,97 @@ class AudioService {
     return this.speakOne(enText, false, tok, 0.65);
   }
 
+  // --- Helper to separate Arabic and English segments from mixed text ---
+  splitArAndEn(text) {
+    if (!text) return { ar: "", en: "" };
+    const clean = text.replace(/_{2,}/g, " ").trim();
+    const arMatches = clean.match(/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\s،؟؛:!.]+/g) || [];
+    const enMatches = clean.match(/[a-zA-Z0-9\s,'.!?:_\-"]+/g) || [];
+
+    const ar = arMatches.join(" ").replace(/\s+/g, " ").trim();
+    const en = enMatches.join(" ").replace(/\s+/g, " ").trim();
+
+    return { ar, en };
+  }
+
+  // --- Speak Linked Arabic + English Pair (Question or Answer) ---
+  speakPair(arText, enText, delayMs = 280, customRate = 0) {
+    this.unlockAudio();
+    const tok = ++this.currentToken;
+    this.stopSpeech();
+
+    const ar = this.cleanText(arText);
+    const en = this.cleanText(enText);
+
+    if (ar && en) {
+      return this.speakOne(ar, true, tok).then(() => {
+        if (tok !== this.currentToken) return;
+        return new Promise(r => setTimeout(r, delayMs)).then(() => {
+          if (tok !== this.currentToken) return;
+          return this.speakOne(en, false, tok, customRate);
+        });
+      });
+    } else if (ar) {
+      return this.speakOne(ar, true, tok);
+    } else if (en) {
+      return this.speakOne(en, false, tok, customRate);
+    }
+    return Promise.resolve();
+  }
+
+  // --- Speak Question (Ar + En) linked with Answer (Ar + En) ---
+  speakQuestionAndAnswer(qAr, qEn, aAr, aEn, delayBetween = 420) {
+    this.unlockAudio();
+    const tok = ++this.currentToken;
+    this.stopSpeech();
+
+    const playQ = () => {
+      const qA = this.cleanText(qAr);
+      const qE = this.cleanText(qEn);
+      if (qA && qE) {
+        return this.speakOne(qA, true, tok).then(() => {
+          if (tok !== this.currentToken) return;
+          return new Promise(r => setTimeout(r, 260)).then(() => {
+            if (tok !== this.currentToken) return;
+            return this.speakOne(qE, false, tok);
+          });
+        });
+      } else if (qA) {
+        return this.speakOne(qA, true, tok);
+      } else if (qE) {
+        return this.speakOne(qE, false, tok);
+      }
+      return Promise.resolve();
+    };
+
+    const playA = () => {
+      const aA = this.cleanText(aAr);
+      const aE = this.cleanText(aEn);
+      if (aA && aE) {
+        return this.speakOne(aA, true, tok).then(() => {
+          if (tok !== this.currentToken) return;
+          return new Promise(r => setTimeout(r, 260)).then(() => {
+            if (tok !== this.currentToken) return;
+            return this.speakOne(aE, false, tok);
+          });
+        });
+      } else if (aA) {
+        return this.speakOne(aA, true, tok);
+      } else if (aE) {
+        return this.speakOne(aE, false, tok);
+      }
+      return Promise.resolve();
+    };
+
+    return playQ().then(() => {
+      if (tok !== this.currentToken) return;
+      return new Promise(r => setTimeout(r, delayBetween)).then(() => {
+        if (tok !== this.currentToken) return;
+        return playA();
+      });
+    });
+  }
+
   // --- Speak sequence (Arabic then English or either) ---
   speakSeq(arText, enText, mode = "both") {
     this.unlockAudio();
@@ -292,19 +383,7 @@ class AudioService {
       return this.speakOne(enText, false, tok);
     }
     if (mode === "both") {
-      if (arText && enText) {
-        return this.speakOne(arText, true, tok).then(() => {
-          if (tok !== this.currentToken) return;
-          return new Promise(r => setTimeout(r, 260)).then(() => {
-            if (tok !== this.currentToken) return;
-            return this.speakOne(enText, false, tok);
-          });
-        });
-      } else if (arText) {
-        return this.speakOne(arText, true, tok);
-      } else if (enText) {
-        return this.speakOne(enText, false, tok);
-      }
+      return this.speakPair(arText, enText, 260);
     }
     return Promise.resolve();
   }
