@@ -616,9 +616,35 @@
 
         <div class="card">
           <div style="font-weight:800; font-size:14.5px; margin-bottom:6px;">⚙️ إعدادات التطبيق والأصوات</div>
-          <div style="display:flex; gap:8px; margin-top:10px;">
-            <button class="icon-btn" onclick="app.toggleTheme()">🌓 تبديل المظهر</button>
-            <button class="icon-btn" onclick="app.testAudioVoices()">🔊 فحص الأصوات</button>
+          <div class="sub" style="margin-bottom:12px;">تحكّم في تشغيل الأصوات وسرعة النطق والمؤثرات التفاعلية مع الحفاظ على تقدمك.</div>
+
+          <!-- Sound Effects Toggle -->
+          <div style="margin-bottom:12px;">
+            <button class="btn btn-ghost" id="profileSfxToggleBtn" onclick="app.toggleSfxSetting()" style="text-align:right; justify-content:flex-start;">
+              🔔 المؤثرات الصوتية: مفعّلة ✅
+            </button>
+          </div>
+
+          <!-- Speech Rate Controls -->
+          <div class="sub" style="font-weight:700; margin-bottom:6px; color:var(--text);">سرعة النطق الصوتي:</div>
+          <div class="tabs-scroll" style="margin-bottom:14px;">
+            <button class="tab-btn" id="rateBtn_0.75" onclick="app.setSpeechSpeed(0.75)">🐢 هادئ (0.75x)</button>
+            <button class="tab-btn active" id="rateBtn_0.9" onclick="app.setSpeechSpeed(0.9)">🎯 طبيعي (0.9x)</button>
+            <button class="tab-btn" id="rateBtn_1.1" onclick="app.setSpeechSpeed(1.1)">⚡ سريع (1.1x)</button>
+          </div>
+
+          <!-- Instant Audio Testing Buttons -->
+          <div class="sub" style="font-weight:700; margin-bottom:6px; color:var(--text);">تجربة وتشغيل الأصوات:</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+            <button class="icon-btn" onclick="app.testEnglishVoice()">🔊 نطق إنجليزي</button>
+            <button class="icon-btn" onclick="app.testArabicVoice()">🔊 نطق عربي</button>
+            <button class="icon-btn" onclick="app.testSoundEffects()">🎵 مؤثرات صوتية</button>
+            <button class="icon-btn" onclick="app.testAudioVoices()">🔍 فحص شامل</button>
+          </div>
+
+          <!-- Theme Toggle -->
+          <div style="border-top:1px solid var(--border); padding-top:10px; margin-top:8px;">
+            <button class="icon-btn" onclick="app.toggleTheme()">🌓 تبديل المظهر (ليلي / نهاري)</button>
           </div>
         </div>
       </div>

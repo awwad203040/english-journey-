@@ -209,6 +209,22 @@ class StorageService {
     this.set(this.KEYS.THEME, theme);
   }
 
+  getSfxEnabled() {
+    return this.get(this.KEYS.SFX, true) !== false;
+  }
+
+  setSfxEnabled(val) {
+    this.set(this.KEYS.SFX, !!val);
+  }
+
+  getSpeechRate() {
+    return Number(this.get(this.KEYS.VOICE_RATE, 0.9)) || 0.9;
+  }
+
+  setSpeechRate(rate) {
+    this.set(this.KEYS.VOICE_RATE, Number(rate) || 0.9);
+  }
+
   // Trial & Access
   initTrial() {
     if (!this.get(this.KEYS.TRIAL_START)) {

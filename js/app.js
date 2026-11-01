@@ -1709,17 +1709,76 @@ class App {
         badgesWrap.appendChild(t);
       });
     }
+
+    // Update Sound Settings Controls
+    const sfxBtn = document.getElementById("profileSfxToggleBtn");
+    if (sfxBtn) {
+      sfxBtn.innerHTML = audioService.sfxEnabled ? "🔔 المؤثرات الصوتية: مفعّلة ✅" : "🔕 المؤثرات الصوتية: معطّلة ❌";
+    }
+    const currentRate = audioService.speechRate;
+    for (const r of [0.75, 0.9, 1.1]) {
+      const b = document.getElementById(`rateBtn_${r}`);
+      if (b) b.classList.toggle("active", Math.abs(currentRate - r) < 0.05);
+    }
   }
 
   testAudioVoices() {
     audioService.unlockAudio();
+    if (audioService.isNativeAndroid()) {
+      this.toast("🔊 محرك أندرويد الصوتي الأصلي (Native TTS) مفعّل وجاهز بنجاح ✅");
+      audioService.speakSeq("مرحباً بك في رحلتي للإنجليزية", "Welcome to English Journey", "both");
+      return;
+    }
     const arPicked = audioService.getArabicVoice();
     const enPicked = audioService.getEnglishVoice();
-    const arStatus = arPicked.voice ? (arPicked.isSaudi ? "عربي سعودي ✅" : "عربي قياسي ⚠️") : "غير متوفر ❌";
-    const enStatus = enPicked.voice ? (enPicked.isHighQuality ? "إنجليزي عالي الجودة ✅" : "إنجليزي أساسي ⚠️") : "غير متوفر ❌";
+    const arStatus = arPicked.voice ? (arPicked.isSaudi ? "عربي سعودي ✅" : "عربي قياسي ✅") : "صوت قياسي عبر الإنترنت 🌐";
+    const enStatus = enPicked.voice ? (enPicked.isHighQuality ? "إنجليزي عالي الجودة ✅" : "إنجليزي أساسي ✅") : "غير متوفر ❌";
 
     this.toast(`الأصوات: ${arStatus} | ${enStatus}`);
     audioService.speakSeq("مرحباً بك في رحلتي للإنجليزية", "Welcome to English Journey", "both");
+  }
+
+  testEnglishVoice() {
+    audioService.unlockAudio();
+    audioService.playClick();
+    this.toast("🔊 تشغيل عينة نطق باللغة الإنجليزية...");
+    audioService.speakSeq("", "Welcome to English Journey! Speak with confidence and master English step by step.", "en");
+  }
+
+  testArabicVoice() {
+    audioService.unlockAudio();
+    audioService.playClick();
+    this.toast("🔊 تشغيل عينة نطق باللغة العربية...");
+    audioService.speakSeq("مرحباً بك في تطبيق رحلتي للإنجليزية، استمتع بتجربة تعلم تفاعلية وممتعة.", "", "ar");
+  }
+
+  testSoundEffects() {
+    audioService.unlockAudio();
+    audioService.playCorrect();
+    setTimeout(() => audioService.playFanfare(), 350);
+    this.toast("🎵 تم تشغيل المؤثرات الصوتية بنجاح!");
+  }
+
+  toggleSfxSetting() {
+    audioService.setSfxEnabled(!audioService.sfxEnabled);
+    audioService.playClick();
+    const isEnabled = audioService.sfxEnabled;
+    this.toast(isEnabled ? "🔔 تم تفعيل المؤثرات الصوتية" : "🔕 تم كتم المؤثرات الصوتية");
+    const sfxBtn = document.getElementById("profileSfxToggleBtn");
+    if (sfxBtn) {
+      sfxBtn.innerHTML = isEnabled ? "🔔 المؤثرات الصوتية: مفعّلة ✅" : "🔕 المؤثرات الصوتية: معطّلة ❌";
+    }
+  }
+
+  setSpeechSpeed(rate) {
+    audioService.setSpeechRate(rate);
+    audioService.playClick();
+    this.toast(`⚡ تم ضبط سرعة النطق على: ${rate}x`);
+    for (const r of [0.75, 0.9, 1.1]) {
+      const b = document.getElementById(`rateBtn_${r}`);
+      if (b) b.classList.toggle("active", r === rate);
+    }
+    audioService.speakSeq("", "This is the current speech speed.", "en");
   }
 
   // --- Certificate View ---
