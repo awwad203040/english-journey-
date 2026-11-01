@@ -795,3 +795,137 @@ html, body {
   position: relative;
   box-shadow: 0 10px 40px rgba(217, 119, 6, 0.15);
 }
+
+/* Lumi Prompts & Audio Buttons */
+.lumi-prompts-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 14px 10px;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  white-space: nowrap;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.lumi-prompts-bar::-webkit-scrollbar {
+  display: none;
+}
+.lumi-prompt-chip {
+  background: var(--card-subtle);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+.lumi-prompt-chip:hover, .lumi-prompt-chip:active {
+  background: var(--blue);
+  color: #ffffff;
+  border-color: var(--blue);
+}
+
+.chat-audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 12px;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--blue);
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.chat-audio-btn:hover {
+  background: var(--blue);
+  color: #ffffff;
+}
+
+/* Travel Dialogue Options & Audio */
+.travel-opt-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: right;
+  gap: 10px;
+}
+.travel-opt-btn:hover {
+  border-color: var(--blue);
+  transform: translateY(-1px);
+}
+.opt-speaker-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--blue);
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: var(--transition);
+  font-size: 16px;
+}
+.opt-speaker-btn:hover {
+  background: var(--blue);
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+/* Pronunciation Practice Word Chips */
+.sl-word-chip {
+  padding: 7px 12px;
+  border-radius: 10px;
+  background: var(--card-subtle);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  direction: ltr;
+}
+.sl-word-chip:hover, .sl-word-chip:active {
+  background: var(--blue);
+  color: #ffffff;
+  border-color: var(--blue);
+  transform: scale(1.05);
+}
+
+/* Everyday Situations Cards */
+.quick-situation-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+  transition: var(--transition);
+  gap: 10px;
+}
+.quick-situation-card:hover {
+  border-color: var(--blue);
+}

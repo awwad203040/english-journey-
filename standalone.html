@@ -805,6 +805,140 @@ html, body {
   box-shadow: 0 10px 40px rgba(217, 119, 6, 0.15);
 }
 
+/* Lumi Prompts & Audio Buttons */
+.lumi-prompts-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 14px 10px;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  white-space: nowrap;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.lumi-prompts-bar::-webkit-scrollbar {
+  display: none;
+}
+.lumi-prompt-chip {
+  background: var(--card-subtle);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+.lumi-prompt-chip:hover, .lumi-prompt-chip:active {
+  background: var(--blue);
+  color: #ffffff;
+  border-color: var(--blue);
+}
+
+.chat-audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 12px;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--blue);
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.chat-audio-btn:hover {
+  background: var(--blue);
+  color: #ffffff;
+}
+
+/* Travel Dialogue Options & Audio */
+.travel-opt-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: right;
+  gap: 10px;
+}
+.travel-opt-btn:hover {
+  border-color: var(--blue);
+  transform: translateY(-1px);
+}
+.opt-speaker-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--blue);
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: var(--transition);
+  font-size: 16px;
+}
+.opt-speaker-btn:hover {
+  background: var(--blue);
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+/* Pronunciation Practice Word Chips */
+.sl-word-chip {
+  padding: 7px 12px;
+  border-radius: 10px;
+  background: var(--card-subtle);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  direction: ltr;
+}
+.sl-word-chip:hover, .sl-word-chip:active {
+  background: var(--blue);
+  color: #ffffff;
+  border-color: var(--blue);
+  transform: scale(1.05);
+}
+
+/* Everyday Situations Cards */
+.quick-situation-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+  transition: var(--transition);
+  gap: 10px;
+}
+.quick-situation-card:hover {
+  border-color: var(--blue);
+}
+
 </style>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
 </head>
@@ -1182,14 +1316,15 @@ html, body {
         <div class="card">
           <div id="travelSceneIcon" style="font-size:52px; text-align:center; padding:10px 0;">🛫</div>
           <div class="sub center" id="travelSituationAr" style="text-align:center; font-weight:700; margin-bottom:12px; color:var(--text);"></div>
-          <div class="pair-en" id="travelNpcEn" style="text-align:center; font-size:16px; color:var(--blue);"></div>
+          <div class="pair-en" id="travelNpcEn" style="text-align:center; font-size:16px; color:var(--blue); font-weight:700;"></div>
           <div class="pair-ar" id="travelNpcAr" style="text-align:center; margin-top:4px; margin-bottom:12px;"></div>
-          <div style="display:flex; justify-content:center; margin-bottom:14px;">
-            <button class="icon-btn" onclick="app.playTravelNpcSpeech()">🔊 استمع للموظف</button>
+          <div style="display:flex; justify-content:center; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+            <button class="icon-btn" onclick="app.playTravelNpcSpeech('normal')">🔊 استمع للموظف</button>
+            <button class="icon-btn" onclick="app.playTravelNpcSpeech('slow')">🐢 نطق بطيء</button>
           </div>
-          <div style="font-size:12.5px; font-weight:800; margin-bottom:8px; color:var(--text);">ماذا تقول أنت الآن؟</div>
+          <div style="font-size:12.5px; font-weight:800; margin-bottom:8px; color:var(--text);">ماذا تقول أنت الآن؟ (اضغط 🔊 لسماع نطق أي خيار):</div>
           <div id="travelOptionsBox"></div>
-          <div id="travelFeedbackBox" style="display:none; margin-top:10px; font-size:13px; line-height:1.6; padding:10px; border-radius:10px; background:var(--card-subtle);"></div>
+          <div id="travelFeedbackBox" style="display:none; margin-top:10px; font-size:13px; line-height:1.6; padding:12px; border-radius:12px; background:var(--card-subtle);"></div>
           <button class="btn btn-primary" id="travelNextBtn" style="margin-top:14px; display:none;" onclick="app.nextTravelStage()">الموقف التالي ←</button>
         </div>
       </div>
@@ -1201,13 +1336,24 @@ html, body {
         <button class="action-btn" onclick="app.showScreen('home')">→</button>
         <div>
           <h1>🤖 لومي — المدرّب الذكي</h1>
-          <div class="subtitle">متصل ومستعد للمحادثة</div>
+          <div class="subtitle">متصل ومستعد للمحادثة والصوت</div>
         </div>
       </div>
-      <div class="scroll-content" id="lumiChatContainer"></div>
-      <div style="position:absolute; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border); padding:10px 14px calc(10px + var(--safe-bottom)); display:flex; gap:8px; z-index:15;">
-        <input class="input-field" id="lumiInput" placeholder="اكتب رسالتك أو جملتك للومي..." style="margin:0;">
-        <button class="btn btn-primary btn-sm" onclick="app.sendLumi()">إرسال</button>
+      <div class="scroll-content chat-container" id="lumiChatContainer"></div>
+      <div style="position:absolute; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border); z-index:15;">
+        <div class="lumi-prompts-bar" id="lumiPromptsBar">
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('🎯 كيف أقول شكراً بطرق لبقة ومتنوعة؟')">🎯 طرق قول شكراً</button>
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('✈️ ما هي أهم الجمل التي أحتاجها في المطار؟')">✈️ جمل المطار</button>
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('🏨 كيف أطلب غرفة في فندق؟')">🏨 حجز فندق</button>
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('💡 ما الفرق بين a و an في الإنجليزية؟')">💡 الفرق بين a و an</button>
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('⏰ اشرح لي قاعدة المضارع البسيط باختصار')">⏰ المضارع البسيط</button>
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('📝 صحح لي هذه الجملة: I am agree with your idea')">📝 صحح لي جملتي</button>
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('🗣️ Hello Lumi, how are you today? Let us talk in English')">🗣️ تحدث معي بالإنجليزية</button>
+        </div>
+        <div style="padding:10px 14px calc(10px + var(--safe-bottom)); display:flex; gap:8px;">
+          <input class="input-field" id="lumiInput" placeholder="اكتب سؤالك أو جملتك للومي..." style="margin:0;">
+          <button class="btn btn-primary btn-sm" onclick="app.sendLumi()">إرسال</button>
+        </div>
       </div>
     </div>
 
@@ -1228,17 +1374,19 @@ html, body {
       </div>
       <div class="scroll-content">
         <div class="card">
-          <div class="sub" style="margin-bottom:8px;">صف موقفك بالعربي، وسيعطيك لومي الجملة الإنجليزية المناسبة فوراً:</div>
+          <div class="sub" style="margin-bottom:8px;">صف موقفك بالعربي، وسيعطيك لومي الجملة الإنجليزية المناسبة فوراً مع النطق:</div>
           <input class="input-field" id="whatsayInput" placeholder="مثال: أريد حجز غرفة هادئة مطلة على الحديقة">
           <button class="btn btn-primary" onclick="app.generateSay('عادي وطبيعي')">أعطني الجملة المناسبة 💡</button>
         </div>
-        <div class="sub center" id="whatsayLoading" style="display:none; text-align:center; margin:16px 0;">لومي يفكر في أفضل صياغة طبيعية... ⏳</div>
+        <div class="sub center" id="whatsayLoading" style="display:none; text-align:center; margin:16px 0;">لومي يجهز لك أفضل صياغة طبيعية... ⏳</div>
         <div id="whatsayResultBox" style="display:none; margin-top:14px;">
           <div class="pair-card">
-            <div class="pair-en" id="whatsayEnText" style="font-size:17px;"></div>
+            <div class="pair-en" id="whatsayEnText" style="font-size:18px; font-weight:800; color:var(--blue);"></div>
             <div class="pair-ar" id="whatsayArText" style="font-size:15px; margin-top:6px;"></div>
-            <div class="pair-audio-row">
-              <button class="icon-btn" onclick="app.playWhatSaySpeech()">🔊 استمع للنطق الصحيح</button>
+            <div class="pair-audio-row" style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:12px;">
+              <button class="icon-btn" onclick="app.playWhatSaySpeech('normal')">🔊 استمع للجملة</button>
+              <button class="icon-btn" onclick="app.playWhatSaySpeech('slow')">🐢 نطق بطيء</button>
+              <button class="icon-btn" onclick="app.playWhatSaySpeech('both')">🇸🇦 عربي + إنجليزي</button>
             </div>
           </div>
           <div class="sub" style="margin:12px 4px 6px;">خيارات إعادة الصياغة بنبرات مختلفة:</div>
@@ -1247,6 +1395,13 @@ html, body {
             <button class="icon-btn" onclick="app.generateSay('أكثر طبيعية للناطقين الأصليين')">🌟 كمتحدث أصلي</button>
             <button class="icon-btn" onclick="app.generateSay('أكثر تهذيباً ورسمية')">👔 رسمية ومهذبة</button>
           </div>
+        </div>
+
+        <!-- Curated Everyday Situations with Direct Audio -->
+        <div style="margin-top:22px;">
+          <div style="font-weight:800; font-size:15px; margin-bottom:6px; color:var(--text);">⚡ مواقف شائعة وسريعة (استمع مباشرة)</div>
+          <div class="sub" style="margin-bottom:12px;">جمل يومية أساسية جاهزة بالنطق الصوتي العادي والبطيء:</div>
+          <div id="quickSituationsList"></div>
         </div>
       </div>
     </div>
@@ -1295,7 +1450,10 @@ html, body {
         <div class="card" id="slListenBox">
           <div style="font-weight:800; font-size:15px; margin-bottom:8px;">🎧 الخطوة 1: الاستماع الدقيق</div>
           <div class="sub" style="margin-bottom:12px;">استمع للجملة جيداً، ثم حدد ما سمعته من الخيارات:</div>
-          <button class="btn btn-ghost" style="margin-bottom:14px;" onclick="app.playSLTargetSpeech()">🔊 اضغط للاستماع للجملة</button>
+          <div style="display:flex; justify-content:center; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+            <button class="btn btn-ghost" onclick="app.playSLTargetSpeech('normal')">🔊 استمع للجملة</button>
+            <button class="btn btn-ghost" onclick="app.playSLTargetSpeech('slow')">🐢 نطق بطيء</button>
+          </div>
           <div id="slListenOptionsWrap"></div>
           <div id="slListenFeedback" style="display:none; color:var(--red); font-size:12.5px; margin-top:8px;"></div>
         </div>
@@ -1303,13 +1461,24 @@ html, body {
         <!-- Speaking Step -->
         <div class="card" id="slSpeakBox" style="display:none;">
           <div style="font-weight:800; font-size:15px; margin-bottom:8px;">🎤 الخطوة 2: التحدث والنطق</div>
-          <div class="sub" style="margin-bottom:12px;">اقرأ هذه الجملة بصوت واضح ليقيس النظام تطابق نطقك:</div>
-          <div class="pair-en" id="slSpeakTargetEn" style="text-align:center; font-size:18px; margin-bottom:4px; color:var(--blue);"></div>
-          <div class="pair-ar" id="slSpeakTargetAr" style="text-align:center; margin-bottom:16px;"></div>
-          <button class="btn btn-gold" id="slRecordBtn" onclick="app.startSLRecording()">🎤 اضغط وتحدث بالإنجليزية</button>
-          <div class="sub" id="slSpeakFallbackMsg" style="display:none; color:var(--text-muted); margin-top:8px; line-height:1.6;">
-            ميزة التعرف الصوتي غير مفعلة في هذا المتصفح. كرر الجملة بصوت عالٍ واضغط متابعة.
+          <div class="sub" style="margin-bottom:12px;">اقرأ هذه الجملة بصوت واضح، أو اضغط على أي كلمة لسماع نطقها منفرداً:</div>
+          <div class="pair-en" id="slSpeakTargetEn" style="text-align:center; font-size:19px; margin-bottom:4px; color:var(--blue); font-weight:800;"></div>
+          <div class="pair-ar" id="slSpeakTargetAr" style="text-align:center; margin-bottom:14px;"></div>
+          
+          <!-- Interactive Word-by-Word Practice -->
+          <div style="font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:6px; text-align:center;">اضغط على الكلمة لسماعها ببطء:</div>
+          <div id="slWordChipsWrap" style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:16px;"></div>
+
+          <div style="display:flex; justify-content:center; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+            <button class="icon-btn" onclick="app.playSLTargetSpeech('normal')">🔊 الجملة كاملة</button>
+            <button class="icon-btn" onclick="app.playSLTargetSpeech('slow')">🐢 نطق بطيء</button>
           </div>
+
+          <button class="btn btn-gold" id="slRecordBtn" onclick="app.startSLRecording()">🎤 اضغط وتحدث بالإنجليزية</button>
+          
+          <button class="btn btn-ghost" id="slSelfPassBtn" style="margin-top:10px; width:100%; border:1.5px dashed var(--blue); color:var(--blue); font-weight:700;" onclick="app.passSLSelfPractice()">🗣️ تدربت وتحدثت بها بصوت عالٍ (+6 نقاط) ✨</button>
+
+          <div id="slSpeakStatusNotice" style="display:none; text-align:center; margin-top:10px; font-size:13px; font-weight:700;"></div>
           <div id="slSpeakResultBox" style="display:none; margin-top:12px;"></div>
         </div>
 
@@ -1515,8 +1684,6 @@ html, body {
 
 <!-- Application Dependencies -->
 <script>
-
-/* === js/data/lessons.js === */
 // English Journey - Curriculum Data (Lessons & Grammar)
 // Supports all 6 Levels: Pre-A1, A1, A2, B1, B2, C1/C2
 
@@ -2879,8 +3046,8 @@ const GRAMMAR_GROUPS = [
   { label: "C2", desc: "قمة الإتقان اللغوي: الجمل الشرطية المختلطة التي تدمج أزمنة مختلفة بدقة بالغة.", items: ["mixed_conditionals"] }
 ];
 
-
-/* === js/data/quizzes.js === */
+</script>
+<script>
 // English Journey - Quizzes and Assessments Data Bank
 // Multiple Choice, Word Ordering, and Level Placement Tests
 
@@ -3137,8 +3304,8 @@ const QUIZZES = {
   ]
 };
 
-
-/* === js/data/stories.js === */
+</script>
+<script>
 // English Journey - Interactive Branching Stories Data
 
 const STORIES = {
@@ -3217,8 +3384,8 @@ const STORIES = {
   }
 };
 
-
-/* === js/data/travel.js === */
+</script>
+<script>
 // English Journey - Situational Travel Dialogues ("عِش الموقف قبل أن تسافر")
 
 const TRAVEL = {
@@ -3425,8 +3592,8 @@ const TRAVEL = {
   }
 };
 
-
-/* === js/data/world.js === */
+</script>
+<script>
 // English Journey - English World Landmarks & Progression Map
 
 const WORLD_LOCATIONS = [
@@ -3512,11 +3679,11 @@ const WORLD_LOCATIONS = [
   }
 ];
 
-
-/* === js/services/audio.js === */
+</script>
+<script>
 // English Journey - Audio & Speech Services
 // 1. Text-To-Speech (Native Android TTS Bridge + Web Speech API + Online Audio Fallback)
-// 2. Speech-To-Text (Pronunciation Tester via SpeechRecognition)
+// 2. Speech-To-Text (Native Android STT Bridge + Web SpeechRecognition + Word Pronunciation)
 // 3. Web Audio API Synthesized Sound Effects (Clicks, Chimes, Fanfares)
 
 class AudioService {
@@ -3526,7 +3693,9 @@ class AudioService {
     this.speechUnlocked = false;
     this.currentToken = 0;
     this._nativeCallbacks = {};
+    this._sttCallbacks = { onResult: null, onError: null, onListening: null };
     this.audioElement = null;
+    this.activeRecognition = null;
 
     // Load persisted settings
     this.sfxEnabled = (typeof storageService !== "undefined") ? storageService.getSfxEnabled() : true;
@@ -3541,6 +3710,14 @@ class AudioService {
       typeof window !== "undefined" &&
       typeof window.AndroidNativeTTS !== "undefined" &&
       typeof window.AndroidNativeTTS.speak === "function"
+    );
+  }
+
+  isNativeSTT() {
+    return (
+      typeof window !== "undefined" &&
+      typeof window.AndroidNativeSTT !== "undefined" &&
+      typeof window.AndroidNativeSTT.startListening === "function"
     );
   }
 
@@ -3609,7 +3786,7 @@ class AudioService {
     v = list.find(x => x.lang && x.lang.toLowerCase() === "en-gb" && good.test(x.name));
     if (v) return { voice: v, isHighQuality: true };
     v = list.find(x => x.lang && x.lang.toLowerCase() === "en-us") || list.find(x => x.lang && x.lang.toLowerCase() === "en-gb");
-    if (v) return { voice: v, isHighQuality: good.test(v.name) };
+    if (v) return { voice: v, isHighQuality: (v && good.test(v.name)) };
     v = list.find(x => x.lang && x.lang.toLowerCase().startsWith("en"));
     return { voice: v || null, isHighQuality: false };
   }
@@ -3633,7 +3810,7 @@ class AudioService {
   }
 
   // --- Speak via Native Android TTS ---
-  speakNative(text, isAr, tok) {
+  speakNative(text, isAr, tok, customRate = 0) {
     return new Promise(resolve => {
       const uid = "tts_" + Math.random().toString(36).substring(2, 9);
       let finished = false;
@@ -3646,7 +3823,6 @@ class AudioService {
         resolve();
       };
 
-      // Safety timeout: in case the engine takes too long or doesn't return
       const timeoutMs = Math.max(3000, text.length * 130);
       const timer = setTimeout(finish, timeoutMs);
 
@@ -3656,7 +3832,8 @@ class AudioService {
 
       try {
         const lang = isAr ? "ar" : "en";
-        window.AndroidNativeTTS.speak(this.cleanText(text), lang, this.speechRate, uid);
+        const rate = customRate > 0 ? customRate : this.speechRate;
+        window.AndroidNativeTTS.speak(this.cleanText(text), lang, rate, uid);
       } catch (e) {
         finish();
       }
@@ -3699,13 +3876,15 @@ class AudioService {
   }
 
   // --- Speak a single phrase ---
-  speakOne(text, isAr, tok) {
+  speakOne(text, isAr, tok, customRate = 0) {
     if (!text) return Promise.resolve();
     this.unlockAudio();
 
+    const effRate = customRate > 0 ? customRate : this.speechRate;
+
     // 1. Android Native TTS (In APK)
     if (this.isNativeAndroid()) {
-      return this.speakNative(text, isAr, tok);
+      return this.speakNative(text, isAr, tok, effRate);
     }
 
     // 2. Web Speech API (In Browsers)
@@ -3737,7 +3916,7 @@ class AudioService {
           const u = new SpeechSynthesisUtterance(chunkStr);
           u.lang = picked.voice ? picked.voice.lang : (isAr ? "ar-SA" : "en-US");
           if (picked.voice) u.voice = picked.voice;
-          u.rate = this.speechRate;
+          u.rate = effRate;
 
           let done = false;
           const advance = () => {
@@ -3748,13 +3927,13 @@ class AudioService {
             speakNext();
           };
 
-          // Anti-hang protection (Chrome Web Speech API bugfix)
+          // Anti-hang protection
           const timeoutId = setTimeout(advance, Math.max(3000, chunkStr.length * 120));
 
           u.onend = advance;
           u.onerror = advance;
 
-          window._activeUtterance = u; // Keep reference to prevent GC bug in Chrome
+          window._activeUtterance = u;
           window.speechSynthesis.speak(u);
         } catch (e) {
           idx++;
@@ -3764,6 +3943,21 @@ class AudioService {
 
       speakNext();
     });
+  }
+
+  // --- Speak English Phrase Directly ---
+  speakEn(enText) {
+    if (!enText) return Promise.resolve();
+    return this.speakSeq("", enText, "en");
+  }
+
+  // --- Speak English Phrase Slowly for Learning ---
+  speakSlow(enText) {
+    if (!enText) return Promise.resolve();
+    this.unlockAudio();
+    const tok = ++this.currentToken;
+    this.stopSpeech();
+    return this.speakOne(enText, false, tok, 0.65);
   }
 
   // --- Speak sequence (Arabic then English or either) ---
@@ -3784,7 +3978,6 @@ class AudioService {
       if (arText && enText) {
         return this.speakOne(arText, true, tok).then(() => {
           if (tok !== this.currentToken) return;
-          // Short pause between Arabic explanation and English phrase
           return new Promise(r => setTimeout(r, 260)).then(() => {
             if (tok !== this.currentToken) return;
             return this.speakOne(enText, false, tok);
@@ -3868,8 +4061,84 @@ class AudioService {
     });
   }
 
-  getSpeechRecognition() {
-    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  // --- Speech Recognition (STT) Manager ---
+  startSpeechRecognition({ lang = "en-US", onListening, onResult, onError }) {
+    this._sttCallbacks = { onListening, onResult, onError };
+
+    // 1. If in Android APK with native STT
+    if (this.isNativeSTT()) {
+      try {
+        window.AndroidNativeSTT.startListening(lang);
+        return;
+      } catch (e) {
+        if (onError) onError("native_failed");
+        return;
+      }
+    }
+
+    // 2. Web Speech Recognition in browser
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+    if (!SR) {
+      if (onError) onError("not_supported");
+      return;
+    }
+
+    try {
+      if (this.activeRecognition) {
+        try { this.activeRecognition.abort(); } catch (e) {}
+      }
+
+      const rec = new SR();
+      this.activeRecognition = rec;
+      rec.lang = lang;
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+
+      rec.onstart = () => {
+        if (onListening) onListening();
+      };
+
+      rec.onresult = (e) => {
+        const text = e.results && e.results[0] && e.results[0][0] ? e.results[0][0].transcript : "";
+        if (onResult) onResult(text);
+      };
+
+      rec.onerror = (e) => {
+        const errType = e.error || "generic_error";
+        if (onError) onError(errType);
+      };
+
+      rec.onend = () => {
+        this.activeRecognition = null;
+      };
+
+      // Prompt mic permission if available via getUserMedia
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(stream => {
+            stream.getTracks().forEach(t => t.stop()); // close test stream
+            rec.start();
+          })
+          .catch(() => {
+            rec.start(); // fallback attempt directly
+          });
+      } else {
+        rec.start();
+      }
+    } catch (e) {
+      if (onError) onError("start_failed");
+    }
+  }
+
+  stopSpeechRecognition() {
+    if (this.isNativeSTT()) {
+      try { window.AndroidNativeSTT.stopListening(); } catch (e) {}
+    }
+    if (this.activeRecognition) {
+      try { this.activeRecognition.abort(); } catch (e) {}
+      this.activeRecognition = null;
+    }
   }
 }
 
@@ -3889,8 +4158,27 @@ window.onNativeTTSError = function(uid) {
   }
 };
 
+// Global Window Callbacks for Native Android STT Events
+window.onNativeSTTListening = function() {
+  if (typeof audioService !== "undefined" && audioService._sttCallbacks && audioService._sttCallbacks.onListening) {
+    audioService._sttCallbacks.onListening();
+  }
+};
 
-/* === js/services/storage.js === */
+window.onNativeSTTResult = function(text) {
+  if (typeof audioService !== "undefined" && audioService._sttCallbacks && audioService._sttCallbacks.onResult) {
+    audioService._sttCallbacks.onResult(text);
+  }
+};
+
+window.onNativeSTTError = function(err) {
+  if (typeof audioService !== "undefined" && audioService._sttCallbacks && audioService._sttCallbacks.onError) {
+    audioService._sttCallbacks.onError(err);
+  }
+};
+
+</script>
+<script>
 // English Journey - Local Persistence & State Management Service
 
 class StorageService {
@@ -4148,8 +4436,8 @@ class StorageService {
 
 const storageService = new StorageService();
 
-
-/* === js/services/lumi.js === */
+</script>
+<script>
 // English Journey - Lumi AI Tutor Service
 // Dual Engine: Live API connector + Rich Offline Linguistic Rule-based Simulator
 
@@ -4172,12 +4460,12 @@ class LumiService {
 
   async ask(userText) {
     const text = (userText || "").trim();
-    if (!text) return "";
+    if (!text) return { text: "", enPhrases: [] };
 
     // 1. If host API is available, try it first
     if (this.apiClient) {
       try {
-        const sysPrompt = "أنت لومي 🤖، مدرب لغة إنجليزية ودود ومشجع للناطقين بالعربية. قدم إجابات دقيقة ومختصرة (3 إلى 4 أسطر كحد أقصى) مع أمثلة عملية إنجليزية وترجمتها. إذا أخطأ المستخدم في الإنجليزية، صحح له بلطف واشرح القاعدة ببساطة.";
+        const sysPrompt = "أنت لومي 🤖، مدرب لغة إنجليزية ودود ومحفز للناطقين بالعربية. قدم إجابات واضحة ودقيقة (3 إلى 5 أسطر كحد أقصى) مع أمثلة عملية إنجليزية وترجمتها. إذا كتب المستخدم بالإنجليزية، قيّم جملته وصححها بلطف.";
         const messages = [
           ...this.history,
           { role: "user", content: (this.history.length === 0 ? sysPrompt + "\n\n" : "") + text }
@@ -4186,69 +4474,224 @@ class LumiService {
         if (res && res.text) {
           this.history.push({ role: "user", content: text });
           this.history.push({ role: "assistant", content: res.text });
-          return res.text;
+          const enPhrases = this.extractEnglishPhrases(res.text);
+          return { text: res.text, enPhrases };
         }
       } catch (e) {
         console.warn("API request failed, falling back to local linguistic engine", e);
       }
     }
 
-    // 2. High-quality offline intelligent simulation
-    await new Promise(r => setTimeout(r, 600)); // natural typing delay
-    const reply = this.generateLocalResponse(text);
+    // 2. High-quality offline intelligent linguistic engine
+    await new Promise(r => setTimeout(r, 450)); // Natural typing delay
+    const replyData = this.generateLocalResponse(text);
     this.history.push({ role: "user", content: text });
-    this.history.push({ role: "assistant", content: reply });
-    return reply;
+    this.history.push({ role: "assistant", content: replyData.text });
+    return replyData;
+  }
+
+  extractEnglishPhrases(text) {
+    if (!text) return [];
+    // Match quoted English text or bullet points containing English
+    const quotes = text.match(/"([^"]*[a-zA-Z]{3,}[^"]*)"/g) || [];
+    const bullets = text.match(/•\s*([a-zA-Z][^.\n]+[.!?]?)/g) || [];
+    const directEn = text.match(/^[A-Z][a-zA-Z\s,']+[.!?]?$/gm) || [];
+
+    const found = [...quotes, ...bullets, ...directEn]
+      .map(s => s.replace(/^[•"\s]+|["]+$/g, "").trim())
+      .filter(s => s.length > 3 && /[a-zA-Z]/.test(s));
+
+    return Array.from(new Set(found));
   }
 
   generateLocalResponse(query) {
-    const q = query.toLowerCase();
+    const q = query.trim().toLowerCase();
 
-    // Greeting
-    if (/^(hi|hello|hey|مرحبا|أهلا|اهلا|السلام عليكم|صباح الخير|مساء الخير)/i.test(q)) {
-      return "أهلاً بك يا بطل! 👋 أنا لومي 🤖، رفيقك في رحلة إتقان الإنجليزية. اكتب لي أي جملة بالإنجليزي وسأصححها لك، أو اسألني عن أي قاعدة أو موقف سفر!";
+    // 1. Greetings & Introductions
+    if (/^(hi|hello|hey|good morning|good evening|مرحبا|أهلا|اهلا|السلام عليكم|صباح الخير|مساء الخير|هلا)/i.test(q)) {
+      const text = "أهلاً بك يا بطل! 👋 أنا لومي 🤖، رفيقك ومدربك في رحلة إتقان الإنجليزية.\nأنا هنا لمساعدتك في كل ما تحتاج:\n• شرح أي قاعدة إنجليزية ببساطة.\n• تصحيح كتابتك ونطقك.\n• صياغة الجمل لمواقف السفر والعمل اليومية.\nجرب أن تكتب لي جملة بالإنجليزية وسأصححها لك فوراً! 🚀";
+      return { text, enPhrases: ["Hello! I am Lumi, your personal English tutor.", "Practice makes perfect!"] };
     }
 
-    // How to say X in English
-    if (q.includes("كيف أقول") || q.includes("كيف اقول") || q.includes("ترجم لي") || q.includes("ما ترجمة")) {
-      if (q.includes("شكرا") || q.includes("شكراً")) return "تقدر تقول:\n• Thank you very much!\n• I really appreciate it!\nكلاهما أسلوب راقٍ وجميل ✨";
-      if (q.includes("مساعدة") || q.includes("ساعدني")) return "تقدر تقول:\n• Could you help me, please?\n• Can you give me a hand?\nالأولى أكثر رسمية وأدباً 🤝";
-      if (q.includes("حساب") || q.includes("فاتورة")) return "في المطعم أو المتجر:\n• Can I have the bill, please?\n• Could we get the check, please?\nتفضل واستخدمها مباشرة 💳";
-      if (q.includes("فندق") || q.includes("غرفة")) return "عند الحجز:\n• I would like to book a room for two nights, please.\n• Do you have any available rooms? 🏨";
-      return "للتعبير عن هذا الموقف بدقة:\n\"Excuse me, could you please help me with this?\"\nأخبرني بتفاصيل الموقف وسأعطيك أدق صياغة طبيعية! 💡";
+    if (q.includes("من انت") || q.includes("من أنت") || q.includes("who are you") || q.includes("عرفني بنفسك")) {
+      const text = "أنا لومي 🤖، المدرّب الذكي لتطبيق رحلتي للإنجليزية (English Journey).\nصُممت لأرافقك خطوة بخطوة من الصفر حتى الاحتراف وفق معايير CEFR الأوروبية.\nاسألني عن القواعد، المفردات، أو تدرب معي على المحادثة!";
+      return { text, enPhrases: ["I am Lumi, your AI English coach.", "Nice to meet you!"] };
     }
 
-    // Grammar questions
+    // 2. Error Correction Engine (Common Arab Learner Mistakes)
+    if (q.includes("i am agree") || q.includes("i'm agree")) {
+      const text = "ملاحظة ذكية يا صديقي! 💡\nفي الإنجليزية نقول:\n• I agree with you.\nولا نقول (I am agree)؛ لأن كلمة agree هي فعل في حد ذاتها ولا تحتاج verb to be.\nجرب قولها الآن!";
+      return { text, enPhrases: ["I agree with you.", "I completely agree."] };
+    }
+
+    if (q.includes("goed") || q.includes("i go yesterday") || q.includes("yesterday i go")) {
+      const text = "تصحيح مهم يا بطل: ⏳\nالفعل go من الأفعال الشاذة (غير المنتظمة)، وماضيه هو went وليس goed.\nالصياغة الصحيحة:\n• Yesterday, I went to the market.\n• I went there last week.";
+      return { text, enPhrases: ["Yesterday, I went to the market.", "I went there last week."] };
+    }
+
+    if (q.includes("he have") || q.includes("she have") || q.includes("it have")) {
+      const text = "تصحيح نحوي دقيق: 📌\nمع ضمائر المفرد الغائب (He, She, It) نستخدم has وليس have.\nالصواب أن نقول:\n• He has a new car.\n• She has a great idea.\nأما have فتأتي مع (I, You, We, They).";
+      return { text, enPhrases: ["He has a new car.", "She has a great idea."] };
+    }
+
+    if (q.includes("she play ") || q.includes("he play ") || q.includes("he speak ") || q.includes("she like ")) {
+      const text = "قاعدة المضارع البسيط الذهبية: ⏰\nعند التحدث عن المفرد (He / She / It) نضيف حرف (s) للفعل في المضارع:\n• He plays football every Friday.\n• She speaks English fluently.\nأنت في الطريق الصحيح للطلاقة! ✨";
+      return { text, enPhrases: ["He plays football every Friday.", "She speaks English fluently."] };
+    }
+
+    if (q.includes("i have 20 years") || q.includes("i have 25 years") || q.includes("i have 30 years") || q.includes("have ... years")) {
+      const text = "ملاحظة لغوية رائعة! 🎂\nفي الإنجليزية للتعبير عن العمر نستخدم فعل الكينونة (am) وليس الملكية (have):\n• I am 20 years old.\n• I am 25.\nجرب قول عمرك بالطريقة الصحيحة!";
+      return { text, enPhrases: ["I am twenty years old.", "How old are you?"] };
+    }
+
+    if (q.includes("people is")) {
+      const text = "انتبه يا بطل: 👥\nكلمة people تعني (ناس) وهي جمع دائم، لذا تأخذ are وليس is:\n• People are very friendly here.\n• The people were happy.";
+      return { text, enPhrases: ["People are very friendly here."] };
+    }
+
+    if (q.includes("informations")) {
+      const text = "قاعدة الأسماء غير المعدودة: 📋\nكلمة information اسم غير معدود (Uncountable)، فلا نضيف له s نهائياً:\n• I need some information, please.\n• This information is very useful.";
+      return { text, enPhrases: ["I need some information, please.", "This information is very helpful."] };
+    }
+
+    if (q.includes("depend of")) {
+      const text = "حرف الجر الصحيح: 🎯\nالفعل depend يأتي دائماً مع on وليس of:\n• It depends on the weather.\n• You can depend on me.";
+      return { text, enPhrases: ["It depends on the weather.", "You can depend on me."] };
+    }
+
+    if (q.includes("she don't") || q.includes("he don't")) {
+      const text = "ملاحظة نفي المفرد: 🚫\nمع (He, She, It) نستخدم doesn't للنفي وليس don't:\n• She doesn't like coffee.\n• He doesn't know the answer.";
+      return { text, enPhrases: ["She doesn't like coffee.", "He doesn't know the answer."] };
+    }
+
+    if (q.includes("explain me")) {
+      const text = "صياغة أنيقة: 🗣️\nفي الإنجليزية مع فعل explain نضيف حرف الجر to للشخص:\n• Could you explain this to me, please?\n• Please explain the lesson to the class.";
+      return { text, enPhrases: ["Could you explain this to me, please?"] };
+    }
+
+    // 3. Situational Queries ("كيف أقول...", "ترجم لي...", "ماذا أقول في...")
+    if (q.includes("شكرا") || q.includes("شكراً") || q.includes("thank")) {
+      const text = "طرق رائعة للتعبير عن الشكر والامتنان:\n• Thank you very much! (شكراً جزيلاً)\n• I really appreciate your help! (أقدر مساعدتك حقاً)\n• That is very kind of you! (هذا لطف كبير منك)\nوالرد عليها:\n• You are welcome! (على الرحب والسعة)";
+      return { text, enPhrases: ["Thank you very much!", "I really appreciate your help!", "You are very welcome!"] };
+    }
+
+    if (q.includes("اعتذار") || q.includes("اسف") || q.includes("آسف") || q.includes("sorry")) {
+      const text = "طرق تقديم الاعتذار بأسلوب راقٍ:\n• I am so sorry for the delay. (أنا آسف جداً على التأخير)\n• Pardon me, I didn't catch that. (معذرة، لم أسمع جيداً)\n• Excuse me, could I pass? (عفواً، هل يمكنني المرور؟)";
+      return { text, enPhrases: ["I am so sorry for the delay.", "Pardon me, I did not catch that.", "Excuse me, please."] };
+    }
+
+    if (q.includes("مساعدة") || q.includes("ساعدني") || q.includes("help")) {
+      const text = "طرق طلب المساعدة بلباقة:\n• Could you please help me with this? (هل يمكنك مساعدتي من فضلك؟)\n• Can you give me a hand? (هل يمكنك إعانتي؟)\n• I need some assistance, please. (أحتاج إلى مساعدة من فضلك)";
+      return { text, enPhrases: ["Could you please help me with this?", "Can you give me a hand?", "I need assistance, please."] };
+    }
+
+    if (q.includes("حساب") || q.includes("فاتورة") || q.includes("bill") || q.includes("check")) {
+      const text = "في المطعم أو المقهى لطلب الحساب:\n• Can we have the bill, please? (البريطانية)\n• Could we get the check, please? (الأمريكية)\n• Do you accept credit cards? (هل تقبلون بطاقات الائتمان؟)";
+      return { text, enPhrases: ["Can we have the bill, please?", "Could we get the check, please?", "Do you accept credit cards?"] };
+    }
+
+    if (q.includes("فندق") || q.includes("غرفة") || q.includes("حجز") || q.includes("hotel")) {
+      const text = "جمل أساسية في الفندق:\n• I have a reservation under the name Ahmed. (لدي حجز باسم أحمد)\n• What time is check-out? (ما هو موعد تسجيل الخروج؟)\n• Could I have an extra towel, please? (هل يمكنني الحصول على منشفة إضافية؟)\n• Is breakfast included? (هل الإفطار مشمول؟)";
+      return { text, enPhrases: ["I have a reservation under the name Ahmed.", "What time is check-out?", "Is breakfast included?"] };
+    }
+
+    if (q.includes("مطار") || q.includes("طيران") || q.includes("بوابة") || q.includes("airport")) {
+      const text = "جمل هامة في المطار:\n• Where is gate number 12? (أين البوابة رقم 12؟)\n• Where can I find the baggage claim area? (أين منطقة استلام الأمتعة؟)\n• Here is my passport and boarding pass. (تفضل، هذا جواز سفري وبطاقة الصعود)";
+      return { text, enPhrases: ["Where is gate number twelve?", "Where is the baggage claim area?", "Here is my passport and boarding pass."] };
+    }
+
+    if (q.includes("مطعم") || q.includes("اكل") || q.includes("طعام") || q.includes("قائمة") || q.includes("restaurant") || q.includes("menu")) {
+      const text = "في المطعم للطلب والترشيح:\n• Could we see the menu, please? (هل يمكننا رؤية قائمة الطعام؟)\n• What do you recommend for dinner? (ماذا ترشح لنا للعشاء؟)\n• I would like the grilled chicken, please. (أود طلب الدجاج المشوي من فضلك)\n• Without onions, please. (بدون بصل من فضلك)";
+      return { text, enPhrases: ["Could we see the menu, please?", "What do you recommend for dinner?", "I would like the grilled chicken, please."] };
+    }
+
+    if (q.includes("تاكسي") || q.includes("طريق") || q.includes("عنوان") || q.includes("taxi") || q.includes("اتجاه")) {
+      const text = "في التاكسي والسؤال عن الطرق:\n• Please take me to this address. (من فضلك خذني إلى هذا العنوان)\n• How much will the fare be? (كم ستكون الأجرة تقريباً؟)\n• Excuse me, how do I get to the nearest station? (عفواً، كيف أصل لأقرب محطة؟)";
+      return { text, enPhrases: ["Please take me to this address.", "How much will the fare be?", "How do I get to the nearest station?"] };
+    }
+
+    if (q.includes("تسوق") || q.includes("سعر") || q.includes("مقاس") || q.includes("شراء") || q.includes("shopping") || q.includes("price")) {
+      const text = "جمل التسوق والشراء:\n• How much does this cost? (كم سعر هذا؟)\n• Do you have this in a medium size? (هل يتوفر هذا بمقاس متوسط؟)\n• Can I try this on, please? (هل يمكنني قياس هذا؟)\n• Is there any discount on this item? (هل هناك خصم على هذا المنتج؟)";
+      return { text, enPhrases: ["How much does this cost?", "Do you have this in a medium size?", "Can I try this on, please?"] };
+    }
+
+    if (q.includes("طبيب") || q.includes("مستشفى") || q.includes("صيدلية") || q.includes("الم") || q.includes("ألم") || q.includes("doctor")) {
+      const text = "في الحالات الطبية والصحية:\n• I need to see a doctor as soon as possible. (أحتاج لمقابلة طبيب في أسرع وقت)\n• I have a severe headache and fever. (أعاني من صداع شديد وحمى)\n• Where is the nearest 24-hour pharmacy? (أين أقرب صيدلية تعمل طوال اليوم؟)";
+      return { text, enPhrases: ["I need to see a doctor as soon as possible.", "I have a severe headache and fever.", "Where is the nearest pharmacy?"] };
+    }
+
+    // 4. Grammar Explanations
     if (q.includes("مضارع بسيط") || q.includes("present simple")) {
-      return "المضارع البسيط نستخدمه للعادات والحقائق اليومية ⏰\n• مع الجمع و I: نضع الفعل كما هو: (I play, They work).\n• مع المفرد (He, She, It): نضيف s للفعل: (He plays, She works).\nمثال: She drinks coffee every morning. ☕";
-    }
-    if (q.includes("ماضي") || q.includes("past simple")) {
-      return "الماضي البسيط للأحداث التي انتهت ⏳\n• منتظم: نضيف ed مثل: visited, played.\n• غير منتظم: يتغير الفعل مثل: go → went, see → saw.\nمثال: Yesterday, I visited my family. 🏡";
-    }
-    if (q.includes("فرق بين a و an") || q.includes("a and an") || q.includes("ادوات التعريف")) {
-      return "القاعدة سهلة جداً: 🍎\n• a قبل الكلمات التي تبدأ بحرف ساكن: a car, a book, a boy.\n• an قبل الكلمات التي تبدأ بصوت علة (a, e, i, o, u): an apple, an egg, an umbrella.\nالهدف هو سهولة النطق وانسيابيته!";
-    }
-    if (q.includes("have") || q.includes("has") || q.includes("مضارع تام")) {
-      return "المضارع التام (have/has + التصريف الثالث) يربط الماضي بالحاضر 🔗\n• I have visited London twice (خبرة سابقة بدون تحديد زمن).\n• He has just arrived (حدث للتو).\nI/You/We/They تأخذ have، و He/She/It تأخذ has!";
+      const text = "شرح المضارع البسيط (Present Simple) ⏰:\nنستخدمه للعادات اليومية، الروتين، والحقائق العامة.\n• مع (I, You, We, They): الفعل في المصدر: I drink coffee.\n• مع (He, She, It): نضيف (s/es) للفعل: He drinks coffee.\n• في السؤال والنفي: نستخدم do / does:\n- Do you work here?\n- She does not work here.";
+      return { text, enPhrases: ["I drink coffee every morning.", "She works at a hospital.", "Do you work here?"] };
     }
 
-    // Sentence correction detection
-    if (q.includes("goed") || q.includes("i go yesterday") || q.includes("he have") || q.includes("she play ")) {
-      let fix = "";
-      if (q.includes("goed")) fix = "انتبه يا بطل: الفعل go شاذ وماضيه هو went وليس goed.";
-      else if (q.includes("he have")) fix = "مع المفرد الغائب He نستخدم has وليس have: He has a car.";
-      else if (q.includes("i go yesterday")) fix = "بما أنك قلت yesterday (أمس) فيجب تحويل الفعل للماضي: I went yesterday.";
-      else fix = "مع He/She/It نضيف s في المضارع: She plays tennis.";
-      return `ملاحظة ذكية يا صديقي! 💡\n${fix}\nجرب كتابة الجملة مرة أخرى بعد التصحيح لنثبتها سوياً!`;
+    if (q.includes("ماضي بسيط") || q.includes("past simple") || q.includes("الماضي")) {
+      const text = "شرح الماضي البسيط (Past Simple) ⏳:\nنستخدمه لحدث بدأ وانتهى في الماضي في وقت محدد.\n• أفعال منتظمة: نضيف (ed) مثل: played, visited, watched.\n• أفعال شاذة (غير منتظمة): يتغير شكلها: go → went, buy → bought, see → saw.\n• في النفي والسؤال نستخدم did والمصدر:\n- Did you see Ahmed yesterday?\n- I didn't see him.";
+      return { text, enPhrases: ["I visited London last summer.", "We saw a great movie yesterday.", "Did you see Ahmed yesterday?"] };
     }
 
-    // Default constructive response
-    return `فكرة ممتازة وتفكير رائع! 👏\nنصيحتي لك اليوم: ركّز على استخدام الجملة في محادثة يومية بصوت مسموع، فالنطق المتكرر يصنع الطلاقة الحقيقية.\nهل تود أن نتدرب على محادثة قصيرة حول هذا الموضوع؟ 💬`;
+    if (q.includes("مضارع مستمر") || q.includes("present continuous")) {
+      const text = "المضارع المستمر (Present Continuous) 🔄:\nيصف حدثاً يقع الآن في هذه اللحظة، أو خطة مستقبلية مؤكدة.\nالتكوين: am / is / are + verb + ing\n• I am studying English right now.\n• They are traveling tomorrow.";
+      return { text, enPhrases: ["I am studying English right now.", "They are traveling tomorrow."] };
+    }
+
+    if (q.includes("مضارع تام") || q.includes("present perfect") || q.includes("have") || q.includes("has")) {
+      const text = "المضارع التام (Present Perfect) 🔗:\nيربط الماضي بالحاضر (خبرات سابقة بدون وقت محدد، أو أحداث لها أثر حاضر).\nالتكوين: have / has + التصريف الثالث (P.P)\n• I have visited Paris three times. (خبرة سابقة)\n• She has just finished her homework. (حدث للتو)";
+      return { text, enPhrases: ["I have visited Paris three times.", "She has just finished her homework."] };
+    }
+
+    if (q.includes("فرق بين a و an") || q.includes("a and an") || q.includes("ادوات التعريف") || q.includes("the")) {
+      const text = "الفرق بين a و an بسهولة وبساطة 🍎:\n• نستخدم (a) قبل الأسماء المفردة المعدودة التي تبدأ بصوت ساكن:\n  a book, a car, a university (نطق صوت يو ساكن).\n• نستخدم (an) قبل الكلمات التي تبدأ بصوت علة (vowel sound: a, e, i, o, u):\n  an apple, an hour (حرف h صامت), an engineer.\nالهدف دائماً هو سهولة النطق وانسيابيته!";
+      return { text, enPhrases: ["I bought a new book.", "She ate an apple.", "We will meet in an hour."] };
+    }
+
+    if (q.includes("حروف الجر") || q.includes("in on at") || q.includes("prepositions")) {
+      const text = "مثلث حروف الجر الشهير (IN - ON - AT) 📐:\n• AT: للأوقات المحددة والنقاط الدقيقة: at 5 PM, at the door, at night.\n• ON: للأيام والتواريخ والأسطح: on Monday, on the table, on July 4th.\n• IN: للأشهر والسنوات والفترات والأماكن المغلقة: in June, in 2026, in Riyadh.";
+      return { text, enPhrases: ["The meeting is at five o'clock.", "I will see you on Monday.", "We will travel in the summer."] };
+    }
+
+    if (q.includes("will") || q.includes("going to") || q.includes("مستقبل")) {
+      const text = "الفرق بين Will و Going to في المستقبل 🚀:\n• Will: للقرارات السريعة اللحظية، والوعود: I will help you with this!\n• Going to: للخطط المسبقة والنوايا والأحداث المبنية على دليل حاضر: Look at those dark clouds, it is going to rain!";
+      return { text, enPhrases: ["I will call you tonight.", "It is going to rain tomorrow."] };
+    }
+
+    if (q.includes("شرط") || q.includes("if conditional") || q.includes("قاعدة if")) {
+      const text = "قواعد If الشرطية الأساسية 🌿:\n• الحالة الأولى (احتمال حقيقي): If + مضارع بسيط, will + المصدر:\n  If you study hard, you will succeed.\n• الحالة الثانية (تخيّل وافتراض): If + ماضي بسيط, would + المصدر:\n  If I had more time, I would travel the world.";
+      return { text, enPhrases: ["If you study hard, you will succeed.", "If I had more time, I would travel the world."] };
+    }
+
+    if (q.includes("مجهول") || q.includes("passive")) {
+      const text = "المبني للمجهول (Passive Voice) 🛡️:\nنستخدمه عندما يكون الحدث أو المفعول أهم من الفاعل.\nالتكوين: Verb to be + التصريف الثالث (P.P)\n• The room is cleaned every day. (تنظف الغرفة كل يوم)\n• The letter was sent yesterday. (أرسلت الرسالة بالأمس)";
+      return { text, enPhrases: ["The room is cleaned every day.", "The letter was sent yesterday."] };
+    }
+
+    // 5. English Conversational Response (If user speaks English)
+    if (/^[a-zA-Z\s,'.!?-]+$/.test(query) && query.split(/\s+/).length >= 2) {
+      const text = `You are doing great! 🌟\nYour English sentence:\n"${query}"\n\nI understood you completely. Speaking and writing in English is the fastest route to fluency!\nTry saying:\n• Let's practice a real conversation together.\n• Tell me about your day!`;
+      return { text, enPhrases: [query, "Let's practice a real conversation together.", "Tell me about your day!"] };
+    }
+
+    // 6. Advice & Study Habits
+    if (q.includes("كيف اطور") || q.includes("كيف اتعلم") || q.includes("نصيحة") || q.includes("خطة") || q.includes("طريقة")) {
+      const text = "خارطة الطريق الذهبية لإتقان الإنجليزية 🗺️:\n1. استمع يومياً لمدة 15 دقيقة (استخدم ميزة التحدث والاستماع هنا بالتطبيق).\n2. احفظ الجمل في سياقها وليس كلمات منفردة (جرب نافذة ماذا أقول الآن).\n3. عِش الموقف: تدرب على مواقف السفر والمطاعم بصوت مسموع.\n4. لا تخف من الخطأ؛ فالخطأ هو الدليل الوحيد على أنك تتعلم!";
+      return { text, enPhrases: ["Listen to English every single day.", "Consistency is the key to success."] };
+    }
+
+    // 7. General Constructive Response
+    const text = `سؤال جميل وتفكير رائع يا بطل! 👏\nللتدرب على هذا الأمر بشكل عملي، إليك هذه الجمل المفيدة:\n• Could you give me an example, please?\n• How do you pronounce this word?\n• I am learning English step by step.\nهل ترغب في أن نتدرّب على محادثة قصيرة أو شرح قاعدة معينة؟ 💬`;
+    return {
+      text,
+      enPhrases: [
+        "Could you give me an example, please?",
+        "How do you pronounce this word?",
+        "I am learning English step by step."
+      ]
+    };
   }
 
-  async generateSituationalSentence(situationArabic, tone = "normal") {
-    // Generates sentence for "ماذا أقول الآن؟"
-    const s = situationArabic.toLowerCase();
+  async generateSituationalSentence(situationArabic, tone = "عادي وطبيعي") {
+    const s = (situationArabic || "").toLowerCase();
     let en = "Excuse me, could you please help me?";
     let ar = "عفواً، هل يمكنك مساعدتي من فضلك؟";
 
@@ -4259,38 +4702,90 @@ class LumiService {
       } else if (tone === "أكثر تهذيباً ورسمية") {
         en = "Good evening. I would like to inquire about booking a room for three nights, please.";
         ar = "مساء الخير. أود الاستفسار عن حجز غرفة لثلاث ليالٍ من فضلك.";
+      } else if (tone === "أكثر طبيعية للناطقين الأصليين") {
+        en = "Hi there, do you happen to have any vacancies for tonight?";
+        ar = "مرحباً، هل يتوفر لديكم أي غرف شاغرة الليلة؟";
       } else {
         en = "Hello, do you have a single room available for tonight?";
         ar = "مرحباً، هل يتوفر لديكم غرفة مفردة لليلة؟";
       }
-    } else if (s.includes("مطعم") || s.includes("طلب") || s.includes("طعام") || s.includes("اكل")) {
-      if (tone === "أسهل وأبسط") {
-        en = "The menu, please.";
-        ar = "قائمة الطعام من فضلك.";
-      } else if (tone === "أكثر تهذيباً ورسمية") {
-        en = "Could you please recommend your signature dish for dinner?";
-        ar = "هل يمكن أن تنصحني بطبقكم المميز للعشاء من فضلك؟";
+    } else if (s.includes("مطعم") || s.includes("طلب") || s.includes("طعام") || s.includes("اكل") || s.includes("فاتورة") || s.includes("حساب")) {
+      if (s.includes("فاتورة") || s.includes("حساب")) {
+        if (tone === "أسهل وأبسط") {
+          en = "The bill, please.";
+          ar = "الحساب من فضلك.";
+        } else if (tone === "أكثر تهذيباً ورسمية") {
+          en = "Could we kindly have the bill whenever you are ready, please?";
+          ar = "هل تتفضل بإحضار الفاتورة متى ما كنت جاهزاً من فضلك؟";
+        } else {
+          en = "Could we get the check, please?";
+          ar = "هل يمكننا الحصول على الحساب من فضلك؟";
+        }
       } else {
-        en = "Excuse me, I am ready to order the grilled chicken, please.";
-        ar = "عفواً، أنا جاهز لطلب الدجاج المشوي من فضلك.";
+        if (tone === "أسهل وأبسط") {
+          en = "The menu, please.";
+          ar = "قائمة الطعام من فضلك.";
+        } else if (tone === "أكثر تهذيباً ورسمية") {
+          en = "Could you please recommend your signature dish for dinner?";
+          ar = "هل يمكن أن تنصحني بطبقكم المميز للعشاء من فضلك؟";
+        } else if (tone === "أكثر طبيعية للناطقين الأصليين") {
+          en = "What are the chef's specials for tonight?";
+          ar = "ما هي الأطباق الخاصة للشيف الليلة؟";
+        } else {
+          en = "Excuse me, I am ready to order the grilled chicken, please.";
+          ar = "عفواً، أنا جاهز لطلب الدجاج المشوي من فضلك.";
+        }
       }
-    } else if (s.includes("مطار") || s.includes("طيران") || s.includes("بوابة") || s.includes("حقيبة")) {
+    } else if (s.includes("مطار") || s.includes("طيران") || s.includes("بوابة") || s.includes("حقيبة") || s.includes("أمتعة")) {
       if (tone === "أسهل وأبسط") {
         en = "Where is gate twelve?";
         ar = "أين البوابة رقم 12؟";
       } else if (tone === "أكثر تهذيباً ورسمية") {
         en = "Pardon me, could you kindly direct me to the baggage claim area?";
         ar = "عذراً، هل تتفضل بإرشادي إلى منطقة استلام الأمتعة؟";
+      } else if (tone === "أكثر طبيعية للناطقين الأصليين") {
+        en = "Which carousel is the flight from Dubai on?";
+        ar = "على أي سير تدور أمتعة رحلة دبي؟";
       } else {
         en = "Excuse me, is this flight on time?";
         ar = "عفواً، هل هذه الرحلة في موعدها المحدد؟";
       }
-    } else if (s.includes("مستشفى") || s.includes("طبيب") || s.includes("ألم") || s.includes("صداع")) {
-      en = "I have a severe headache and fever. Could I see a doctor?";
-      ar = "أعاني من صداع شديد وحمى. هل يمكنني مقابلة الطبيب؟";
-    } else if (s.includes("تاكسي") || s.includes("طريق") || s.includes("عنوان")) {
-      en = "Please take me to the city center as soon as possible.";
-      ar = "من فضلك خذني إلى وسط المدينة في أسرع وقت ممكن.";
+    } else if (s.includes("مستشفى") || s.includes("طبيب") || s.includes("ألم") || s.includes("صداع") || s.includes("دواء") || s.includes("صيدلية")) {
+      if (tone === "أسهل وأبسط") {
+        en = "I need a doctor, please.";
+        ar = "أحتاج إلى طبيب من فضلك.";
+      } else if (tone === "أكثر تهذيباً ورسمية") {
+        en = "I am experiencing severe dizziness and would like to see a physician immediately.";
+        ar = "أعاني من دوار شديد وأود مقابلة طبيب على الفور.";
+      } else {
+        en = "I have a severe headache and fever. Could I see a doctor?";
+        ar = "أعاني من صداع شديد وحمى. هل يمكنني مقابلة الطبيب؟";
+      }
+    } else if (s.includes("تاكسي") || s.includes("طريق") || s.includes("عنوان") || s.includes("محطة")) {
+      if (tone === "أسهل وأبسط") {
+        en = "To the city center, please.";
+        ar = "إلى وسط المدينة من فضلك.";
+      } else if (tone === "أكثر تهذيباً ورسمية") {
+        en = "Could you please take me to the airport terminal, and turn on the meter?";
+        ar = "هل يمكنك من فضلك أخذي لصالة المطار وتشغيل العداد؟";
+      } else {
+        en = "Please take me to the city center as soon as possible.";
+        ar = "من فضلك خذني إلى وسط المدينة في أسرع وقت ممكن.";
+      }
+    } else if (s.includes("تسوق") || s.includes("سعر") || s.includes("مقاس") || s.includes("شراء") || s.includes("متجر")) {
+      if (tone === "أسهل وأبسط") {
+        en = "How much is this?";
+        ar = "كم سعر هذا؟";
+      } else if (tone === "أكثر تهذيباً ورسمية") {
+        en = "Would you happen to have this shirt in a medium size, please?";
+        ar = "هل يتوفر هذا القميص بمقاس متوسط لديكم من فضلك؟";
+      } else {
+        en = "Do you have this in a different color or size?";
+        ar = "هل يتوفر هذا بلون أو مقاس آخر؟";
+      }
+    } else if (s.includes("قهوة") || s.includes("كافيه") || s.includes("شاي") || s.includes("سكر")) {
+      en = "Can I get an iced latte with oat milk, please?";
+      ar = "هل يمكنني طلب لاتيه مثلج بحليب الشوفان من فضلك؟";
     }
 
     // Try Claude API if available
@@ -4343,8 +4838,8 @@ class LumiService {
 
 const lumiService = new LumiService();
 
-
-/* === js/app.js === */
+</script>
+<script>
 // English Journey - Master Application Controller
 
 class App {
@@ -5282,14 +5777,17 @@ class App {
     optWrap.innerHTML = "";
 
     stage.options.forEach((opt, idx) => {
-      const b = document.createElement("button");
-      b.className = "btn btn-ghost";
-      b.style.cssText = "margin-bottom:10px; text-align:right; flex-direction:column; align-items:flex-start; padding:12px 14px;";
+      const b = document.createElement("div");
+      b.className = "travel-opt-btn";
+      const safeEn = (opt.en || "").replace(/'/g, "\\'");
       b.innerHTML = `
-        <span style="direction:ltr; text-align:left; font-weight:700; color:var(--text);">${opt.en}</span>
-        <span style="font-size:12px; color:var(--text-muted); margin-top:3px;">${opt.ar}</span>
+        <div style="flex:1; text-align:right;">
+          <div style="direction:ltr; text-align:left; font-weight:700; color:var(--text); font-size:14.5px;">${opt.en}</div>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:3px;">${opt.ar}</div>
+        </div>
+        <button class="opt-speaker-btn" title="استمع لنطق هذا الخيار" onclick="event.stopPropagation(); audioService.speakEn('${safeEn}')">🔊</button>
       `;
-      b.onclick = () => this.answerTravelChoice(idx, b);
+      b.onclick = () => this.answerTravelChoice(idx, b, opt);
       optWrap.appendChild(b);
     });
 
@@ -5300,24 +5798,33 @@ class App {
     nextBtn.style.display = "none";
   }
 
-  answerTravelChoice(choiceIdx, btnEl) {
+  answerTravelChoice(choiceIdx, btnEl, opt) {
     if (this.travelDone) return;
     const stage = TRAVEL[this.travelKey].stages[this.travelIndex];
-    const opt = stage.options[choiceIdx];
 
     const exp = document.getElementById("travelFeedbackBox");
     const nextBtn = document.getElementById("travelNextBtn");
+    const safeEn = (opt.en || "").replace(/'/g, "\\'");
 
     if (opt.best) {
       this.travelDone = true;
       audioService.playCorrect();
+      audioService.speakEn(opt.en);
+
       btnEl.style.background = "var(--green)";
       btnEl.style.color = "#ffffff";
       btnEl.style.borderColor = "var(--green)";
+      const enDiv = btnEl.querySelector("div > div");
+      if (enDiv) enDiv.style.color = "#ffffff";
 
       exp.style.display = "block";
       exp.style.color = "var(--green)";
-      exp.textContent = `✅ ${opt.feedback}`;
+      exp.innerHTML = `
+        <div>✅ ${opt.feedback}</div>
+        <div style="margin-top:8px;">
+          <button class="icon-btn" onclick="audioService.speakEn('${safeEn}')">🔊 أعد الاستماع للجملة الصحيحة</button>
+        </div>
+      `;
 
       nextBtn.style.display = "block";
       nextBtn.textContent = this.travelIndex === TRAVEL[this.travelKey].stages.length - 1 ? "إنهاء الموقف بنجاح 🎉" : "الموقف التالي ←";
@@ -5346,16 +5853,19 @@ class App {
     this.renderTravelStage();
   }
 
-  playTravelNpcSpeech() {
+  playTravelNpcSpeech(speed = "normal") {
     const stage = TRAVEL[this.travelKey].stages[this.travelIndex];
     if (stage) {
-      audioService.speakSeq(stage.npcAr, stage.npcEn, "both");
+      if (speed === "slow") {
+        audioService.speakSlow(stage.npcEn);
+      } else {
+        audioService.speakSeq(stage.npcAr, stage.npcEn, "both");
+      }
     }
   }
 
   // --- Speaking & Listening Practice ---
   startSpeakListen() {
-    // Generate pool from lessons
     const pool = [];
     ["greet", "family", "daily", "airport", "hotel", "restaurant"].forEach(k => {
       if (LESSONS[k] && LESSONS[k].pairs) {
@@ -5386,7 +5896,6 @@ class App {
     document.getElementById("slNextBtn").style.display = "none";
     document.getElementById("slListenFeedback").style.display = "none";
 
-    // Build distractors
     const distractors = this.shuffleArray(this.slPool.filter(x => x.en !== item.en)).slice(0, 2);
     const options = this.shuffleArray([item, ...distractors]);
 
@@ -5402,9 +5911,14 @@ class App {
     });
   }
 
-  playSLTargetSpeech() {
+  playSLTargetSpeech(speed = "normal") {
     const item = this.slPool[this.slIndex];
-    if (item) audioService.speakSeq("", item.en, "en");
+    if (!item) return;
+    if (speed === "slow") {
+      audioService.speakSlow(item.en);
+    } else {
+      audioService.speakEn(item.en);
+    }
   }
 
   answerSLListen(isCorrect, btnEl) {
@@ -5433,57 +5947,67 @@ class App {
     document.getElementById("slSpeakTargetEn").textContent = item.en;
     document.getElementById("slSpeakTargetAr").textContent = item.ar;
 
+    // Build interactive word chips for pronunciation practice
+    const chipsWrap = document.getElementById("slWordChipsWrap");
+    if (chipsWrap) {
+      chipsWrap.innerHTML = "";
+      const words = (item.en || "").replace(/[.,!?;:]/g, "").split(/\s+/).filter(Boolean);
+      words.forEach(w => {
+        const btn = document.createElement("button");
+        btn.className = "sl-word-chip";
+        btn.innerHTML = `🔊 ${w}`;
+        btn.onclick = () => audioService.speakSlow(w);
+        chipsWrap.appendChild(btn);
+      });
+    }
+
     const resultBox = document.getElementById("slSpeakResultBox");
     resultBox.style.display = "none";
     resultBox.innerHTML = "";
 
-    const SR = audioService.getSpeechRecognition();
-    const recBtn = document.getElementById("slRecordBtn");
-    const fallbackMsg = document.getElementById("slSpeakFallbackMsg");
+    const statusNotice = document.getElementById("slSpeakStatusNotice");
+    if (statusNotice) statusNotice.style.display = "none";
 
-    if (!SR) {
-      fallbackMsg.style.display = "block";
-      recBtn.style.display = "none";
-      document.getElementById("slNextBtn").style.display = "block";
-    } else {
-      fallbackMsg.style.display = "none";
-      recBtn.style.display = "block";
-      recBtn.disabled = false;
-      recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
-    }
+    const recBtn = document.getElementById("slRecordBtn");
+    recBtn.style.display = "block";
+    recBtn.disabled = false;
+    recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
   }
 
   startSLRecording() {
-    const SR = audioService.getSpeechRecognition();
-    if (!SR) return;
-
     const recBtn = document.getElementById("slRecordBtn");
     recBtn.disabled = true;
-    recBtn.innerHTML = "🎙️ يستمع إليك الآن...";
+    recBtn.innerHTML = "🎙️ يستمع إليك الآن... تكلم بوضوح";
 
-    try {
-      const rec = new SR();
-      rec.lang = "en-US";
-      rec.maxAlternatives = 1;
-      rec.onresult = (e) => {
-        const spoken = e.results[0][0].transcript;
-        this.evaluateSLSpeech(spoken);
-      };
-      rec.onerror = () => {
-        this.toast("تعذر التقاط الصوت، تأكد من إذن الميكروفون.");
-        recBtn.disabled = false;
-        recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
-      };
-      rec.onend = () => {
-        recBtn.disabled = false;
-        recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
-      };
-      rec.start();
-    } catch (e) {
-      this.toast("ميزة التعرف على الصوت غير مدعومة على جهازك.");
-      recBtn.disabled = false;
-      recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
+    const statusNotice = document.getElementById("slSpeakStatusNotice");
+    if (statusNotice) {
+      statusNotice.style.display = "block";
+      statusNotice.style.color = "var(--blue)";
+      statusNotice.textContent = "🎙️ الميكروفون نشط، انطق الجملة بالإنجليزية الآن...";
     }
+
+    audioService.startSpeechRecognition({
+      lang: "en-US",
+      onListening: () => {
+        recBtn.innerHTML = "🎙️ يستمع إليك الآن... تكلم بوضوح";
+        recBtn.disabled = true;
+      },
+      onResult: (spoken) => {
+        recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
+        recBtn.disabled = false;
+        if (statusNotice) statusNotice.style.display = "none";
+        this.evaluateSLSpeech(spoken);
+      },
+      onError: (err) => {
+        recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
+        recBtn.disabled = false;
+        if (statusNotice) {
+          statusNotice.style.display = "block";
+          statusNotice.style.color = "var(--gold-dark)";
+          statusNotice.innerHTML = "💡 تعذر التقاط الصوت عبر الميكروفون. استمع للجملة ونطقها بصوتك، ثم اضغط على زر (تدربت وتحدثت بها) بالأسفل للمتابعة بنجاح!";
+        }
+      }
+    });
   }
 
   evaluateSLSpeech(spokenText) {
@@ -5496,7 +6020,7 @@ class App {
     html += `<div style="direction:ltr; text-align:left; margin-bottom:10px; display:flex; flex-wrap:wrap; gap:6px;">`;
 
     let matches = 0;
-    targetWords.forEach((word, i) => {
+    targetWords.forEach(word => {
       const isMatch = spokenWords.includes(word);
       if (isMatch) matches++;
       html += `<span class="badge-tag" style="background:${isMatch ? 'var(--green)' : '#fee2e2'}; color:${isMatch ? '#fff' : 'var(--red)'};">${word}</span>`;
@@ -5504,16 +6028,34 @@ class App {
     html += `</div>`;
 
     const pct = targetWords.length ? Math.round((matches / targetWords.length) * 100) : 0;
-    html += `<div style="font-weight:800; color:${pct >= 70 ? 'var(--green)' : 'var(--gold-dark)'};">نسبة التطابق الصوتي: ${pct}٪</div>`;
+    html += `<div style="font-weight:800; color:${pct >= 60 ? 'var(--green)' : 'var(--gold-dark)'};">نسبة التطابق الصوتي: ${pct}٪</div>`;
 
     const resBox = document.getElementById("slSpeakResultBox");
     resBox.style.display = "block";
     resBox.innerHTML = html;
 
-    if (pct >= 60) {
+    if (pct >= 50) {
       audioService.playCorrect();
       storageService.addXP(6);
     }
+
+    document.getElementById("slNextBtn").style.display = "block";
+  }
+
+  passSLSelfPractice() {
+    audioService.playCorrect();
+    storageService.addXP(6);
+
+    const resBox = document.getElementById("slSpeakResultBox");
+    resBox.style.display = "block";
+    resBox.innerHTML = `
+      <div style="background:#ecfdf5; border:1px solid #a7f3d0; color:var(--green); padding:10px 14px; border-radius:12px; font-weight:700;">
+        🎉 رائع جداً! تم تسجيل تدريبك ونطقك للجملة بصوت عالٍ (+6 نقاط XP). استمر في ممارسة النطق اليومي!
+      </div>
+    `;
+
+    const statusNotice = document.getElementById("slSpeakStatusNotice");
+    if (statusNotice) statusNotice.style.display = "none";
 
     document.getElementById("slNextBtn").style.display = "block";
   }
@@ -5534,16 +6076,48 @@ class App {
   startLumiChat() {
     const box = document.getElementById("lumiChatContainer");
     if (box && box.children.length === 0) {
-      this.appendLumiMsg("bot", "أهلاً بك يا بطل! 👋 أنا لومي 🤖 مدرّبك الشخصي للغة الإنجليزية.\nاسألني أي سؤال عن القواعد، أو جرّب كتابة جملة بالإنجليزي وسأصححها لك فوراً!");
+      this.appendLumiMsg(
+        "bot",
+        "أهلاً بك يا بطل! 👋 أنا لومي 🤖 مدرّبك الشخصي للغة الإنجليزية.\nاسألني عن أي قاعدة أو موقف سفر، أو جرّب كتابة جملة بالإنجليزي وسأصححها لك فوراً، أو اختر من الاقتراحات السريعة بالأسفل!",
+        ["Hello! I am Lumi, your personal English tutor.", "Practice makes perfect!"]
+      );
     }
   }
 
-  appendLumiMsg(role, text) {
+  askLumiPrompt(promptText) {
+    const inp = document.getElementById("lumiInput");
+    if (inp) {
+      inp.value = promptText;
+      this.sendLumi();
+    }
+  }
+
+  appendLumiMsg(role, text, enPhrases = []) {
     const box = document.getElementById("lumiChatContainer");
     if (!box) return null;
+
     const bubble = document.createElement("div");
     bubble.className = `chat-bubble ${role}`;
-    bubble.textContent = text;
+    
+    const textNode = document.createElement("div");
+    textNode.style.whiteSpace = "pre-wrap";
+    textNode.textContent = text;
+    bubble.appendChild(textNode);
+
+    // If bot provided English phrases, attach clickable speech buttons
+    if (role === "bot" && enPhrases && enPhrases.length > 0) {
+      const audioRow = document.createElement("div");
+      audioRow.style.cssText = "display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; direction:ltr;";
+      enPhrases.forEach(phrase => {
+        const btn = document.createElement("button");
+        btn.className = "chat-audio-btn";
+        btn.innerHTML = `🔊 ${phrase}`;
+        btn.onclick = () => audioService.speakEn(phrase);
+        audioRow.appendChild(btn);
+      });
+      bubble.appendChild(audioRow);
+    }
+
     box.appendChild(bubble);
     box.scrollTop = box.scrollHeight;
     return bubble;
@@ -5559,9 +6133,30 @@ class App {
     this.appendLumiMsg("user", text);
 
     const typingBubble = this.appendLumiMsg("bot", "يكتب الآن... ⏳");
-    const reply = await lumiService.ask(text);
+    const replyData = await lumiService.ask(text);
+
     if (typingBubble) {
-      typingBubble.textContent = reply;
+      typingBubble.innerHTML = "";
+      const textNode = document.createElement("div");
+      textNode.style.whiteSpace = "pre-wrap";
+      textNode.textContent = replyData.text;
+      typingBubble.appendChild(textNode);
+
+      if (replyData.enPhrases && replyData.enPhrases.length > 0) {
+        const audioRow = document.createElement("div");
+        audioRow.style.cssText = "display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; direction:ltr;";
+        replyData.enPhrases.forEach(phrase => {
+          const btn = document.createElement("button");
+          btn.className = "chat-audio-btn";
+          btn.innerHTML = `🔊 ${phrase}`;
+          btn.onclick = () => audioService.speakEn(phrase);
+          audioRow.appendChild(btn);
+        });
+        typingBubble.appendChild(audioRow);
+      }
+      
+      const box = document.getElementById("lumiChatContainer");
+      if (box) box.scrollTop = box.scrollHeight;
     }
   }
 
@@ -5569,6 +6164,44 @@ class App {
   resetWhatSay() {
     const resBox = document.getElementById("whatsayResultBox");
     if (resBox) resBox.style.display = "none";
+    this.renderQuickSituations();
+  }
+
+  renderQuickSituations() {
+    const container = document.getElementById("quickSituationsList");
+    if (!container) return;
+
+    const QUICK_SITUATIONS = [
+      { title: "طلب الفاتورة في المطعم", icon: "💳", en: "Could we have the check, please?", ar: "هل يمكننا الحصول على الفاتورة من فضلك؟" },
+      { title: "حجز غرفة هادئة في فندق", icon: "🏨", en: "I would like to book a quiet room, please.", ar: "أود حجز غرفة هادئة من فضلك." },
+      { title: "السؤال عن بوابة الصعود بالمطار", icon: "🛫", en: "Excuse me, where is gate number twelve?", ar: "عفواً، أين بوابة الصعود رقم 12؟" },
+      { title: "طلب تاكسي لوسط المدينة", icon: "🚕", en: "Please take me to the city center.", ar: "من فضلك خذني إلى وسط المدينة." },
+      { title: "السؤال عن مقاس أصغر في المتجر", icon: "🛍️", en: "Do you have this in a smaller size?", ar: "هل يتوفر هذا بمقاس أصغر؟" },
+      { title: "طلب قهوة بدون سكر", icon: "☕", en: "Can I get a black coffee with no sugar, please?", ar: "هل يمكنني طلب قهوة سادة بدون سكر؟" },
+      { title: "السؤال عن أقرب محطة مترو", icon: "📍", en: "Excuse me, where is the nearest metro station?", ar: "عفواً، أين أقرب محطة مترو؟" },
+      { title: "طلب مساعدة طبية عاجلة", icon: "🚑", en: "I need to see a doctor immediately, please.", ar: "أحتاج لمقابلة طبيب على الفور من فضلك." }
+    ];
+
+    container.innerHTML = "";
+    QUICK_SITUATIONS.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "quick-situation-card";
+      const safeEn = item.en.replace(/'/g, "\\'");
+      card.innerHTML = `
+        <div style="flex:1;">
+          <div style="font-weight:700; font-size:13.5px; color:var(--text); margin-bottom:2px;">
+            <span>${item.icon}</span> ${item.title}
+          </div>
+          <div style="direction:ltr; text-align:left; font-weight:800; color:var(--blue); font-size:14px;">${item.en}</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${item.ar}</div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button class="opt-speaker-btn" title="استمع للنطق" onclick="audioService.speakEn('${safeEn}')">🔊</button>
+          <button class="opt-speaker-btn" title="نطق بطيء" onclick="audioService.speakSlow('${safeEn}')">🐢</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
   }
 
   async generateSay(tone = "عادي وطبيعي") {
@@ -5594,11 +6227,18 @@ class App {
     loader.style.display = "none";
     resBox.style.display = "block";
     audioService.playCorrect();
+    // Auto-pronounce English sentence immediately
+    audioService.speakEn(res.en);
   }
 
-  playWhatSaySpeech() {
-    if (this.currentSayEn) {
+  playWhatSaySpeech(mode = "normal") {
+    if (!this.currentSayEn) return;
+    if (mode === "slow") {
+      audioService.speakSlow(this.currentSayEn);
+    } else if (mode === "both") {
       audioService.speakSeq(this.currentSayAr, this.currentSayEn, "both");
+    } else {
+      audioService.speakEn(this.currentSayEn);
     }
   }
 
@@ -6275,7 +6915,6 @@ class App {
 
 // Global App Instance
 const app = new App();
-
 
 </script>
 </body>

@@ -383,14 +383,15 @@
         <div class="card">
           <div id="travelSceneIcon" style="font-size:52px; text-align:center; padding:10px 0;">🛫</div>
           <div class="sub center" id="travelSituationAr" style="text-align:center; font-weight:700; margin-bottom:12px; color:var(--text);"></div>
-          <div class="pair-en" id="travelNpcEn" style="text-align:center; font-size:16px; color:var(--blue);"></div>
+          <div class="pair-en" id="travelNpcEn" style="text-align:center; font-size:16px; color:var(--blue); font-weight:700;"></div>
           <div class="pair-ar" id="travelNpcAr" style="text-align:center; margin-top:4px; margin-bottom:12px;"></div>
-          <div style="display:flex; justify-content:center; margin-bottom:14px;">
-            <button class="icon-btn" onclick="app.playTravelNpcSpeech()">🔊 استمع للموظف</button>
+          <div style="display:flex; justify-content:center; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+            <button class="icon-btn" onclick="app.playTravelNpcSpeech('normal')">🔊 استمع للموظف</button>
+            <button class="icon-btn" onclick="app.playTravelNpcSpeech('slow')">🐢 نطق بطيء</button>
           </div>
-          <div style="font-size:12.5px; font-weight:800; margin-bottom:8px; color:var(--text);">ماذا تقول أنت الآن؟</div>
+          <div style="font-size:12.5px; font-weight:800; margin-bottom:8px; color:var(--text);">ماذا تقول أنت الآن؟ (اضغط 🔊 لسماع نطق أي خيار):</div>
           <div id="travelOptionsBox"></div>
-          <div id="travelFeedbackBox" style="display:none; margin-top:10px; font-size:13px; line-height:1.6; padding:10px; border-radius:10px; background:var(--card-subtle);"></div>
+          <div id="travelFeedbackBox" style="display:none; margin-top:10px; font-size:13px; line-height:1.6; padding:12px; border-radius:12px; background:var(--card-subtle);"></div>
           <button class="btn btn-primary" id="travelNextBtn" style="margin-top:14px; display:none;" onclick="app.nextTravelStage()">الموقف التالي ←</button>
         </div>
       </div>
@@ -402,13 +403,24 @@
         <button class="action-btn" onclick="app.showScreen('home')">→</button>
         <div>
           <h1>🤖 لومي — المدرّب الذكي</h1>
-          <div class="subtitle">متصل ومستعد للمحادثة</div>
+          <div class="subtitle">متصل ومستعد للمحادثة والصوت</div>
         </div>
       </div>
-      <div class="scroll-content" id="lumiChatContainer"></div>
-      <div style="position:absolute; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border); padding:10px 14px calc(10px + var(--safe-bottom)); display:flex; gap:8px; z-index:15;">
-        <input class="input-field" id="lumiInput" placeholder="اكتب رسالتك أو جملتك للومي..." style="margin:0;">
-        <button class="btn btn-primary btn-sm" onclick="app.sendLumi()">إرسال</button>
+      <div class="scroll-content chat-container" id="lumiChatContainer"></div>
+      <div style="position:absolute; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border); z-index:15;">
+        <div class="lumi-prompts-bar" id="lumiPromptsBar">
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('🎯 كيف أقول شكراً بطرق لبقة ومتنوعة؟')">🎯 طرق قول شكراً</button>
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('✈️ ما هي أهم الجمل التي أحتاجها في المطار؟')">✈️ جمل المطار</button>
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('🏨 كيف أطلب غرفة في فندق؟')">🏨 حجز فندق</button>
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('💡 ما الفرق بين a و an في الإنجليزية؟')">💡 الفرق بين a و an</button>
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('⏰ اشرح لي قاعدة المضارع البسيط باختصار')">⏰ المضارع البسيط</button>
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('📝 صحح لي هذه الجملة: I am agree with your idea')">📝 صحح لي جملتي</button>
+          <button class="lumi-prompt-chip" onclick="app.askLumiPrompt('🗣️ Hello Lumi, how are you today? Let us talk in English')">🗣️ تحدث معي بالإنجليزية</button>
+        </div>
+        <div style="padding:10px 14px calc(10px + var(--safe-bottom)); display:flex; gap:8px;">
+          <input class="input-field" id="lumiInput" placeholder="اكتب سؤالك أو جملتك للومي..." style="margin:0;">
+          <button class="btn btn-primary btn-sm" onclick="app.sendLumi()">إرسال</button>
+        </div>
       </div>
     </div>
 
@@ -429,17 +441,19 @@
       </div>
       <div class="scroll-content">
         <div class="card">
-          <div class="sub" style="margin-bottom:8px;">صف موقفك بالعربي، وسيعطيك لومي الجملة الإنجليزية المناسبة فوراً:</div>
+          <div class="sub" style="margin-bottom:8px;">صف موقفك بالعربي، وسيعطيك لومي الجملة الإنجليزية المناسبة فوراً مع النطق:</div>
           <input class="input-field" id="whatsayInput" placeholder="مثال: أريد حجز غرفة هادئة مطلة على الحديقة">
           <button class="btn btn-primary" onclick="app.generateSay('عادي وطبيعي')">أعطني الجملة المناسبة 💡</button>
         </div>
-        <div class="sub center" id="whatsayLoading" style="display:none; text-align:center; margin:16px 0;">لومي يفكر في أفضل صياغة طبيعية... ⏳</div>
+        <div class="sub center" id="whatsayLoading" style="display:none; text-align:center; margin:16px 0;">لومي يجهز لك أفضل صياغة طبيعية... ⏳</div>
         <div id="whatsayResultBox" style="display:none; margin-top:14px;">
           <div class="pair-card">
-            <div class="pair-en" id="whatsayEnText" style="font-size:17px;"></div>
+            <div class="pair-en" id="whatsayEnText" style="font-size:18px; font-weight:800; color:var(--blue);"></div>
             <div class="pair-ar" id="whatsayArText" style="font-size:15px; margin-top:6px;"></div>
-            <div class="pair-audio-row">
-              <button class="icon-btn" onclick="app.playWhatSaySpeech()">🔊 استمع للنطق الصحيح</button>
+            <div class="pair-audio-row" style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:12px;">
+              <button class="icon-btn" onclick="app.playWhatSaySpeech('normal')">🔊 استمع للجملة</button>
+              <button class="icon-btn" onclick="app.playWhatSaySpeech('slow')">🐢 نطق بطيء</button>
+              <button class="icon-btn" onclick="app.playWhatSaySpeech('both')">🇸🇦 عربي + إنجليزي</button>
             </div>
           </div>
           <div class="sub" style="margin:12px 4px 6px;">خيارات إعادة الصياغة بنبرات مختلفة:</div>
@@ -448,6 +462,13 @@
             <button class="icon-btn" onclick="app.generateSay('أكثر طبيعية للناطقين الأصليين')">🌟 كمتحدث أصلي</button>
             <button class="icon-btn" onclick="app.generateSay('أكثر تهذيباً ورسمية')">👔 رسمية ومهذبة</button>
           </div>
+        </div>
+
+        <!-- Curated Everyday Situations with Direct Audio -->
+        <div style="margin-top:22px;">
+          <div style="font-weight:800; font-size:15px; margin-bottom:6px; color:var(--text);">⚡ مواقف شائعة وسريعة (استمع مباشرة)</div>
+          <div class="sub" style="margin-bottom:12px;">جمل يومية أساسية جاهزة بالنطق الصوتي العادي والبطيء:</div>
+          <div id="quickSituationsList"></div>
         </div>
       </div>
     </div>
@@ -496,7 +517,10 @@
         <div class="card" id="slListenBox">
           <div style="font-weight:800; font-size:15px; margin-bottom:8px;">🎧 الخطوة 1: الاستماع الدقيق</div>
           <div class="sub" style="margin-bottom:12px;">استمع للجملة جيداً، ثم حدد ما سمعته من الخيارات:</div>
-          <button class="btn btn-ghost" style="margin-bottom:14px;" onclick="app.playSLTargetSpeech()">🔊 اضغط للاستماع للجملة</button>
+          <div style="display:flex; justify-content:center; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+            <button class="btn btn-ghost" onclick="app.playSLTargetSpeech('normal')">🔊 استمع للجملة</button>
+            <button class="btn btn-ghost" onclick="app.playSLTargetSpeech('slow')">🐢 نطق بطيء</button>
+          </div>
           <div id="slListenOptionsWrap"></div>
           <div id="slListenFeedback" style="display:none; color:var(--red); font-size:12.5px; margin-top:8px;"></div>
         </div>
@@ -504,13 +528,24 @@
         <!-- Speaking Step -->
         <div class="card" id="slSpeakBox" style="display:none;">
           <div style="font-weight:800; font-size:15px; margin-bottom:8px;">🎤 الخطوة 2: التحدث والنطق</div>
-          <div class="sub" style="margin-bottom:12px;">اقرأ هذه الجملة بصوت واضح ليقيس النظام تطابق نطقك:</div>
-          <div class="pair-en" id="slSpeakTargetEn" style="text-align:center; font-size:18px; margin-bottom:4px; color:var(--blue);"></div>
-          <div class="pair-ar" id="slSpeakTargetAr" style="text-align:center; margin-bottom:16px;"></div>
-          <button class="btn btn-gold" id="slRecordBtn" onclick="app.startSLRecording()">🎤 اضغط وتحدث بالإنجليزية</button>
-          <div class="sub" id="slSpeakFallbackMsg" style="display:none; color:var(--text-muted); margin-top:8px; line-height:1.6;">
-            ميزة التعرف الصوتي غير مفعلة في هذا المتصفح. كرر الجملة بصوت عالٍ واضغط متابعة.
+          <div class="sub" style="margin-bottom:12px;">اقرأ هذه الجملة بصوت واضح، أو اضغط على أي كلمة لسماع نطقها منفرداً:</div>
+          <div class="pair-en" id="slSpeakTargetEn" style="text-align:center; font-size:19px; margin-bottom:4px; color:var(--blue); font-weight:800;"></div>
+          <div class="pair-ar" id="slSpeakTargetAr" style="text-align:center; margin-bottom:14px;"></div>
+          
+          <!-- Interactive Word-by-Word Practice -->
+          <div style="font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:6px; text-align:center;">اضغط على الكلمة لسماعها ببطء:</div>
+          <div id="slWordChipsWrap" style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:16px;"></div>
+
+          <div style="display:flex; justify-content:center; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+            <button class="icon-btn" onclick="app.playSLTargetSpeech('normal')">🔊 الجملة كاملة</button>
+            <button class="icon-btn" onclick="app.playSLTargetSpeech('slow')">🐢 نطق بطيء</button>
           </div>
+
+          <button class="btn btn-gold" id="slRecordBtn" onclick="app.startSLRecording()">🎤 اضغط وتحدث بالإنجليزية</button>
+          
+          <button class="btn btn-ghost" id="slSelfPassBtn" style="margin-top:10px; width:100%; border:1.5px dashed var(--blue); color:var(--blue); font-weight:700;" onclick="app.passSLSelfPractice()">🗣️ تدربت وتحدثت بها بصوت عالٍ (+6 نقاط) ✨</button>
+
+          <div id="slSpeakStatusNotice" style="display:none; text-align:center; margin-top:10px; font-size:13px; font-weight:700;"></div>
           <div id="slSpeakResultBox" style="display:none; margin-top:12px;"></div>
         </div>
 

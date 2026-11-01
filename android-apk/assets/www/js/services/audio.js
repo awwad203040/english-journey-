@@ -1,6 +1,6 @@
 // English Journey - Audio & Speech Services
 // 1. Text-To-Speech (Native Android TTS Bridge + Web Speech API + Online Audio Fallback)
-// 2. Speech-To-Text (Pronunciation Tester via SpeechRecognition)
+// 2. Speech-To-Text (Native Android STT Bridge + Web SpeechRecognition + Word Pronunciation)
 // 3. Web Audio API Synthesized Sound Effects (Clicks, Chimes, Fanfares)
 
 class AudioService {
@@ -10,7 +10,9 @@ class AudioService {
     this.speechUnlocked = false;
     this.currentToken = 0;
     this._nativeCallbacks = {};
+    this._sttCallbacks = { onResult: null, onError: null, onListening: null };
     this.audioElement = null;
+    this.activeRecognition = null;
 
     // Load persisted settings
     this.sfxEnabled = (typeof storageService !== "undefined") ? storageService.getSfxEnabled() : true;
@@ -25,6 +27,14 @@ class AudioService {
       typeof window !== "undefined" &&
       typeof window.AndroidNativeTTS !== "undefined" &&
       typeof window.AndroidNativeTTS.speak === "function"
+    );
+  }
+
+  isNativeSTT() {
+    return (
+      typeof window !== "undefined" &&
+      typeof window.AndroidNativeSTT !== "undefined" &&
+      typeof window.AndroidNativeSTT.startListening === "function"
     );
   }
 
@@ -93,7 +103,7 @@ class AudioService {
     v = list.find(x => x.lang && x.lang.toLowerCase() === "en-gb" && good.test(x.name));
     if (v) return { voice: v, isHighQuality: true };
     v = list.find(x => x.lang && x.lang.toLowerCase() === "en-us") || list.find(x => x.lang && x.lang.toLowerCase() === "en-gb");
-    if (v) return { voice: v, isHighQuality: good.test(v.name) };
+    if (v) return { voice: v, isHighQuality: (v && good.test(v.name)) };
     v = list.find(x => x.lang && x.lang.toLowerCase().startsWith("en"));
     return { voice: v || null, isHighQuality: false };
   }
@@ -117,7 +127,7 @@ class AudioService {
   }
 
   // --- Speak via Native Android TTS ---
-  speakNative(text, isAr, tok) {
+  speakNative(text, isAr, tok, customRate = 0) {
     return new Promise(resolve => {
       const uid = "tts_" + Math.random().toString(36).substring(2, 9);
       let finished = false;
@@ -130,7 +140,6 @@ class AudioService {
         resolve();
       };
 
-      // Safety timeout: in case the engine takes too long or doesn't return
       const timeoutMs = Math.max(3000, text.length * 130);
       const timer = setTimeout(finish, timeoutMs);
 
@@ -140,7 +149,8 @@ class AudioService {
 
       try {
         const lang = isAr ? "ar" : "en";
-        window.AndroidNativeTTS.speak(this.cleanText(text), lang, this.speechRate, uid);
+        const rate = customRate > 0 ? customRate : this.speechRate;
+        window.AndroidNativeTTS.speak(this.cleanText(text), lang, rate, uid);
       } catch (e) {
         finish();
       }
@@ -183,13 +193,15 @@ class AudioService {
   }
 
   // --- Speak a single phrase ---
-  speakOne(text, isAr, tok) {
+  speakOne(text, isAr, tok, customRate = 0) {
     if (!text) return Promise.resolve();
     this.unlockAudio();
 
+    const effRate = customRate > 0 ? customRate : this.speechRate;
+
     // 1. Android Native TTS (In APK)
     if (this.isNativeAndroid()) {
-      return this.speakNative(text, isAr, tok);
+      return this.speakNative(text, isAr, tok, effRate);
     }
 
     // 2. Web Speech API (In Browsers)
@@ -221,7 +233,7 @@ class AudioService {
           const u = new SpeechSynthesisUtterance(chunkStr);
           u.lang = picked.voice ? picked.voice.lang : (isAr ? "ar-SA" : "en-US");
           if (picked.voice) u.voice = picked.voice;
-          u.rate = this.speechRate;
+          u.rate = effRate;
 
           let done = false;
           const advance = () => {
@@ -232,13 +244,13 @@ class AudioService {
             speakNext();
           };
 
-          // Anti-hang protection (Chrome Web Speech API bugfix)
+          // Anti-hang protection
           const timeoutId = setTimeout(advance, Math.max(3000, chunkStr.length * 120));
 
           u.onend = advance;
           u.onerror = advance;
 
-          window._activeUtterance = u; // Keep reference to prevent GC bug in Chrome
+          window._activeUtterance = u;
           window.speechSynthesis.speak(u);
         } catch (e) {
           idx++;
@@ -248,6 +260,21 @@ class AudioService {
 
       speakNext();
     });
+  }
+
+  // --- Speak English Phrase Directly ---
+  speakEn(enText) {
+    if (!enText) return Promise.resolve();
+    return this.speakSeq("", enText, "en");
+  }
+
+  // --- Speak English Phrase Slowly for Learning ---
+  speakSlow(enText) {
+    if (!enText) return Promise.resolve();
+    this.unlockAudio();
+    const tok = ++this.currentToken;
+    this.stopSpeech();
+    return this.speakOne(enText, false, tok, 0.65);
   }
 
   // --- Speak sequence (Arabic then English or either) ---
@@ -268,7 +295,6 @@ class AudioService {
       if (arText && enText) {
         return this.speakOne(arText, true, tok).then(() => {
           if (tok !== this.currentToken) return;
-          // Short pause between Arabic explanation and English phrase
           return new Promise(r => setTimeout(r, 260)).then(() => {
             if (tok !== this.currentToken) return;
             return this.speakOne(enText, false, tok);
@@ -352,8 +378,84 @@ class AudioService {
     });
   }
 
-  getSpeechRecognition() {
-    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  // --- Speech Recognition (STT) Manager ---
+  startSpeechRecognition({ lang = "en-US", onListening, onResult, onError }) {
+    this._sttCallbacks = { onListening, onResult, onError };
+
+    // 1. If in Android APK with native STT
+    if (this.isNativeSTT()) {
+      try {
+        window.AndroidNativeSTT.startListening(lang);
+        return;
+      } catch (e) {
+        if (onError) onError("native_failed");
+        return;
+      }
+    }
+
+    // 2. Web Speech Recognition in browser
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+    if (!SR) {
+      if (onError) onError("not_supported");
+      return;
+    }
+
+    try {
+      if (this.activeRecognition) {
+        try { this.activeRecognition.abort(); } catch (e) {}
+      }
+
+      const rec = new SR();
+      this.activeRecognition = rec;
+      rec.lang = lang;
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+
+      rec.onstart = () => {
+        if (onListening) onListening();
+      };
+
+      rec.onresult = (e) => {
+        const text = e.results && e.results[0] && e.results[0][0] ? e.results[0][0].transcript : "";
+        if (onResult) onResult(text);
+      };
+
+      rec.onerror = (e) => {
+        const errType = e.error || "generic_error";
+        if (onError) onError(errType);
+      };
+
+      rec.onend = () => {
+        this.activeRecognition = null;
+      };
+
+      // Prompt mic permission if available via getUserMedia
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(stream => {
+            stream.getTracks().forEach(t => t.stop()); // close test stream
+            rec.start();
+          })
+          .catch(() => {
+            rec.start(); // fallback attempt directly
+          });
+      } else {
+        rec.start();
+      }
+    } catch (e) {
+      if (onError) onError("start_failed");
+    }
+  }
+
+  stopSpeechRecognition() {
+    if (this.isNativeSTT()) {
+      try { window.AndroidNativeSTT.stopListening(); } catch (e) {}
+    }
+    if (this.activeRecognition) {
+      try { this.activeRecognition.abort(); } catch (e) {}
+      this.activeRecognition = null;
+    }
   }
 }
 
@@ -370,5 +472,24 @@ window.onNativeTTSDone = function(uid) {
 window.onNativeTTSError = function(uid) {
   if (typeof audioService !== "undefined" && audioService._nativeCallbacks && audioService._nativeCallbacks[uid]) {
     audioService._nativeCallbacks[uid]();
+  }
+};
+
+// Global Window Callbacks for Native Android STT Events
+window.onNativeSTTListening = function() {
+  if (typeof audioService !== "undefined" && audioService._sttCallbacks && audioService._sttCallbacks.onListening) {
+    audioService._sttCallbacks.onListening();
+  }
+};
+
+window.onNativeSTTResult = function(text) {
+  if (typeof audioService !== "undefined" && audioService._sttCallbacks && audioService._sttCallbacks.onResult) {
+    audioService._sttCallbacks.onResult(text);
+  }
+};
+
+window.onNativeSTTError = function(err) {
+  if (typeof audioService !== "undefined" && audioService._sttCallbacks && audioService._sttCallbacks.onError) {
+    audioService._sttCallbacks.onError(err);
   }
 };

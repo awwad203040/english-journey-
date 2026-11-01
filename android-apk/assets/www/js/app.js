@@ -935,14 +935,17 @@ class App {
     optWrap.innerHTML = "";
 
     stage.options.forEach((opt, idx) => {
-      const b = document.createElement("button");
-      b.className = "btn btn-ghost";
-      b.style.cssText = "margin-bottom:10px; text-align:right; flex-direction:column; align-items:flex-start; padding:12px 14px;";
+      const b = document.createElement("div");
+      b.className = "travel-opt-btn";
+      const safeEn = (opt.en || "").replace(/'/g, "\\'");
       b.innerHTML = `
-        <span style="direction:ltr; text-align:left; font-weight:700; color:var(--text);">${opt.en}</span>
-        <span style="font-size:12px; color:var(--text-muted); margin-top:3px;">${opt.ar}</span>
+        <div style="flex:1; text-align:right;">
+          <div style="direction:ltr; text-align:left; font-weight:700; color:var(--text); font-size:14.5px;">${opt.en}</div>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:3px;">${opt.ar}</div>
+        </div>
+        <button class="opt-speaker-btn" title="استمع لنطق هذا الخيار" onclick="event.stopPropagation(); audioService.speakEn('${safeEn}')">🔊</button>
       `;
-      b.onclick = () => this.answerTravelChoice(idx, b);
+      b.onclick = () => this.answerTravelChoice(idx, b, opt);
       optWrap.appendChild(b);
     });
 
@@ -953,24 +956,33 @@ class App {
     nextBtn.style.display = "none";
   }
 
-  answerTravelChoice(choiceIdx, btnEl) {
+  answerTravelChoice(choiceIdx, btnEl, opt) {
     if (this.travelDone) return;
     const stage = TRAVEL[this.travelKey].stages[this.travelIndex];
-    const opt = stage.options[choiceIdx];
 
     const exp = document.getElementById("travelFeedbackBox");
     const nextBtn = document.getElementById("travelNextBtn");
+    const safeEn = (opt.en || "").replace(/'/g, "\\'");
 
     if (opt.best) {
       this.travelDone = true;
       audioService.playCorrect();
+      audioService.speakEn(opt.en);
+
       btnEl.style.background = "var(--green)";
       btnEl.style.color = "#ffffff";
       btnEl.style.borderColor = "var(--green)";
+      const enDiv = btnEl.querySelector("div > div");
+      if (enDiv) enDiv.style.color = "#ffffff";
 
       exp.style.display = "block";
       exp.style.color = "var(--green)";
-      exp.textContent = `✅ ${opt.feedback}`;
+      exp.innerHTML = `
+        <div>✅ ${opt.feedback}</div>
+        <div style="margin-top:8px;">
+          <button class="icon-btn" onclick="audioService.speakEn('${safeEn}')">🔊 أعد الاستماع للجملة الصحيحة</button>
+        </div>
+      `;
 
       nextBtn.style.display = "block";
       nextBtn.textContent = this.travelIndex === TRAVEL[this.travelKey].stages.length - 1 ? "إنهاء الموقف بنجاح 🎉" : "الموقف التالي ←";
@@ -999,16 +1011,19 @@ class App {
     this.renderTravelStage();
   }
 
-  playTravelNpcSpeech() {
+  playTravelNpcSpeech(speed = "normal") {
     const stage = TRAVEL[this.travelKey].stages[this.travelIndex];
     if (stage) {
-      audioService.speakSeq(stage.npcAr, stage.npcEn, "both");
+      if (speed === "slow") {
+        audioService.speakSlow(stage.npcEn);
+      } else {
+        audioService.speakSeq(stage.npcAr, stage.npcEn, "both");
+      }
     }
   }
 
   // --- Speaking & Listening Practice ---
   startSpeakListen() {
-    // Generate pool from lessons
     const pool = [];
     ["greet", "family", "daily", "airport", "hotel", "restaurant"].forEach(k => {
       if (LESSONS[k] && LESSONS[k].pairs) {
@@ -1039,7 +1054,6 @@ class App {
     document.getElementById("slNextBtn").style.display = "none";
     document.getElementById("slListenFeedback").style.display = "none";
 
-    // Build distractors
     const distractors = this.shuffleArray(this.slPool.filter(x => x.en !== item.en)).slice(0, 2);
     const options = this.shuffleArray([item, ...distractors]);
 
@@ -1055,9 +1069,14 @@ class App {
     });
   }
 
-  playSLTargetSpeech() {
+  playSLTargetSpeech(speed = "normal") {
     const item = this.slPool[this.slIndex];
-    if (item) audioService.speakSeq("", item.en, "en");
+    if (!item) return;
+    if (speed === "slow") {
+      audioService.speakSlow(item.en);
+    } else {
+      audioService.speakEn(item.en);
+    }
   }
 
   answerSLListen(isCorrect, btnEl) {
@@ -1086,57 +1105,67 @@ class App {
     document.getElementById("slSpeakTargetEn").textContent = item.en;
     document.getElementById("slSpeakTargetAr").textContent = item.ar;
 
+    // Build interactive word chips for pronunciation practice
+    const chipsWrap = document.getElementById("slWordChipsWrap");
+    if (chipsWrap) {
+      chipsWrap.innerHTML = "";
+      const words = (item.en || "").replace(/[.,!?;:]/g, "").split(/\s+/).filter(Boolean);
+      words.forEach(w => {
+        const btn = document.createElement("button");
+        btn.className = "sl-word-chip";
+        btn.innerHTML = `🔊 ${w}`;
+        btn.onclick = () => audioService.speakSlow(w);
+        chipsWrap.appendChild(btn);
+      });
+    }
+
     const resultBox = document.getElementById("slSpeakResultBox");
     resultBox.style.display = "none";
     resultBox.innerHTML = "";
 
-    const SR = audioService.getSpeechRecognition();
-    const recBtn = document.getElementById("slRecordBtn");
-    const fallbackMsg = document.getElementById("slSpeakFallbackMsg");
+    const statusNotice = document.getElementById("slSpeakStatusNotice");
+    if (statusNotice) statusNotice.style.display = "none";
 
-    if (!SR) {
-      fallbackMsg.style.display = "block";
-      recBtn.style.display = "none";
-      document.getElementById("slNextBtn").style.display = "block";
-    } else {
-      fallbackMsg.style.display = "none";
-      recBtn.style.display = "block";
-      recBtn.disabled = false;
-      recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
-    }
+    const recBtn = document.getElementById("slRecordBtn");
+    recBtn.style.display = "block";
+    recBtn.disabled = false;
+    recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
   }
 
   startSLRecording() {
-    const SR = audioService.getSpeechRecognition();
-    if (!SR) return;
-
     const recBtn = document.getElementById("slRecordBtn");
     recBtn.disabled = true;
-    recBtn.innerHTML = "🎙️ يستمع إليك الآن...";
+    recBtn.innerHTML = "🎙️ يستمع إليك الآن... تكلم بوضوح";
 
-    try {
-      const rec = new SR();
-      rec.lang = "en-US";
-      rec.maxAlternatives = 1;
-      rec.onresult = (e) => {
-        const spoken = e.results[0][0].transcript;
-        this.evaluateSLSpeech(spoken);
-      };
-      rec.onerror = () => {
-        this.toast("تعذر التقاط الصوت، تأكد من إذن الميكروفون.");
-        recBtn.disabled = false;
-        recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
-      };
-      rec.onend = () => {
-        recBtn.disabled = false;
-        recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
-      };
-      rec.start();
-    } catch (e) {
-      this.toast("ميزة التعرف على الصوت غير مدعومة على جهازك.");
-      recBtn.disabled = false;
-      recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
+    const statusNotice = document.getElementById("slSpeakStatusNotice");
+    if (statusNotice) {
+      statusNotice.style.display = "block";
+      statusNotice.style.color = "var(--blue)";
+      statusNotice.textContent = "🎙️ الميكروفون نشط، انطق الجملة بالإنجليزية الآن...";
     }
+
+    audioService.startSpeechRecognition({
+      lang: "en-US",
+      onListening: () => {
+        recBtn.innerHTML = "🎙️ يستمع إليك الآن... تكلم بوضوح";
+        recBtn.disabled = true;
+      },
+      onResult: (spoken) => {
+        recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
+        recBtn.disabled = false;
+        if (statusNotice) statusNotice.style.display = "none";
+        this.evaluateSLSpeech(spoken);
+      },
+      onError: (err) => {
+        recBtn.innerHTML = "🎤 اضغط وتحدث بالإنجليزية";
+        recBtn.disabled = false;
+        if (statusNotice) {
+          statusNotice.style.display = "block";
+          statusNotice.style.color = "var(--gold-dark)";
+          statusNotice.innerHTML = "💡 تعذر التقاط الصوت عبر الميكروفون. استمع للجملة ونطقها بصوتك، ثم اضغط على زر (تدربت وتحدثت بها) بالأسفل للمتابعة بنجاح!";
+        }
+      }
+    });
   }
 
   evaluateSLSpeech(spokenText) {
@@ -1149,7 +1178,7 @@ class App {
     html += `<div style="direction:ltr; text-align:left; margin-bottom:10px; display:flex; flex-wrap:wrap; gap:6px;">`;
 
     let matches = 0;
-    targetWords.forEach((word, i) => {
+    targetWords.forEach(word => {
       const isMatch = spokenWords.includes(word);
       if (isMatch) matches++;
       html += `<span class="badge-tag" style="background:${isMatch ? 'var(--green)' : '#fee2e2'}; color:${isMatch ? '#fff' : 'var(--red)'};">${word}</span>`;
@@ -1157,16 +1186,34 @@ class App {
     html += `</div>`;
 
     const pct = targetWords.length ? Math.round((matches / targetWords.length) * 100) : 0;
-    html += `<div style="font-weight:800; color:${pct >= 70 ? 'var(--green)' : 'var(--gold-dark)'};">نسبة التطابق الصوتي: ${pct}٪</div>`;
+    html += `<div style="font-weight:800; color:${pct >= 60 ? 'var(--green)' : 'var(--gold-dark)'};">نسبة التطابق الصوتي: ${pct}٪</div>`;
 
     const resBox = document.getElementById("slSpeakResultBox");
     resBox.style.display = "block";
     resBox.innerHTML = html;
 
-    if (pct >= 60) {
+    if (pct >= 50) {
       audioService.playCorrect();
       storageService.addXP(6);
     }
+
+    document.getElementById("slNextBtn").style.display = "block";
+  }
+
+  passSLSelfPractice() {
+    audioService.playCorrect();
+    storageService.addXP(6);
+
+    const resBox = document.getElementById("slSpeakResultBox");
+    resBox.style.display = "block";
+    resBox.innerHTML = `
+      <div style="background:#ecfdf5; border:1px solid #a7f3d0; color:var(--green); padding:10px 14px; border-radius:12px; font-weight:700;">
+        🎉 رائع جداً! تم تسجيل تدريبك ونطقك للجملة بصوت عالٍ (+6 نقاط XP). استمر في ممارسة النطق اليومي!
+      </div>
+    `;
+
+    const statusNotice = document.getElementById("slSpeakStatusNotice");
+    if (statusNotice) statusNotice.style.display = "none";
 
     document.getElementById("slNextBtn").style.display = "block";
   }
@@ -1187,16 +1234,48 @@ class App {
   startLumiChat() {
     const box = document.getElementById("lumiChatContainer");
     if (box && box.children.length === 0) {
-      this.appendLumiMsg("bot", "أهلاً بك يا بطل! 👋 أنا لومي 🤖 مدرّبك الشخصي للغة الإنجليزية.\nاسألني أي سؤال عن القواعد، أو جرّب كتابة جملة بالإنجليزي وسأصححها لك فوراً!");
+      this.appendLumiMsg(
+        "bot",
+        "أهلاً بك يا بطل! 👋 أنا لومي 🤖 مدرّبك الشخصي للغة الإنجليزية.\nاسألني عن أي قاعدة أو موقف سفر، أو جرّب كتابة جملة بالإنجليزي وسأصححها لك فوراً، أو اختر من الاقتراحات السريعة بالأسفل!",
+        ["Hello! I am Lumi, your personal English tutor.", "Practice makes perfect!"]
+      );
     }
   }
 
-  appendLumiMsg(role, text) {
+  askLumiPrompt(promptText) {
+    const inp = document.getElementById("lumiInput");
+    if (inp) {
+      inp.value = promptText;
+      this.sendLumi();
+    }
+  }
+
+  appendLumiMsg(role, text, enPhrases = []) {
     const box = document.getElementById("lumiChatContainer");
     if (!box) return null;
+
     const bubble = document.createElement("div");
     bubble.className = `chat-bubble ${role}`;
-    bubble.textContent = text;
+    
+    const textNode = document.createElement("div");
+    textNode.style.whiteSpace = "pre-wrap";
+    textNode.textContent = text;
+    bubble.appendChild(textNode);
+
+    // If bot provided English phrases, attach clickable speech buttons
+    if (role === "bot" && enPhrases && enPhrases.length > 0) {
+      const audioRow = document.createElement("div");
+      audioRow.style.cssText = "display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; direction:ltr;";
+      enPhrases.forEach(phrase => {
+        const btn = document.createElement("button");
+        btn.className = "chat-audio-btn";
+        btn.innerHTML = `🔊 ${phrase}`;
+        btn.onclick = () => audioService.speakEn(phrase);
+        audioRow.appendChild(btn);
+      });
+      bubble.appendChild(audioRow);
+    }
+
     box.appendChild(bubble);
     box.scrollTop = box.scrollHeight;
     return bubble;
@@ -1212,9 +1291,30 @@ class App {
     this.appendLumiMsg("user", text);
 
     const typingBubble = this.appendLumiMsg("bot", "يكتب الآن... ⏳");
-    const reply = await lumiService.ask(text);
+    const replyData = await lumiService.ask(text);
+
     if (typingBubble) {
-      typingBubble.textContent = reply;
+      typingBubble.innerHTML = "";
+      const textNode = document.createElement("div");
+      textNode.style.whiteSpace = "pre-wrap";
+      textNode.textContent = replyData.text;
+      typingBubble.appendChild(textNode);
+
+      if (replyData.enPhrases && replyData.enPhrases.length > 0) {
+        const audioRow = document.createElement("div");
+        audioRow.style.cssText = "display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; direction:ltr;";
+        replyData.enPhrases.forEach(phrase => {
+          const btn = document.createElement("button");
+          btn.className = "chat-audio-btn";
+          btn.innerHTML = `🔊 ${phrase}`;
+          btn.onclick = () => audioService.speakEn(phrase);
+          audioRow.appendChild(btn);
+        });
+        typingBubble.appendChild(audioRow);
+      }
+      
+      const box = document.getElementById("lumiChatContainer");
+      if (box) box.scrollTop = box.scrollHeight;
     }
   }
 
@@ -1222,6 +1322,44 @@ class App {
   resetWhatSay() {
     const resBox = document.getElementById("whatsayResultBox");
     if (resBox) resBox.style.display = "none";
+    this.renderQuickSituations();
+  }
+
+  renderQuickSituations() {
+    const container = document.getElementById("quickSituationsList");
+    if (!container) return;
+
+    const QUICK_SITUATIONS = [
+      { title: "طلب الفاتورة في المطعم", icon: "💳", en: "Could we have the check, please?", ar: "هل يمكننا الحصول على الفاتورة من فضلك؟" },
+      { title: "حجز غرفة هادئة في فندق", icon: "🏨", en: "I would like to book a quiet room, please.", ar: "أود حجز غرفة هادئة من فضلك." },
+      { title: "السؤال عن بوابة الصعود بالمطار", icon: "🛫", en: "Excuse me, where is gate number twelve?", ar: "عفواً، أين بوابة الصعود رقم 12؟" },
+      { title: "طلب تاكسي لوسط المدينة", icon: "🚕", en: "Please take me to the city center.", ar: "من فضلك خذني إلى وسط المدينة." },
+      { title: "السؤال عن مقاس أصغر في المتجر", icon: "🛍️", en: "Do you have this in a smaller size?", ar: "هل يتوفر هذا بمقاس أصغر؟" },
+      { title: "طلب قهوة بدون سكر", icon: "☕", en: "Can I get a black coffee with no sugar, please?", ar: "هل يمكنني طلب قهوة سادة بدون سكر؟" },
+      { title: "السؤال عن أقرب محطة مترو", icon: "📍", en: "Excuse me, where is the nearest metro station?", ar: "عفواً، أين أقرب محطة مترو؟" },
+      { title: "طلب مساعدة طبية عاجلة", icon: "🚑", en: "I need to see a doctor immediately, please.", ar: "أحتاج لمقابلة طبيب على الفور من فضلك." }
+    ];
+
+    container.innerHTML = "";
+    QUICK_SITUATIONS.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "quick-situation-card";
+      const safeEn = item.en.replace(/'/g, "\\'");
+      card.innerHTML = `
+        <div style="flex:1;">
+          <div style="font-weight:700; font-size:13.5px; color:var(--text); margin-bottom:2px;">
+            <span>${item.icon}</span> ${item.title}
+          </div>
+          <div style="direction:ltr; text-align:left; font-weight:800; color:var(--blue); font-size:14px;">${item.en}</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${item.ar}</div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button class="opt-speaker-btn" title="استمع للنطق" onclick="audioService.speakEn('${safeEn}')">🔊</button>
+          <button class="opt-speaker-btn" title="نطق بطيء" onclick="audioService.speakSlow('${safeEn}')">🐢</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
   }
 
   async generateSay(tone = "عادي وطبيعي") {
@@ -1247,11 +1385,18 @@ class App {
     loader.style.display = "none";
     resBox.style.display = "block";
     audioService.playCorrect();
+    // Auto-pronounce English sentence immediately
+    audioService.speakEn(res.en);
   }
 
-  playWhatSaySpeech() {
-    if (this.currentSayEn) {
+  playWhatSaySpeech(mode = "normal") {
+    if (!this.currentSayEn) return;
+    if (mode === "slow") {
+      audioService.speakSlow(this.currentSayEn);
+    } else if (mode === "both") {
       audioService.speakSeq(this.currentSayAr, this.currentSayEn, "both");
+    } else {
+      audioService.speakEn(this.currentSayEn);
     }
   }
 
