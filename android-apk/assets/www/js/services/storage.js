@@ -19,7 +19,13 @@ class StorageService {
       TRIAL_START: "ej_trial_start",
       SUBSCRIBED: "ej_subscribed",
       SFX: "ej_sfx_enabled",
-      VOICE_RATE: "ej_voice_rate"
+      VOICE_RATE: "ej_voice_rate",
+      SRS_CARDS: "ej_srs_cards",
+      PLACEMENT: "ej_placement",
+      PHONICS_DONE: "ej_phonics_done",
+      LEGO_DONE: "ej_lego_done",
+      SHADOWING_DONE: "ej_shadowing_done",
+      CERTIFICATES: "ej_certificates"
     };
     this.initTrial();
   }
@@ -250,6 +256,100 @@ class StorageService {
   hasFullAccess(forceFree = true) {
     if (forceFree) return true;
     return this.isSubscribed() || this.getTrialDaysLeft() > 0;
+  }
+
+  // --- Smart SRS Flashcards ---
+  getSRSCards() {
+    return this.get(this.KEYS.SRS_CARDS, null);
+  }
+
+  saveSRSCards(cards) {
+    this.set(this.KEYS.SRS_CARDS, cards);
+  }
+
+  updateSRSCardBox(cardId, newBox) {
+    const cards = this.getSRSCards() || [];
+    const card = cards.find(c => c.id === cardId);
+    if (card) {
+      card.box = newBox;
+      card.lastReviewed = new Date().toISOString();
+      this.saveSRSCards(cards);
+      if (newBox === 3) this.addXP(5);
+    }
+  }
+
+  // --- Diagnostic Placement Test ---
+  getPlacementResult() {
+    return this.get(this.KEYS.PLACEMENT, null);
+  }
+
+  savePlacementResult(resultObj) {
+    this.set(this.KEYS.PLACEMENT, {
+      ...resultObj,
+      date: new Date().toLocaleDateString("ar-SA", { year: "numeric", month: "long", day: "numeric" })
+    });
+    this.addXP(40);
+  }
+
+  // --- Phonics Mastery ---
+  getPhonicsDone() {
+    return this.get(this.KEYS.PHONICS_DONE, []);
+  }
+
+  markPhonicsDone(topicId) {
+    const list = this.getPhonicsDone();
+    if (!list.includes(topicId)) {
+      list.push(topicId);
+      this.set(this.KEYS.PHONICS_DONE, list);
+      this.addXP(15);
+    }
+  }
+
+  // --- Sentence Lego Progress ---
+  getLegoDone() {
+    return this.get(this.KEYS.LEGO_DONE, []);
+  }
+
+  markLegoDone(legoId) {
+    const list = this.getLegoDone();
+    if (!list.includes(legoId)) {
+      list.push(legoId);
+      this.set(this.KEYS.LEGO_DONE, list);
+      this.addXP(20);
+    }
+  }
+
+  // --- Shadowing Progress ---
+  getShadowingDone() {
+    return this.get(this.KEYS.SHADOWING_DONE, []);
+  }
+
+  markShadowingDone(drillId) {
+    const list = this.getShadowingDone();
+    if (!list.includes(drillId)) {
+      list.push(drillId);
+      this.set(this.KEYS.SHADOWING_DONE, list);
+      this.addXP(15);
+    }
+  }
+
+  // --- Digital Certificates ---
+  getCertificates() {
+    return this.get(this.KEYS.CERTIFICATES, []);
+  }
+
+  awardCertificate(cert) {
+    const list = this.getCertificates();
+    const existing = list.find(c => c.level === cert.level);
+    if (!existing) {
+      list.push({
+        ...cert,
+        id: "EJ-" + Math.floor(100000 + Math.random() * 900000),
+        awardedAt: new Date().toLocaleDateString("ar-SA", { year: "numeric", month: "long", day: "numeric" })
+      });
+      this.set(this.KEYS.CERTIFICATES, list);
+      this.addXP(50);
+    }
   }
 }
 

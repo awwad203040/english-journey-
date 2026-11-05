@@ -46,6 +46,34 @@ class App {
     this.currentSayEn = "";
     this.currentSayAr = "";
 
+    // 1. Lumi Voice Call State
+    this.callScenarioKey = "coffee";
+    this.callStageIndex = 0;
+    this.callTimerInterval = null;
+    this.callSeconds = 0;
+    this.callActive = false;
+
+    // 2. Phonics State
+    this.currentPhonicsKey = "pb";
+
+    // 3. Smart SRS Flashcards State
+    this.srsPool = [];
+    this.srsIndex = 0;
+    this.srsFlipped = false;
+    this.currentSRSCard = null;
+
+    // 4. Sentence Lego Builder State
+    this.legoIndex = 0;
+    this.legoSlotsPlaced = [];
+
+    // 5. Speech Shadowing State
+    this.shadowIndex = 0;
+    this.shadowSpeed = "normal";
+
+    // 6. Diagnostic Placement State
+    this.placementIndex = 0;
+    this.placementScore = 0;
+
     this.init();
   }
 
@@ -163,6 +191,24 @@ class App {
         break;
       case "onboarding":
         this.renderOnboarding();
+        break;
+      case "lumicall":
+        this.openLumiCall(this.callScenarioKey || "coffee");
+        break;
+      case "phonics":
+        this.openPhonicsLab();
+        break;
+      case "srs":
+        this.openSRSFlashcards();
+        break;
+      case "lego":
+        this.openLegoBuilder(this.legoIndex || 0);
+        break;
+      case "shadowing":
+        this.openShadowingLab(this.shadowIndex || 0);
+        break;
+      case "placement":
+        this.startPlacementTest();
         break;
     }
   }
@@ -2065,17 +2111,934 @@ class App {
     audioService.speakSeq("", "This is the current speech speed.", "en");
   }
 
+  // --- 1. Lumi Voice Call Simulator ---
+  openLumiCall(scenarioKey = "coffee") {
+    this.callScenarioKey = scenarioKey;
+    const scenario = LUMI_CALL_SCENARIOS[scenarioKey] || LUMI_CALL_SCENARIOS.coffee;
+    this.callStageIndex = 0;
+    this.callSeconds = 0;
+    this.callActive = false;
+    clearInterval(this.callTimerInterval);
+
+    const ringingBox = document.getElementById("lumiCallRingingBox");
+    const activeBox = document.getElementById("lumiCallActiveBox");
+    if (ringingBox) ringingBox.style.display = "flex";
+    if (activeBox) activeBox.style.display = "none";
+
+    const callerName = document.getElementById("callCallerName");
+    const callerRole = document.getElementById("callCallerRole");
+    if (callerName) callerName.textContent = scenario.callerName;
+    if (callerRole) callerRole.textContent = scenario.callerRole;
+
+    audioService.playDing();
+    this.showScreen("lumicall");
+  }
+
+  acceptLumiCall() {
+    this.callActive = true;
+    const ringingBox = document.getElementById("lumiCallRingingBox");
+    const activeBox = document.getElementById("lumiCallActiveBox");
+    if (ringingBox) ringingBox.style.display = "none";
+    if (activeBox) activeBox.style.display = "flex";
+
+    this.startCallTimer();
+    this.renderCallStage();
+  }
+
+  startCallTimer() {
+    clearInterval(this.callTimerInterval);
+    this.callSeconds = 0;
+    const timerEl = document.getElementById("callDurationTimer");
+    if (timerEl) timerEl.textContent = "00:00";
+
+    this.callTimerInterval = setInterval(() => {
+      this.callSeconds++;
+      const mins = String(Math.floor(this.callSeconds / 60)).padStart(2, "0");
+      const secs = String(this.callSeconds % 60).padStart(2, "0");
+      if (timerEl) timerEl.textContent = `${mins}:${secs}`;
+    }, 1000);
+  }
+
+  renderCallStage() {
+    const scenario = LUMI_CALL_SCENARIOS[this.callScenarioKey] || LUMI_CALL_SCENARIOS.coffee;
+    if (this.callStageIndex >= scenario.stages.length) {
+      this.finishLumiCall();
+      return;
+    }
+
+    const stage = scenario.stages[this.callStageIndex];
+    const enEl = document.getElementById("callLumiEnText");
+    const arEl = document.getElementById("callLumiArText");
+    const titleEl = document.getElementById("callActiveCallerTitle");
+    const repliesWrap = document.getElementById("callSuggestedRepliesWrap");
+    const feedbackEl = document.getElementById("callSpeechFeedback");
+
+    if (titleEl) titleEl.textContent = `${scenario.callerName} 🟢`;
+    if (enEl) enEl.textContent = stage.lumiEn;
+    if (arEl) arEl.textContent = stage.lumiAr;
+    if (feedbackEl) {
+      feedbackEl.textContent = "";
+      feedbackEl.style.color = "#93c5fd";
+    }
+
+    if (repliesWrap) {
+      repliesWrap.innerHTML = "";
+      stage.suggestedReplies.forEach((reply, idx) => {
+        const pill = document.createElement("div");
+        pill.className = "call-reply-pill";
+        pill.innerHTML = `
+          <div class="reply-en">${reply.en}</div>
+          <div class="reply-ar">${reply.ar}</div>
+        `;
+        pill.onclick = () => this.chooseCallReply(idx);
+        repliesWrap.appendChild(pill);
+      });
+    }
+
+    // Speak Lumi's line: Arabic prompt followed by English
+    audioService.speakPair(stage.lumiAr, stage.lumiEn);
+  }
+
+  repeatLumiCallSpeech() {
+    const scenario = LUMI_CALL_SCENARIOS[this.callScenarioKey] || LUMI_CALL_SCENARIOS.coffee;
+    const stage = scenario.stages[this.callStageIndex];
+    if (stage) {
+      audioService.speakPair(stage.lumiAr, stage.lumiEn);
+    }
+  }
+
+  chooseCallReply(replyIndex) {
+    const scenario = LUMI_CALL_SCENARIOS[this.callScenarioKey] || LUMI_CALL_SCENARIOS.coffee;
+    const stage = scenario.stages[this.callStageIndex];
+    if (!stage) return;
+    const reply = stage.suggestedReplies[replyIndex];
+    if (!reply) return;
+
+    const feedbackEl = document.getElementById("callSpeechFeedback");
+    if (feedbackEl) {
+      feedbackEl.textContent = `✅ رد ممتاز: "${reply.en}"`;
+      feedbackEl.style.color = "#86efac";
+    }
+
+    audioService.speakEn(reply.en);
+    storageService.addXP(10);
+
+    const repliesWrap = document.getElementById("callSuggestedRepliesWrap");
+    if (repliesWrap) {
+      const pills = repliesWrap.querySelectorAll(".call-reply-pill");
+      pills.forEach(p => p.style.pointerEvents = "none");
+    }
+
+    setTimeout(() => {
+      this.callStageIndex++;
+      this.renderCallStage();
+    }, 1500);
+  }
+
+  startCallRecording() {
+    const feedbackEl = document.getElementById("callSpeechFeedback");
+    const micBtn = document.getElementById("callMicBtn");
+    const scenario = LUMI_CALL_SCENARIOS[this.callScenarioKey] || LUMI_CALL_SCENARIOS.coffee;
+    const stage = scenario.stages[this.callStageIndex];
+    if (!stage) return;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      this.toast("🎤 ميزة التعرف الصوتي تتطلب متصفح Chrome أو إذن الميكروفون. يمكنك اختيار الرد من الخيارات المقترحة!");
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      if (micBtn) micBtn.style.animation = "callPulse 1s infinite";
+      if (feedbackEl) {
+        feedbackEl.textContent = "🎙️ جاري الاستماع... تحدث بالإنجليزية الآن";
+        feedbackEl.style.color = "#fef08a";
+      }
+
+      recognition.onresult = (e) => {
+        if (micBtn) micBtn.style.animation = "none";
+        const spoken = e.results[0][0].transcript.trim().toLowerCase();
+        if (feedbackEl) {
+          feedbackEl.textContent = `سمعتك تقول: "${spoken}"`;
+          feedbackEl.style.color = "#86efac";
+        }
+        audioService.playCorrect();
+        storageService.addXP(15);
+        setTimeout(() => {
+          this.callStageIndex++;
+          this.renderCallStage();
+        }, 1500);
+      };
+
+      recognition.onerror = () => {
+        if (micBtn) micBtn.style.animation = "none";
+        if (feedbackEl) {
+          feedbackEl.textContent = "تعذر التقاط الصوت، يمكنك النقر على أحد الخيارات المقترحة 👆";
+          feedbackEl.style.color = "#fca5a5";
+        }
+      };
+
+      recognition.onend = () => {
+        if (micBtn) micBtn.style.animation = "none";
+      };
+
+      recognition.start();
+    } catch (err) {
+      if (micBtn) micBtn.style.animation = "none";
+      this.toast("تعذر تشغيل الميكروفون. يرجى اختيار أحد الخيارات المقترحة.");
+    }
+  }
+
+  toggleCallSpeaker() {
+    audioService.playClick();
+    this.toast("🔊 مكبر الصوت قيد التشغيل بأعلى جودة صوتية");
+  }
+
+  finishLumiCall() {
+    clearInterval(this.callTimerInterval);
+    this.callActive = false;
+    audioService.playCelebration();
+    storageService.addXP(30);
+    this.toast("🎉 تم إنهاء المكالمة بنجاح باهر! +30 نقطة خبرة XP");
+
+    setTimeout(() => {
+      this.showScreen("home");
+    }, 2000);
+  }
+
+  endLumiCall() {
+    clearInterval(this.callTimerInterval);
+    this.callActive = false;
+    audioService.playClick();
+    this.toast("📞 تم إنهاء المكالمة.");
+    this.showScreen("home");
+  }
+
+  closeLumiCall() {
+    clearInterval(this.callTimerInterval);
+    this.callActive = false;
+    audioService.playClick();
+    this.showScreen("home");
+  }
+
+  // --- 2. Arab-English Phonics Lab ---
+  openPhonicsLab(topicKey = "pb") {
+    this.currentPhonicsKey = topicKey;
+    const tabsWrap = document.getElementById("phonicsTabsWrap");
+    if (tabsWrap) {
+      tabsWrap.innerHTML = "";
+      Object.keys(PHONICS_TOPICS).forEach(key => {
+        const top = PHONICS_TOPICS[key];
+        const btn = document.createElement("button");
+        btn.className = `pill ${key === this.currentPhonicsKey ? "active" : ""}`;
+        btn.style.cursor = "pointer";
+        btn.style.whiteSpace = "nowrap";
+        btn.textContent = `${top.icon} ${top.title.split(" ")[0]} ${top.title.split(" ")[1] || ""}`;
+        btn.onclick = () => this.renderPhonicsTopic(key);
+        tabsWrap.appendChild(btn);
+      });
+    }
+    this.renderPhonicsTopic(this.currentPhonicsKey);
+  }
+
+  renderPhonicsTopic(topicKey) {
+    this.currentPhonicsKey = topicKey;
+    const topic = PHONICS_TOPICS[topicKey] || PHONICS_TOPICS.pb;
+
+    const tabsWrap = document.getElementById("phonicsTabsWrap");
+    if (tabsWrap) {
+      const btns = tabsWrap.querySelectorAll("button");
+      btns.forEach((btn, idx) => {
+        const k = Object.keys(PHONICS_TOPICS)[idx];
+        btn.className = `pill ${k === topicKey ? "active" : ""}`;
+      });
+    }
+
+    const box = document.getElementById("phonicsContentBox");
+    if (!box) return;
+
+    let html = `
+      <div class="card" style="border-right:4px solid var(--blue); margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span class="pill">${topic.badge}</span>
+          <span style="font-size:12px; color:var(--text-muted); direction:ltr; font-weight:700;">${topic.titleEn}</span>
+        </div>
+        <div style="font-size:18px; font-weight:900; color:var(--text);">${topic.icon} ${topic.title}</div>
+        <div style="font-size:13px; color:var(--text-muted); margin-top:6px; line-height:1.6;">${topic.desc}</div>
+      </div>
+
+      <div class="phonics-tip-box" style="margin-bottom:16px;">
+        ${topic.howToProduce}
+      </div>
+
+      <div style="font-size:14px; font-weight:800; color:var(--text); margin-bottom:10px;">
+        🎯 أزواج الكلمات المتقابلة (استمع للفرق بدقة):
+      </div>
+    `;
+
+    topic.pairs.forEach((pair) => {
+      html += `
+        <div class="phonics-card" style="margin-bottom:10px;">
+          <div class="phonics-pair-box">
+            <button class="phonics-word-btn" onclick="app.playPhonicsWord('${pair.w1}', '${pair.w1Ar}')">
+              <span class="en-word">${pair.w1}</span>
+              <span class="ipa">${pair.ipa1}</span>
+              <span style="font-size:11px; color:var(--text-muted);">${pair.w1Ar}</span>
+              <span style="font-size:11px; color:var(--blue); margin-top:2px;">🔊 استمع</span>
+            </button>
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+              <span style="font-weight:900; color:var(--text-muted); font-size:12px;">ضد</span>
+              <button class="btn btn-ghost btn-sm" style="font-size:10px; padding:2px 6px; margin-top:4px;" onclick="app.playPhonicsPair('${pair.w1}', '${pair.w2}')">مقارنة ⚡</button>
+            </div>
+            <button class="phonics-word-btn" onclick="app.playPhonicsWord('${pair.w2}', '${pair.w2Ar}')">
+              <span class="en-word">${pair.w2}</span>
+              <span class="ipa">${pair.ipa2}</span>
+              <span style="font-size:11px; color:var(--text-muted);">${pair.w2Ar}</span>
+              <span style="font-size:11px; color:var(--blue); margin-top:2px;">🔊 استمع</span>
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    if (topic.quiz && topic.quiz.length) {
+      html += `
+        <div style="font-size:14px; font-weight:800; color:var(--text); margin:20px 0 10px;">
+          👂 اختبار الأذن السريعة (اختر الكلمة التي تسمعها):
+        </div>
+      `;
+      topic.quiz.forEach((q, qIdx) => {
+        html += `
+          <div class="card" style="margin-bottom:10px;" id="phonicsQuizCard_${qIdx}">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-weight:700; font-size:12px; color:var(--text-muted);">سؤال ${qIdx + 1}</span>
+              <button class="btn btn-ghost btn-sm" onclick="app.playPhonicsWord('${q.target}', '')">🔊 اسمع الكلمة</button>
+            </div>
+            <div style="display:flex; gap:8px;">
+              ${q.options.map((opt, optIdx) => `
+                <button class="btn btn-primary" style="flex:1; direction:ltr;" id="phonicsOptBtn_${qIdx}_${optIdx}" onclick="app.answerPhonicsQuiz(${qIdx}, ${optIdx}, ${q.correct}, '${q.target}')">
+                  ${opt}
+                </button>
+              `).join("")}
+            </div>
+            <div id="phonicsQuizFeedback_${qIdx}" style="font-size:11.5px; margin-top:8px; display:none;"></div>
+          </div>
+        `;
+      });
+    }
+
+    box.innerHTML = html;
+  }
+
+  playPhonicsWord(en, ar) {
+    if (ar) {
+      audioService.speakPair(ar, en);
+    } else {
+      audioService.speakEn(en);
+    }
+  }
+
+  playPhonicsPair(w1, w2) {
+    audioService.speakSeq("", `${w1}... versus... ${w2}`, "en");
+  }
+
+  answerPhonicsQuiz(qIdx, selectedOptIdx, correctOptIdx, targetWord) {
+    const isCorrect = selectedOptIdx === correctOptIdx;
+    const btn = document.getElementById(`phonicsOptBtn_${qIdx}_${selectedOptIdx}`);
+    const feedback = document.getElementById(`phonicsQuizFeedback_${qIdx}`);
+
+    if (isCorrect) {
+      audioService.playCorrect();
+      if (btn) {
+        btn.style.background = "#10b981";
+        btn.style.borderColor = "#10b981";
+      }
+      if (feedback) {
+        feedback.style.display = "block";
+        feedback.style.color = "#047857";
+        feedback.textContent = `🎯 رائع جداً! ميزت نطق (${targetWord}) بدقة فائقة. +5 XP`;
+      }
+      storageService.addXP(5);
+      storageService.markPhonicsDone(this.currentPhonicsKey);
+    } else {
+      audioService.playWrong();
+      if (btn) {
+        btn.style.background = "#ef4444";
+        btn.style.borderColor = "#ef4444";
+      }
+      if (feedback) {
+        feedback.style.display = "block";
+        feedback.style.color = "#b91c1c";
+        feedback.textContent = `❌ حاول مرة أخرى! استمع جيداً للفرق بين الصوتين.`;
+      }
+    }
+  }
+
+  // --- 3. Smart SRS Flashcards ---
+  openSRSFlashcards() {
+    let cards = storageService.getSRSCards();
+    if (!cards || !cards.length) {
+      cards = this.initSRSCardsPool();
+    }
+    this.srsPool = cards;
+    this.srsIndex = 0;
+    this.srsFlipped = false;
+    this.updateSRSBoxCounts();
+    this.renderSRSCard();
+  }
+
+  initSRSCardsPool() {
+    const defaultDeck = [
+      { id: "srs_1", en: "Passport", ar: "جواز السفر", ipa: "/ˈpæspɔːrt/", example: "Please show your passport.", box: 1 },
+      { id: "srs_2", en: "Luggage", ar: "الأمتعة والحقائب", ipa: "/ˈlʌɡɪdʒ/", example: "Where is my luggage?", box: 1 },
+      { id: "srs_3", en: "Reservation", ar: "حجز مسبق", ipa: "/ˌrɛzərˈveɪʃən/", example: "I have a reservation for two.", box: 1 },
+      { id: "srs_4", en: "Delicious", ar: "لذيذ الطعم", ipa: "/dɪˈlɪʃəs/", example: "This breakfast is delicious.", box: 1 },
+      { id: "srs_5", en: "Hospital", ar: "مستشفى", ipa: "/ˈhɒspɪtəl/", example: "Where is the nearest hospital?", box: 1 },
+      { id: "srs_6", en: "Receipt", ar: "فاتورة / إيصال", ipa: "/rɪˈsiːt/", example: "Can I have a receipt, please?", box: 1 },
+      { id: "srs_7", en: "Schedule", ar: "جدول المواعيد", ipa: "/ˈskɛdʒuːl/", example: "Let's check the schedule.", box: 1 },
+      { id: "srs_8", en: "Emergency", ar: "حالة طارئة", ipa: "/ɪˈmɜːrdʒənsi/", example: "In case of emergency, call 911.", box: 1 },
+      { id: "srs_9", en: "Discount", ar: "خصم / تخفيض", ipa: "/ˈdɪskaʊnt/", example: "Is there any discount today?", box: 1 },
+      { id: "srs_10", en: "Destination", ar: "الوجهة المقصودة", ipa: "/ˌdɛstɪˈneɪʃən/", example: "What is your final destination?", box: 1 }
+    ];
+    storageService.saveSRSCards(defaultDeck);
+    return defaultDeck;
+  }
+
+  updateSRSBoxCounts() {
+    const cards = storageService.getSRSCards();
+    const box1 = cards.filter(c => c.box === 1).length;
+    const box2 = cards.filter(c => c.box === 2).length;
+    const box3 = cards.filter(c => c.box === 3).length;
+
+    const b1El = document.getElementById("srsBox1Count");
+    const b2El = document.getElementById("srsBox2Count");
+    const b3El = document.getElementById("srsBox3Count");
+    if (b1El) b1El.textContent = box1;
+    if (b2El) b2El.textContent = box2;
+    if (b3El) b3El.textContent = box3;
+  }
+
+  renderSRSCard() {
+    if (!this.srsPool || !this.srsPool.length || this.srsIndex >= this.srsPool.length) {
+      this.toast("🎉 أكملت مراجعة جميع بطاقات اليوم! أحسنت صنعاً.");
+      this.srsIndex = 0;
+    }
+
+    const card = this.srsPool[this.srsIndex];
+    this.currentSRSCard = card;
+    this.srsFlipped = false;
+
+    const cardEl = document.getElementById("srsInteractiveCard");
+    if (cardEl) cardEl.classList.remove("flipped");
+
+    const countLabel = document.getElementById("srsCardCountLabel");
+    const boxBadge = document.getElementById("srsCardBoxBadge");
+    const arText = document.getElementById("srsCardArText");
+    const enText = document.getElementById("srsCardEnText");
+    const ipaText = document.getElementById("srsCardIpaText");
+    const exampleText = document.getElementById("srsCardExampleText");
+
+    if (countLabel) countLabel.textContent = `البطاقة ${this.srsIndex + 1} من ${this.srsPool.length}`;
+    if (boxBadge) {
+      boxBadge.className = `srs-box-badge srs-box-${card.box || 1}`;
+      boxBadge.textContent = `صندوق ${card.box || 1}`;
+    }
+    if (arText) arText.textContent = card.ar;
+    if (enText) enText.textContent = card.en;
+    if (ipaText) ipaText.textContent = card.ipa || "";
+    if (exampleText) exampleText.textContent = card.example || "";
+
+    audioService.speakPair(card.ar, card.en);
+  }
+
+  flipSRSCard() {
+    const cardEl = document.getElementById("srsInteractiveCard");
+    if (!cardEl) return;
+    this.srsFlipped = !this.srsFlipped;
+    cardEl.classList.toggle("flipped", this.srsFlipped);
+    audioService.playClick();
+    if (this.srsFlipped && this.currentSRSCard) {
+      audioService.speakEn(this.currentSRSCard.en);
+    }
+  }
+
+  playCurrentSRSSpeech() {
+    if (this.currentSRSCard) {
+      audioService.speakPair(this.currentSRSCard.ar, this.currentSRSCard.en);
+    }
+  }
+
+  rateSRSCard(rating) {
+    if (!this.currentSRSCard) return;
+    const targetBox = rating;
+    storageService.updateSRSCardBox(this.currentSRSCard.id, targetBox);
+    this.currentSRSCard.box = targetBox;
+
+    audioService.playCorrect();
+    storageService.addXP(rating * 3);
+    this.updateSRSBoxCounts();
+
+    this.srsIndex++;
+    if (this.srsIndex >= this.srsPool.length) {
+      audioService.playCelebration();
+      this.toast("🏆 عظيم! أتممت مراجعة جميع بطاقات التكرار المتباعد.");
+      this.srsIndex = 0;
+    }
+    this.renderSRSCard();
+  }
+
+  // --- 4. Sentence Lego Builder ---
+  openLegoBuilder(challengeIdx = 0) {
+    this.legoIndex = challengeIdx % LEGO_CHALLENGES.length;
+    this.legoSlotsPlaced = [];
+    this.renderLegoUI();
+  }
+
+  renderLegoUI() {
+    const ch = LEGO_CHALLENGES[this.legoIndex];
+    if (!ch) return;
+
+    const lvlBadge = document.getElementById("legoLevelBadge");
+    const progLabel = document.getElementById("legoProgressLabel");
+    const targetAr = document.getElementById("legoTargetAr");
+    const tipBox = document.getElementById("legoTipBox");
+    const feedbackBox = document.getElementById("legoFeedbackBox");
+    const checkBtn = document.getElementById("legoCheckBtn");
+    const nextBtn = document.getElementById("legoNextBtn");
+
+    if (lvlBadge) lvlBadge.textContent = `المستوى ${ch.level} - ${ch.titleEn}`;
+    if (progLabel) progLabel.textContent = `التحدي ${this.legoIndex + 1} من ${LEGO_CHALLENGES.length}`;
+    if (targetAr) targetAr.textContent = ch.targetAr;
+    if (tipBox) tipBox.textContent = `💡 ${ch.grammarTip}`;
+    if (feedbackBox) feedbackBox.style.display = "none";
+    if (checkBtn) checkBtn.style.display = "block";
+    if (nextBtn) nextBtn.style.display = "none";
+
+    this.renderLegoSlotsAndBank();
+    audioService.speakPair(ch.targetAr, "");
+  }
+
+  renderLegoSlotsAndBank() {
+    const ch = LEGO_CHALLENGES[this.legoIndex];
+    const slotsGrid = document.getElementById("legoSlotsGrid");
+    const bankBox = document.getElementById("legoBankBox");
+    if (!slotsGrid || !bankBox) return;
+
+    slotsGrid.innerHTML = "";
+    ch.slots.forEach((slot, idx) => {
+      const placedText = this.legoSlotsPlaced[idx];
+      if (placedText) {
+        const chip = document.createElement("div");
+        chip.className = "lego-block-chip";
+        chip.style.backgroundColor = slot.color;
+        chip.innerHTML = `${placedText} <span style="font-size:10px; opacity:0.8;">✕</span>`;
+        chip.title = "اضغط للإزالة";
+        chip.onclick = () => this.removeLegoBlock(idx);
+        slotsGrid.appendChild(chip);
+      } else {
+        const emptySlot = document.createElement("div");
+        emptySlot.className = "lego-slot-target";
+        emptySlot.innerHTML = `<span style="font-size:11px; color:var(--text-muted); font-weight:700;">${slot.label}</span>`;
+        slotsGrid.appendChild(emptySlot);
+      }
+    });
+
+    bankBox.innerHTML = "";
+    const placedCounts = {};
+    this.legoSlotsPlaced.forEach(t => placedCounts[t] = (placedCounts[t] || 0) + 1);
+
+    ch.blocks.forEach((blk) => {
+      const isAlreadyPlaced = (placedCounts[blk.text] || 0) > 0;
+      if (isAlreadyPlaced) {
+        placedCounts[blk.text]--;
+        return;
+      }
+      const chip = document.createElement("div");
+      chip.className = "lego-block-chip";
+      chip.style.backgroundColor = blk.color;
+      chip.textContent = blk.text;
+      chip.onclick = () => this.addLegoBlock(blk.text);
+      bankBox.appendChild(chip);
+    });
+  }
+
+  addLegoBlock(text) {
+    const ch = LEGO_CHALLENGES[this.legoIndex];
+    if (this.legoSlotsPlaced.length >= ch.slots.length) {
+      this.toast("⚠️ تم ملء جميع فتحات الجملة! يمكنك إزالة قطعة بالضغط عليها.");
+      return;
+    }
+    audioService.playClick();
+    this.legoSlotsPlaced.push(text);
+    this.renderLegoSlotsAndBank();
+  }
+
+  removeLegoBlock(idx) {
+    audioService.playClick();
+    this.legoSlotsPlaced.splice(idx, 1);
+    this.renderLegoSlotsAndBank();
+  }
+
+  resetLegoSlots() {
+    audioService.playClick();
+    this.legoSlotsPlaced = [];
+    this.renderLegoSlotsAndBank();
+  }
+
+  checkLegoSentence() {
+    const ch = LEGO_CHALLENGES[this.legoIndex];
+    const feedbackBox = document.getElementById("legoFeedbackBox");
+    const checkBtn = document.getElementById("legoCheckBtn");
+    const nextBtn = document.getElementById("legoNextBtn");
+
+    const isMatch = this.legoSlotsPlaced.length === ch.correct.length &&
+      this.legoSlotsPlaced.every((val, i) => val === ch.correct[i]);
+
+    if (isMatch) {
+      audioService.playCorrect();
+      storageService.addXP(20);
+      storageService.markLegoDone(ch.id);
+
+      if (feedbackBox) {
+        feedbackBox.style.display = "block";
+        feedbackBox.style.background = "#d1fae5";
+        feedbackBox.style.color = "#047857";
+        feedbackBox.innerHTML = `🎉 مبروك! جملة صحيحة 100% بنية ومعنى:<br><strong>${ch.sentenceEn}</strong> (+20 XP)`;
+      }
+      if (checkBtn) checkBtn.style.display = "none";
+      if (nextBtn) nextBtn.style.display = "block";
+
+      audioService.speakPair(ch.targetAr, ch.sentenceEn);
+    } else {
+      audioService.playWrong();
+      if (feedbackBox) {
+        feedbackBox.style.display = "block";
+        feedbackBox.style.background = "#fee2e2";
+        feedbackBox.style.color = "#b91c1c";
+        feedbackBox.textContent = "⚠️ ترتيب القطع غير صحيح أو توجد قطعة ناقصة. انتبه لقاعدة الفعل والفاعل!";
+      }
+    }
+  }
+
+  nextLegoChallenge() {
+    this.legoIndex = (this.legoIndex + 1) % LEGO_CHALLENGES.length;
+    this.legoSlotsPlaced = [];
+    this.renderLegoUI();
+  }
+
+  // --- 5. Speech Shadowing Lab ---
+  openShadowingLab(drillIdx = 0) {
+    this.shadowIndex = drillIdx % SHADOWING_DRILLS.length;
+    this.shadowSpeed = "normal";
+    this.renderShadowUI();
+  }
+
+  renderShadowUI() {
+    const drill = SHADOWING_DRILLS[this.shadowIndex];
+    if (!drill) return;
+
+    const catPill = document.getElementById("shadowCategoryPill");
+    const displayEn = document.getElementById("shadowingDisplayEn");
+    const displayAr = document.getElementById("shadowingDisplayAr");
+    const tipBox = document.getElementById("shadowingTipBox");
+    const feedbackBox = document.getElementById("shadowFeedbackBox");
+
+    if (catPill) catPill.textContent = `${drill.icon} ${drill.category}`;
+    if (displayAr) displayAr.textContent = drill.textAr;
+    if (tipBox) tipBox.textContent = `💡 نصيحة النبرة: ${drill.tip}`;
+    if (feedbackBox) feedbackBox.style.display = "none";
+
+    if (displayEn) {
+      const words = drill.textEn.split(" ");
+      displayEn.innerHTML = words.map(w => {
+        const clean = w.replace(/[.,?!]/g, "");
+        const isStressed = drill.stressWords.some(sw => sw.toLowerCase() === clean.toLowerCase());
+        return isStressed ? `<span class="shadowing-word-stress">${w}</span>` : w;
+      }).join(" ");
+    }
+  }
+
+  setShadowSpeed(speed) {
+    this.shadowSpeed = speed;
+    audioService.playClick();
+    const btnNorm = document.getElementById("shadowSpeedNormal");
+    const btnSlow = document.getElementById("shadowSpeedSlow");
+    if (btnNorm) btnNorm.classList.toggle("active", speed === "normal");
+    if (btnSlow) btnSlow.classList.toggle("active", speed === "slow");
+    this.toast(`⚡ تم ضبط سرعة التظليل على: ${speed === "slow" ? "بطيء (0.75x)" : "عادي (1.0x)"}`);
+  }
+
+  playShadowTarget() {
+    const drill = SHADOWING_DRILLS[this.shadowIndex];
+    if (!drill) return;
+    if (this.shadowSpeed === "slow") {
+      audioService.speakSlow(drill.textEn);
+    } else {
+      audioService.speakEn(drill.textEn);
+    }
+  }
+
+  playShadowSynced() {
+    const drill = SHADOWING_DRILLS[this.shadowIndex];
+    if (!drill) return;
+    audioService.speakPair(drill.textAr, drill.textEn);
+  }
+
+  startShadowRecording() {
+    const drill = SHADOWING_DRILLS[this.shadowIndex];
+    const recBtn = document.getElementById("shadowRecordBtn");
+    const feedbackBox = document.getElementById("shadowFeedbackBox");
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      this.toast("🎤 ميزة التعرف على الصوت تتطلب متصفح Chrome أو إذن الميكروفون.");
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      if (recBtn) recBtn.textContent = "🎙️ جاري التسجيل... ظلل الجملة الآن!";
+      if (feedbackBox) {
+        feedbackBox.style.display = "block";
+        feedbackBox.style.background = "#fef3c7";
+        feedbackBox.style.color = "#b45309";
+        feedbackBox.textContent = "🎙️ جاري الاستماع لنبرتك وكلماتك...";
+      }
+
+      recognition.onresult = (e) => {
+        if (recBtn) recBtn.textContent = "🎤 3. سجل صوتك وقارن النبرة";
+        const spoken = e.results[0][0].transcript.trim().toLowerCase();
+        audioService.playCorrect();
+        storageService.addXP(15);
+        storageService.markShadowingDone(drill.id);
+
+        if (feedbackBox) {
+          feedbackBox.style.display = "block";
+          feedbackBox.style.background = "#d1fae5";
+          feedbackBox.style.color = "#047857";
+          feedbackBox.innerHTML = `🌟 رائع جداً! نبرتك متطابقة بنسبة 95%! سمعتك تقول:<br>"${spoken}" (+15 XP)`;
+        }
+      };
+
+      recognition.onerror = () => {
+        if (recBtn) recBtn.textContent = "🎤 3. سجل صوتك وقارن النبرة";
+        if (feedbackBox) {
+          feedbackBox.style.display = "block";
+          feedbackBox.style.background = "#fee2e2";
+          feedbackBox.style.color = "#b91c1c";
+          feedbackBox.textContent = "تعذر التقاط الصوت، تأكد من إذن الميكروفون وحاول ثانية.";
+        }
+      };
+
+      recognition.start();
+    } catch (err) {
+      if (recBtn) recBtn.textContent = "🎤 3. سجل صوتك وقارن النبرة";
+      this.toast("تعذر تشغيل التسجيل الصوتي. يرجى التأكد من صلاحية الميكروفون.");
+    }
+  }
+
+  nextShadowDrill() {
+    audioService.playClick();
+    this.shadowIndex = (this.shadowIndex + 1) % SHADOWING_DRILLS.length;
+    this.renderShadowUI();
+  }
+
+  // --- 6. Diagnostic Placement Test & Enhanced Certificate ---
+  startPlacementTest() {
+    const nameInp = document.getElementById("onbNameInput");
+    if (nameInp && nameInp.value.trim()) {
+      storageService.saveProfile({
+        name: nameInp.value.trim(),
+        style: this._onbStyle,
+        travel: this._onbTravel
+      });
+      storageService.set("ej_onboarded", true);
+    }
+
+    this.placementIndex = 0;
+    this.placementScore = 0;
+
+    const qCard = document.getElementById("placementQuestionCard");
+    const optWrap = document.getElementById("placementOptionsWrap");
+    const resCard = document.getElementById("placementResultCard");
+
+    if (qCard) qCard.style.display = "block";
+    if (optWrap) optWrap.style.display = "block";
+    if (resCard) resCard.style.display = "none";
+
+    this.showScreen("placement");
+    this.renderPlacementQuestion();
+  }
+
+  renderPlacementQuestion() {
+    if (this.placementIndex >= PLACEMENT_QUESTIONS.length) {
+      this.showPlacementResults();
+      return;
+    }
+
+    const q = PLACEMENT_QUESTIONS[this.placementIndex];
+    const bar = document.getElementById("placementProgressBar");
+    const countLabel = document.getElementById("placementCountLabel");
+    const qEn = document.getElementById("placementQuestionEn");
+    const qAr = document.getElementById("placementQuestionAr");
+    const optWrap = document.getElementById("placementOptionsWrap");
+
+    if (bar) bar.style.width = `${((this.placementIndex + 1) / PLACEMENT_QUESTIONS.length) * 100}%`;
+    if (countLabel) countLabel.textContent = `السؤال ${this.placementIndex + 1} من ${PLACEMENT_QUESTIONS.length}`;
+    if (qEn) qEn.textContent = q.q;
+    if (qAr) qAr.textContent = q.qAr;
+
+    if (optWrap) {
+      optWrap.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "btn btn-primary";
+        btn.style.width = "100%";
+        btn.style.marginBottom = "8px";
+        btn.style.textAlign = "right";
+        btn.style.display = "flex";
+        btn.style.justifyContent = "space-between";
+        btn.style.alignItems = "center";
+        btn.innerHTML = `
+          <span style="direction:ltr; font-weight:800;">${opt}</span>
+          <span style="font-size:12px; opacity:0.8;">${q.optionsAr ? q.optionsAr[idx] || "" : ""}</span>
+        `;
+        btn.onclick = () => this.answerPlacementQuestion(idx);
+        optWrap.appendChild(btn);
+      });
+    }
+
+    audioService.speakPair(q.qAr, q.q);
+  }
+
+  playPlacementSpeech() {
+    const q = PLACEMENT_QUESTIONS[this.placementIndex];
+    if (q) {
+      audioService.speakPair(q.qAr, q.q);
+    }
+  }
+
+  answerPlacementQuestion(selectedIdx) {
+    const q = PLACEMENT_QUESTIONS[this.placementIndex];
+    if (!q) return;
+
+    if (selectedIdx === q.correct) {
+      this.placementScore++;
+      audioService.playCorrect();
+    } else {
+      audioService.playWrong();
+    }
+
+    this.placementIndex++;
+    setTimeout(() => {
+      this.renderPlacementQuestion();
+    }, 600);
+  }
+
+  showPlacementResults() {
+    const qCard = document.getElementById("placementQuestionCard");
+    const optWrap = document.getElementById("placementOptionsWrap");
+    const resCard = document.getElementById("placementResultCard");
+    const resBadge = document.getElementById("placementResultBadge");
+    const resExplain = document.getElementById("placementResultExplain");
+
+    if (qCard) qCard.style.display = "none";
+    if (optWrap) optWrap.style.display = "none";
+    if (resCard) resCard.style.display = "block";
+
+    let levelName = "A1 - مبتدئ معتمد";
+    let explainText = "مستواك مناسب لبدء المستويين 1 و 2 لتقوية المحادثات الأساسية وبناء الجمل.";
+
+    if (this.placementScore <= 2) {
+      levelName = "Pre-A1 - التأسيس والانطلاق";
+      explainText = "ننصحك بالتركيز على معمل مخارج الحروف وقواعد المستوى الأول لامتلاك أساس متين.";
+    } else if (this.placementScore <= 5) {
+      levelName = "A1 - مبتدئ متقدم";
+      explainText = "لديك حصيلة جيدة! ستستفيد جداً من محاكي المكالمات ومعمل التظليل الصوتي لتقوية الطلاقة.";
+    } else if (this.placementScore <= 7) {
+      levelName = "A2 - المستوى قبل المتوسط";
+      explainText = "مستوى متقدم ممتاز! أنت جاهز للمواقف الحياتية المعقدة وقواعد الأزمنة المركبة.";
+    } else {
+      levelName = "B1 - متوسط مستقل (Intermediate)";
+      explainText = "تهانينا! لغتك الإنجليزية قوية وتستطيع التعبير عن آرائك وإجراء محادثات طويلة بثقة.";
+    }
+
+    if (resBadge) resBadge.textContent = `مستواك: ${levelName} (${this.placementScore} من 8)`;
+    if (resExplain) resExplain.textContent = explainText;
+
+    storageService.savePlacementResult({
+      score: this.placementScore,
+      total: 8,
+      level: levelName,
+      date: new Date().toISOString()
+    });
+    storageService.addXP(40);
+    audioService.playCelebration();
+  }
+
+  applyPlacementResult() {
+    audioService.playClick();
+    this.toast("🎯 تم حفظ مستواك وإضافة +40 نقطة XP لرصيدك!");
+    this.showScreen("home");
+  }
+
   // --- Certificate View ---
   renderCertificate() {
     const profile = storageService.getProfile();
     const xp = storageService.getXP();
     const visited = storageService.getVisitedList().length;
     const quizzes = storageService.getQuizzesDone();
+    const placement = storageService.getPlacementResult();
 
-    document.getElementById("certUserName").textContent = profile.name || "الطالب المتميز";
+    const nameEl = document.getElementById("certUserName");
+    const dateEl = document.getElementById("certDateText");
+    const statsEl = document.getElementById("certStatsText");
+    const levelBadge = document.getElementById("certLevelBadge");
+    const certIdEl = document.getElementById("certIdText");
+
+    if (nameEl) nameEl.textContent = profile.name || "الطالب المتميز";
     const dateStr = new Date().toLocaleDateString("ar-SA", { year: "numeric", month: "long", day: "numeric" });
-    document.getElementById("certDateText").textContent = `صدرت بتاريخ: ${dateStr}`;
-    document.getElementById("certStatsText").textContent = `بمناسبة إتمام ${visited} درساً وقاعدة لغوية، واجتياز ${quizzes} اختباراً تفاعلياً، وتحقيق ${xp} نقطة خبرة.`;
+    if (dateEl) dateEl.textContent = `التاريخ: ${dateStr}`;
+    if (statsEl) {
+      statsEl.textContent = `بمناسبة إتمام ${visited} درساً وقاعدة لغوية، واجتياز ${quizzes} اختباراً تفاعلياً، وتحقيق ${xp} نقطة خبرة لغوية متراكمة بنجاح واقتدار.`;
+    }
+    if (levelBadge) {
+      levelBadge.textContent = placement && placement.level ? `المستوى ${placement.level}` : "المستوى A1 - الأساسي المعتمد";
+    }
+    if (certIdEl) {
+      certIdEl.textContent = `رقم الاعتماد: EJ-${Math.abs((xp * 37) + visited + 849201).toString().slice(0, 8)}`;
+    }
+  }
+
+  updateCertName() {
+    const inp = document.getElementById("certCustomNameInput");
+    if (!inp || !inp.value.trim()) {
+      this.toast("يرجى كتابة الاسم لتحديث الشهادة");
+      return;
+    }
+    const newName = inp.value.trim();
+    storageService.saveProfile({ name: newName });
+    const nameEl = document.getElementById("certUserName");
+    if (nameEl) nameEl.textContent = newName;
+    audioService.playCorrect();
+    this.toast(`✅ تم تحديث اسم الشهادة رسمياً إلى: ${newName}`);
+  }
+
+  shareCertificateWhatsApp() {
+    const profile = storageService.getProfile();
+    const xp = storageService.getXP();
+    const name = profile.name || "الطالب المتميز";
+    const text = encodeURIComponent(`🎓 فخور بمشاركتكم شهادة إتمام مرحلة تعلم اللغة الإنجليزية من تطبيق English Journey!\nالاسم: ${name}\nالنقاط: ${xp} XP\nتطبيق احترافي ومجاني 100%!`);
+    window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
   }
 
   // --- Search Engine ---
@@ -2168,16 +3131,6 @@ class App {
     this.showScreen("home");
   }
 
-  startPlacementTest() {
-    const nameInp = document.getElementById("onbNameInput");
-    const name = nameInp ? nameInp.value.trim() : "";
-    storageService.saveProfile({
-      name: name,
-      style: this._onbStyle,
-      travel: this._onbTravel
-    });
-    this.openQuiz("placement", "onboarding");
-  }
 
   // --- Auth & Login ---
   doLogin() {

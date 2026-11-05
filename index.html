@@ -114,6 +114,16 @@
           <button class="btn btn-gold" onclick="app.openLesson('greet', 'home')">ابدأ رحلتك الآن</button>
         </div>
 
+        <!-- Diagnostic Placement Test Banner -->
+        <button class="card card-interactive" style="border:1.5px solid var(--gold); background:linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.04));" onclick="app.startPlacementTest()">
+          <div class="icon-box" style="background:#fef3c7; color:var(--gold-dark); font-size:26px;">🎯</div>
+          <div class="grow">
+            <div style="font-weight:900; font-size:14.5px; color:var(--gold-dark);">اختبار تحديد المستوى وتشخيص المهارات</div>
+            <div class="sub">8 أسئلة ذكية في 3 دقائق لتحديد مستواك وبدء خطتك المناسبة</div>
+          </div>
+          <span class="pill" style="background:var(--gold); color:#ffffff; font-size:11px;">ابدأ الآن</span>
+        </button>
+
         <!-- AI Tutor Lumi Banner -->
         <button class="card card-interactive" onclick="app.showScreen('lumi')">
           <div class="icon-box" style="background:#e0e7ff; color:var(--blue); font-size:26px;">🤖</div>
@@ -183,6 +193,53 @@
           </div>
           <div class="arrow-icon">‹</div>
         </button>
+
+        <!-- Pro Beginner Labs Section -->
+        <div style="margin:20px 0 10px;">
+          <div style="font-weight:900; font-size:15px; color:var(--text); margin-bottom:4px;">✨ مختبرات الاحتراف للمبتدئين</div>
+          <div class="sub" style="font-size:12px;">أدوات حصرية مصممة خصيصاً للمتعلم العربي لكسر حاجز الخوف والطلاقة</div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px;">
+          <!-- 1. Lumi Voice Call -->
+          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #10b981;" onclick="app.openLumiCall()">
+            <div style="font-size:28px; margin-bottom:6px;">📞</div>
+            <div style="font-weight:800; font-size:13.5px; color:var(--text);">مكالمة لومي</div>
+            <div class="sub" style="font-size:11px; margin-top:2px;">محاكاة مكالمة هاتفية حية</div>
+          </button>
+
+          <!-- 2. Arab Phonics Lab -->
+          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #3b82f6;" onclick="app.openPhonicsLab()">
+            <div style="font-size:28px; margin-bottom:6px;">🔤</div>
+            <div style="font-weight:800; font-size:13.5px; color:var(--text);">مخارج الحروف</div>
+            <div class="sub" style="font-size:11px; margin-top:2px;">علاج فخ P و B و TH</div>
+          </button>
+
+          <!-- 3. Smart SRS Flashcards -->
+          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #8b5cf6;" onclick="app.openSRSFlashcards()">
+            <div style="font-size:28px; margin-bottom:6px;">🧠</div>
+            <div style="font-weight:800; font-size:13.5px; color:var(--text);">فلاش كاردز SRS</div>
+            <div class="sub" style="font-size:11px; margin-top:2px;">تكرار متباعد للذاكرة الدائمة</div>
+          </button>
+
+          <!-- 4. Sentence Lego Builder -->
+          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #f59e0b;" onclick="app.openLegoBuilder()">
+            <div style="font-size:28px; margin-bottom:6px;">🧱</div>
+            <div style="font-weight:800; font-size:13.5px; color:var(--text);">ليغو الجمل</div>
+            <div class="sub" style="font-size:11px; margin-top:2px;">تركيب بصري للقواعد</div>
+          </button>
+
+          <!-- 5. Speech Shadowing Lab -->
+          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #ec4899; grid-column:span 2;" onclick="app.openShadowingLab()">
+            <div style="display:flex; align-items:center; justify-content:center; gap:12px;">
+              <div style="font-size:28px;">👥</div>
+              <div style="text-align:right;">
+                <div style="font-weight:800; font-size:13.5px; color:var(--text);">معمل التظليل الصوتي (Shadowing)</div>
+                <div class="sub" style="font-size:11px;">تحدث متزامن مع الناطق الأصلي لاكتساب اللكنة والسرعة</div>
+              </div>
+            </div>
+          </button>
+        </div>
 
         <!-- 6 Main Hub Tiles -->
         <div class="tiles">
@@ -697,17 +754,45 @@
         <h1>شهادة الإتمام والتقدير</h1>
       </div>
       <div class="scroll-content">
-        <div class="cert-frame">
-          <div style="font-size:44px;">🎓</div>
-          <div style="font-weight:900; font-size:11px; color:var(--text-muted); letter-spacing:3px; margin-top:6px;">ENGLISH JOURNEY ACADEMY</div>
-          <div style="font-weight:900; font-size:22px; color:var(--navy); margin-top:14px;">شهادة تقدير وإنجاز</div>
-          <div class="sub" style="font-size:12.5px;">Certificate of Completion & Excellence</div>
-          <div class="sub" style="margin:20px 0 4px;">تُمنح هذه الشهادة بفخر لـ:</div>
-          <div id="certUserName" style="font-weight:900; font-size:24px; color:var(--gold-dark); margin-bottom:12px;">-</div>
-          <div id="certStatsText" style="font-size:13.5px; line-height:1.8; color:var(--text); margin-bottom:16px;"></div>
-          <div class="sub" id="certDateText" style="font-size:11.5px;"></div>
+        <!-- Certificate Frame -->
+        <div class="cert-gold-frame">
+          <div style="font-size:46px;">🎓</div>
+          <div style="font-weight:900; font-size:11px; color:#b45309; letter-spacing:3px; margin-top:4px;">ENGLISH JOURNEY ACADEMY</div>
+          <div style="font-weight:900; font-size:22px; color:#0b1b3d; margin-top:10px;">شهادة تقدير وإنجاز لغوي</div>
+          <div style="font-size:12px; color:#64748b; font-weight:700;">Certificate of Achievement & CEFR Proficiency</div>
+          
+          <div style="margin:16px 0 2px; font-size:12px; color:#475569;">تُمنح هذه الشهادة رسمياً وفخراً لـ:</div>
+          <div id="certUserName" style="font-weight:900; font-size:24px; color:#b45309; margin-bottom:10px; border-bottom:2px dashed #fcd34d; padding-bottom:6px; display:inline-block; min-width:200px;">-</div>
+          
+          <div class="pill" id="certLevelBadge" style="margin:4px auto 12px; background:#0b1b3d; color:#f59e0b; font-weight:800; font-size:13px; display:inline-block;">المستوى A1 - الأساسي المعتمد</div>
+
+          <div id="certStatsText" style="font-size:13px; line-height:1.8; color:#1e293b; margin-bottom:12px;"></div>
+          
+          <!-- Official Seal Badge -->
+          <div class="cert-seal-badge">
+            <span style="font-size:16px;">★</span>
+            <span>VERIFIED</span>
+          </div>
+
+          <div style="margin-top:14px; font-size:11px; color:#64748b; display:flex; justify-content:space-between;">
+            <span id="certIdText">رقم الاعتماد: EJ-849201</span>
+            <span id="certDateText">التاريخ: -</span>
+          </div>
         </div>
-        <button class="btn btn-primary" style="margin-top:16px;" onclick="window.print()">🖨️ طباعة الشهادة / حفظ كـ PDF</button>
+
+        <!-- Custom Name Input -->
+        <div style="margin-top:16px;">
+          <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">تعديل الاسم المطبوع على الشهادة:</label>
+          <div style="display:flex; gap:6px;">
+            <input class="input-field" id="certCustomNameInput" placeholder="اكتب اسمك الثلاثي للشهادة" style="margin-bottom:0;">
+            <button class="btn btn-primary btn-sm" onclick="app.updateCertName()">تحديث</button>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:14px;">
+          <button class="btn btn-gold" style="flex:1;" onclick="app.shareCertificateWhatsApp()">📲 مشاركة عبر واتساب</button>
+          <button class="btn btn-primary" style="flex:1;" onclick="window.print()">🖨️ طباعة / حفظ كـ PDF</button>
+        </div>
       </div>
     </div>
 
@@ -748,6 +833,251 @@
       </div>
     </div>
 
+    <!-- SCREEN 26: LUMI VOICE CALL SIMULATOR -->
+    <div class="screen" id="screen-lumicall" style="padding:0; overflow:hidden;">
+      <div class="call-container" id="lumiCallRingingBox">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <button class="action-btn" style="color:#ffffff;" onclick="app.closeLumiCall()">✕</button>
+          <div style="font-size:12px; color:#93c5fd; font-weight:700;">مكالمة هاتفية تفاعلية</div>
+          <div style="width:36px;"></div>
+        </div>
+
+        <div class="call-avatar-wrap">
+          <div class="call-avatar-pulse"></div>
+          <div class="call-avatar-img">🤖</div>
+        </div>
+
+        <div style="font-size:22px; font-weight:900; margin-top:10px;" id="callCallerName">Lumi - مدرّبك الذكي</div>
+        <div style="font-size:13px; color:#93c5fd; margin-top:4px;" id="callCallerRole">نادل في مقهى ستاربكس</div>
+        <div style="margin-top:14px; font-size:14px; color:#cbd5e1; animation:callPulse 1.5s infinite;">يرن الآن... Incoming Call 📲</div>
+
+        <div style="margin-top:auto; padding-bottom:30px; display:flex; justify-content:space-around; align-items:center;">
+          <div>
+            <button class="call-circle-btn decline" onclick="app.closeLumiCall()">✕</button>
+            <div style="font-size:12px; margin-top:6px; color:#fca5a5;">رفض</div>
+          </div>
+          <div>
+            <button class="call-circle-btn accept" onclick="app.acceptLumiCall()">📞</button>
+            <div style="font-size:12px; margin-top:6px; color:#86efac;">رد على المكالمة</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="call-container" id="lumiCallActiveBox" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="call-timer" id="callDurationTimer">00:00</div>
+          <div style="font-weight:800; font-size:13px; color:#93c5fd;" id="callActiveCallerTitle">مكالمة جارية 🟢</div>
+          <button class="btn btn-ghost btn-sm" style="color:#ffffff; font-size:11px; padding:3px 8px; border:1px solid rgba(255,255,255,0.2);" onclick="app.repeatLumiCallSpeech()">🔊 أعد السؤال</button>
+        </div>
+
+        <div class="call-avatar-wrap" style="width:80px; height:80px; margin:10px auto 4px;">
+          <div class="call-avatar-img" style="font-size:38px;">🤖</div>
+        </div>
+
+        <div class="call-voice-wave" id="callVoiceWave">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <!-- Spoken Question Bubble -->
+        <div class="call-speech-bubble">
+          <div style="direction:ltr; text-align:left; font-size:16px; font-weight:800; color:#60a5fa; margin-bottom:6px;" id="callLumiEnText">...</div>
+          <div style="font-size:13px; color:#e2e8f0;" id="callLumiArText">...</div>
+        </div>
+
+        <!-- Suggested beginner replies -->
+        <div style="font-size:12px; font-weight:700; color:#93c5fd; text-align:right; margin-bottom:8px;">💡 خيارات للرد (اضغط للرد أو تحدث بالمايك):</div>
+        <div id="callSuggestedRepliesWrap" style="max-height:160px; overflow-y:auto; margin-bottom:10px;"></div>
+
+        <div id="callSpeechFeedback" style="font-size:12px; min-height:18px; margin-bottom:6px; font-weight:700;"></div>
+
+        <!-- Call Actions Bar -->
+        <div class="call-actions-bar">
+          <button class="call-circle-btn speaker" onclick="app.toggleCallSpeaker()" id="callSpeakerBtn" title="مكبر الصوت">🔊</button>
+          <button class="call-circle-btn mic" id="callMicBtn" onclick="app.startCallRecording()" title="تحدث الآن">🎤</button>
+          <button class="call-circle-btn decline" onclick="app.endLumiCall()" title="إنهاء المكالمة">🔴</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 27: ARAB-ENGLISH PHONICS LAB -->
+    <div class="screen" id="screen-phonics">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>معمل مخارج الحروف للعرب</h1>
+      </div>
+      <div class="scroll-content">
+        <!-- Topic Tabs -->
+        <div class="tabs-slider" id="phonicsTabsWrap" style="display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; margin-bottom:14px;"></div>
+
+        <!-- Active Topic Details -->
+        <div id="phonicsContentBox"></div>
+      </div>
+    </div>
+
+    <!-- SCREEN 28: SMART SRS FLASHCARDS -->
+    <div class="screen" id="screen-srs">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>فلاش كاردز التكرار المتباعد</h1>
+      </div>
+      <div class="scroll-content">
+        <!-- Boxes Stats -->
+        <div style="display:flex; justify-content:space-between; gap:6px; margin-bottom:16px;">
+          <div class="card center" style="flex:1; padding:10px 6px; margin:0; text-align:center;">
+            <div style="font-size:18px; font-weight:900; color:#b91c1c;" id="srsBox1Count">0</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700;">صندوق 1 (يومي)</div>
+          </div>
+          <div class="card center" style="flex:1; padding:10px 6px; margin:0; text-align:center;">
+            <div style="font-size:18px; font-weight:900; color:#b45309;" id="srsBox2Count">0</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700;">صندوق 2 (3 أيام)</div>
+          </div>
+          <div class="card center" style="flex:1; padding:10px 6px; margin:0; text-align:center;">
+            <div style="font-size:18px; font-weight:900; color:#047857;" id="srsBox3Count">0</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700;">صندوق 3 (متقن 🏆)</div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:12.5px; font-weight:700; color:var(--text-muted);" id="srsCardCountLabel">البطاقة 1 من 10</span>
+          <button class="btn btn-ghost btn-sm" onclick="app.playCurrentSRSSpeech()">🔊 استمع (عربي + English)</button>
+        </div>
+
+        <!-- 3D Flashcard Container -->
+        <div class="srs-scene" onclick="app.flipSRSCard()">
+          <div class="srs-card" id="srsInteractiveCard">
+            <div class="srs-face srs-face-front">
+              <span class="srs-box-badge srs-box-1" id="srsCardBoxBadge">صندوق 1</span>
+              <div style="font-size:42px; margin:16px 0 8px;" id="srsCardIcon">💡</div>
+              <div style="font-weight:900; font-size:22px; color:var(--text);" id="srsCardArText">-</div>
+              <div class="sub" style="margin-top:12px; font-size:12px; color:var(--blue);">👆 اضغط على البطاقة لقلبها واكتشاف الإنجليزية</div>
+            </div>
+            <div class="srs-face srs-face-back">
+              <div style="direction:ltr; font-weight:900; font-size:24px; color:var(--blue); margin-bottom:4px;" id="srsCardEnText">-</div>
+              <div style="direction:ltr; font-size:13px; color:var(--text-muted); margin-bottom:12px;" id="srsCardIpaText">/ ... /</div>
+              <div style="direction:ltr; text-align:center; font-size:14.5px; color:var(--text); line-height:1.6;" id="srsCardExampleText">...</div>
+              <div class="sub" style="margin-top:14px; font-size:12px;">كيف تقيّم حفظك لهذه الكلمة؟</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rating Controls -->
+        <div style="display:flex; gap:8px; margin-top:16px;">
+          <button class="btn" style="flex:1; background:#fee2e2; color:#b91c1c; border-color:#fca5a5; font-size:12.5px;" onclick="app.rateSRSCard(1)">🔴 صعبة (إعادة)</button>
+          <button class="btn" style="flex:1; background:#fef3c7; color:#b45309; border-color:#fcd34d; font-size:12.5px;" onclick="app.rateSRSCard(2)">🟡 متوسطة</button>
+          <button class="btn" style="flex:1; background:#d1fae5; color:#047857; border-color:#6ee7b7; font-size:12.5px;" onclick="app.rateSRSCard(3)">🟢 سهلة جداً</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 29: SENTENCE LEGO BUILDER -->
+    <div class="screen" id="screen-lego">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>مصنع ليغو الجمل</h1>
+      </div>
+      <div class="scroll-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="pill" id="legoLevelBadge">المستوى 1</span>
+          <span style="font-size:12px; font-weight:700; color:var(--text-muted);" id="legoProgressLabel">التحدي 1 من 6</span>
+        </div>
+
+        <!-- Target Arabic Sentence -->
+        <div class="card" style="border-right:4px solid var(--blue); margin-bottom:12px;">
+          <div style="font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:2px;">الجملة المستهدفة باللغة العربية:</div>
+          <div style="font-size:18px; font-weight:900; color:var(--text);" id="legoTargetAr">-</div>
+        </div>
+
+        <!-- Grammar Formula Tip -->
+        <div class="phonics-tip-box" id="legoTipBox" style="margin-bottom:16px;">...</div>
+
+        <!-- Lego Construction Slots -->
+        <div style="font-size:12.5px; font-weight:800; color:var(--text); margin-bottom:6px;">منطقة تركيب الليغو (اضغط على القطعة لإزالتها):</div>
+        <div class="lego-slots-grid" id="legoSlotsGrid"></div>
+
+        <!-- Blocks Bank -->
+        <div style="font-size:12.5px; font-weight:800; color:var(--text); margin-bottom:6px;">مخزن القطع (اضغط على الكلمة لوضعها في مكانها):</div>
+        <div class="lego-bank-box" id="legoBankBox"></div>
+
+        <div id="legoFeedbackBox" style="display:none; margin:14px 0; padding:12px; border-radius:12px; text-align:center; font-weight:700;"></div>
+
+        <div style="display:flex; gap:8px; margin-top:16px;">
+          <button class="btn btn-ghost" style="flex:1;" onclick="app.resetLegoSlots()">🔄 تفريغ</button>
+          <button class="btn btn-primary" style="flex:2;" id="legoCheckBtn" onclick="app.checkLegoSentence()">🚀 تحقق من الجملة</button>
+          <button class="btn btn-gold" style="flex:2; display:none;" id="legoNextBtn" onclick="app.nextLegoChallenge()">التالي ←</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 30: SPEECH SHADOWING LAB -->
+    <div class="screen" id="screen-shadowing">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>معمل التظليل الصوتي</h1>
+      </div>
+      <div class="scroll-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <span class="pill" id="shadowCategoryPill">التحيات اليومية</span>
+          <div style="display:flex; gap:6px;">
+            <button class="speed-pill-btn active" id="shadowSpeedNormal" onclick="app.setShadowSpeed('normal')">⚡ عادي 1.0x</button>
+            <button class="speed-pill-btn" id="shadowSpeedSlow" onclick="app.setShadowSpeed('slow')">🐢 بطيء 0.75x</button>
+          </div>
+        </div>
+
+        <div class="shadowing-text-display" id="shadowingDisplayEn">...</div>
+        <div class="card" style="margin-bottom:14px; font-size:14.5px; font-weight:700; color:var(--text);" id="shadowingDisplayAr">-</div>
+
+        <div class="phonics-tip-box" id="shadowingTipBox" style="margin-bottom:16px;">...</div>
+
+        <!-- 3 Step Actions -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+          <button class="btn btn-ghost" onclick="app.playShadowTarget()">🔊 1. استمع بدقة</button>
+          <button class="btn btn-primary" onclick="app.playShadowSynced()">👥 2. ظلل متزامناً</button>
+        </div>
+
+        <button class="btn btn-gold" style="width:100%; margin-bottom:12px;" id="shadowRecordBtn" onclick="app.startShadowRecording()">🎤 3. سجل صوتك وقارن النبرة</button>
+
+        <div id="shadowFeedbackBox" style="display:none; padding:12px; border-radius:12px; margin-bottom:14px; text-align:center; font-weight:700;"></div>
+
+        <button class="btn btn-ghost" style="width:100%;" onclick="app.nextShadowDrill()">الجملة التدريبية التالية ←</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 31: DIAGNOSTIC PLACEMENT TEST -->
+    <div class="screen" id="screen-placement">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>اختبار تحديد المستوى</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="progress-bar-wrap" style="margin-bottom:14px;">
+          <div class="progress-bar-fill" id="placementProgressBar" style="width:12.5%;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:12px;">
+          <span id="placementCountLabel">السؤال 1 من 8</span>
+          <span>تشخيص فوري للـ CEFR 🎯</span>
+        </div>
+
+        <div class="card" id="placementQuestionCard" style="margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-weight:800; font-size:12px; color:var(--blue);">السؤال التشخيصي</span>
+            <button class="btn btn-ghost btn-sm" onclick="app.playPlacementSpeech()">🔊 استمع</button>
+          </div>
+          <div style="direction:ltr; text-align:left; font-size:17px; font-weight:800; color:var(--text); margin-bottom:6px;" id="placementQuestionEn">-</div>
+          <div style="font-size:13.5px; color:var(--text-muted);" id="placementQuestionAr">-</div>
+        </div>
+
+        <div id="placementOptionsWrap"></div>
+
+        <div id="placementResultCard" style="display:none; text-align:center;" class="card">
+          <div style="font-size:48px; margin-bottom:8px;">🏆</div>
+          <div style="font-weight:900; font-size:22px; color:var(--navy); margin-bottom:4px;">نتيجة تشخيص مستواك</div>
+          <div class="pill" id="placementResultBadge" style="font-size:16px; padding:6px 16px; margin:8px auto; background:var(--blue); color:#ffffff;">المستوى A1 - مبتدئ متقدم</div>
+          <div style="font-size:13.5px; color:var(--text); line-height:1.8; margin:14px 0;" id="placementResultExplain">-</div>
+          <button class="btn btn-gold" style="width:100%; margin-bottom:8px;" onclick="app.applyPlacementResult()">ابدأ تعلم الإنجليزية بمستواك المحدد (+40 نقطة XP) 🚀</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Toast Notification Overlay -->
     <div class="toast-notice" id="toastNotice"></div>
 
@@ -760,6 +1090,11 @@
 <script src="js/data/stories.js"></script>
 <script src="js/data/travel.js"></script>
 <script src="js/data/world.js"></script>
+<script src="js/data/lumicall.js"></script>
+<script src="js/data/phonics.js"></script>
+<script src="js/data/lego.js"></script>
+<script src="js/data/shadowing.js"></script>
+<script src="js/data/placement.js"></script>
 <script src="js/services/audio.js"></script>
 <script src="js/services/storage.js"></script>
 <script src="js/services/lumi.js"></script>

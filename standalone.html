@@ -939,6 +939,390 @@ html, body {
   border-color: var(--blue);
 }
 
+/* ==========================================================================
+   1. LUMI VOICE CALL SIMULATOR
+   ========================================================================== */
+.call-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: radial-gradient(circle at 50% 30%, #152445 0%, #070e1c 100%);
+  color: #ffffff;
+  padding: 24px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.call-avatar-wrap {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  margin: 20px auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.call-avatar-pulse {
+  position: absolute;
+  inset: -15px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.25);
+  animation: callPulse 2s infinite ease-out;
+}
+
+.call-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes callPulse {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 0.2; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+.call-timer {
+  font-size: 14px;
+  font-weight: 700;
+  color: #93c5fd;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.call-voice-wave {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  margin: 10px 0;
+}
+
+.call-voice-wave span {
+  width: 4px;
+  height: 8px;
+  background: #60a5fa;
+  border-radius: 4px;
+  animation: waveBar 1.2s infinite ease-in-out;
+}
+.call-voice-wave span:nth-child(2) { animation-delay: 0.15s; }
+.call-voice-wave span:nth-child(3) { animation-delay: 0.3s; }
+.call-voice-wave span:nth-child(4) { animation-delay: 0.45s; }
+.call-voice-wave span:nth-child(5) { animation-delay: 0.6s; }
+
+@keyframes waveBar {
+  0%, 100% { height: 6px; }
+  50% { height: 26px; background: #93c5fd; }
+}
+
+.call-speech-bubble {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  padding: 16px 18px;
+  margin: 10px 0 16px;
+  text-align: right;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+.call-reply-pill {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: #ffffff;
+  font-size: 13.5px;
+  text-align: right;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.call-reply-pill:hover, .call-reply-pill:active {
+  background: rgba(37, 99, 235, 0.4);
+  border-color: #60a5fa;
+  transform: translateY(-2px);
+}
+
+.call-actions-bar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.call-circle-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.call-circle-btn.accept { background: #10b981; color: #ffffff; }
+.call-circle-btn.decline { background: #ef4444; color: #ffffff; }
+.call-circle-btn.mic { background: #3b82f6; color: #ffffff; }
+.call-circle-btn.speaker { background: rgba(255, 255, 255, 0.2); color: #ffffff; }
+.call-circle-btn:active { transform: scale(0.92); }
+
+/* ==========================================================================
+   2. ARAB-ENGLISH PHONICS LAB
+   ========================================================================== */
+.phonics-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+.phonics-card:hover {
+  border-color: var(--blue);
+}
+
+.phonics-pair-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.phonics-word-btn {
+  background: var(--card-subtle);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.phonics-word-btn:hover, .phonics-word-btn:active {
+  border-color: var(--blue);
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.phonics-tip-box {
+  background: #fef3c7;
+  border-right: 4px solid var(--gold);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  color: #78350f;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+[data-theme="dark"] .phonics-tip-box {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fde68a;
+}
+
+/* ==========================================================================
+   3. SMART SRS FLASHCARDS
+   ========================================================================== */
+.srs-scene {
+  perspective: 1000px;
+  margin: 20px 0 16px;
+}
+
+.srs-card {
+  width: 100%;
+  min-height: 220px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.srs-card.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.srs-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  border: 2px solid var(--border);
+  background: var(--card);
+}
+
+.srs-face-front {
+  background: linear-gradient(145deg, var(--card), var(--card-subtle));
+}
+
+.srs-face-back {
+  background: linear-gradient(145deg, var(--card), var(--card-subtle));
+  transform: rotateY(180deg);
+  border-color: var(--blue);
+}
+
+.srs-box-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+.srs-box-1 { background: #fee2e2; color: #b91c1c; }
+.srs-box-2 { background: #fef3c7; color: #b45309; }
+.srs-box-3 { background: #d1fae5; color: #047857; }
+
+/* ==========================================================================
+   4. SENTENCE LEGO BUILDER
+   ========================================================================== */
+.lego-slots-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 64px;
+  padding: 10px;
+  background: var(--card-subtle);
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  align-items: center;
+  margin-bottom: 16px;
+  transition: var(--transition);
+}
+.lego-slots-grid.correct {
+  border-color: var(--green);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.lego-block-chip {
+  padding: 10px 16px;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), inset 0 2px 0 rgba(255, 255, 255, 0.35);
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+  direction: ltr;
+}
+.lego-block-chip:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+.lego-block-chip:active {
+  transform: scale(0.95);
+}
+
+.lego-bank-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  min-height: 80px;
+  align-items: center;
+}
+
+/* ==========================================================================
+   5. SPEECH SHADOWING LAB
+   ========================================================================== */
+.shadowing-text-display {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.8;
+  direction: ltr;
+  text-align: left;
+  padding: 18px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 14px;
+}
+
+.shadowing-word-stress {
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-weight: 900;
+}
+
+.speed-pill-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.speed-pill-btn.active {
+  background: var(--blue);
+  color: #ffffff;
+  border-color: var(--blue);
+}
+
+/* ==========================================================================
+   6. ENHANCED GRADUATION CERTIFICATES
+   ========================================================================== */
+.cert-gold-frame {
+  background: #ffffff;
+  border: 8px double #d97706;
+  border-radius: 20px;
+  padding: 28px 20px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 15px 45px rgba(217, 119, 6, 0.2);
+  color: #0f172a;
+}
+.cert-seal-badge {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #b45309);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 900;
+  margin: 16px auto 0;
+  box-shadow: 0 6px 18px rgba(180, 83, 9, 0.4);
+}
+
+
 </style>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
 </head>
@@ -1047,6 +1431,16 @@ html, body {
           <button class="btn btn-gold" onclick="app.openLesson('greet', 'home')">ابدأ رحلتك الآن</button>
         </div>
 
+        <!-- Diagnostic Placement Test Banner -->
+        <button class="card card-interactive" style="border:1.5px solid var(--gold); background:linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.04));" onclick="app.startPlacementTest()">
+          <div class="icon-box" style="background:#fef3c7; color:var(--gold-dark); font-size:26px;">🎯</div>
+          <div class="grow">
+            <div style="font-weight:900; font-size:14.5px; color:var(--gold-dark);">اختبار تحديد المستوى وتشخيص المهارات</div>
+            <div class="sub">8 أسئلة ذكية في 3 دقائق لتحديد مستواك وبدء خطتك المناسبة</div>
+          </div>
+          <span class="pill" style="background:var(--gold); color:#ffffff; font-size:11px;">ابدأ الآن</span>
+        </button>
+
         <!-- AI Tutor Lumi Banner -->
         <button class="card card-interactive" onclick="app.showScreen('lumi')">
           <div class="icon-box" style="background:#e0e7ff; color:var(--blue); font-size:26px;">🤖</div>
@@ -1116,6 +1510,53 @@ html, body {
           </div>
           <div class="arrow-icon">‹</div>
         </button>
+
+        <!-- Pro Beginner Labs Section -->
+        <div style="margin:20px 0 10px;">
+          <div style="font-weight:900; font-size:15px; color:var(--text); margin-bottom:4px;">✨ مختبرات الاحتراف للمبتدئين</div>
+          <div class="sub" style="font-size:12px;">أدوات حصرية مصممة خصيصاً للمتعلم العربي لكسر حاجز الخوف والطلاقة</div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px;">
+          <!-- 1. Lumi Voice Call -->
+          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #10b981;" onclick="app.openLumiCall()">
+            <div style="font-size:28px; margin-bottom:6px;">📞</div>
+            <div style="font-weight:800; font-size:13.5px; color:var(--text);">مكالمة لومي</div>
+            <div class="sub" style="font-size:11px; margin-top:2px;">محاكاة مكالمة هاتفية حية</div>
+          </button>
+
+          <!-- 2. Arab Phonics Lab -->
+          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #3b82f6;" onclick="app.openPhonicsLab()">
+            <div style="font-size:28px; margin-bottom:6px;">🔤</div>
+            <div style="font-weight:800; font-size:13.5px; color:var(--text);">مخارج الحروف</div>
+            <div class="sub" style="font-size:11px; margin-top:2px;">علاج فخ P و B و TH</div>
+          </button>
+
+          <!-- 3. Smart SRS Flashcards -->
+          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #8b5cf6;" onclick="app.openSRSFlashcards()">
+            <div style="font-size:28px; margin-bottom:6px;">🧠</div>
+            <div style="font-weight:800; font-size:13.5px; color:var(--text);">فلاش كاردز SRS</div>
+            <div class="sub" style="font-size:11px; margin-top:2px;">تكرار متباعد للذاكرة الدائمة</div>
+          </button>
+
+          <!-- 4. Sentence Lego Builder -->
+          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #f59e0b;" onclick="app.openLegoBuilder()">
+            <div style="font-size:28px; margin-bottom:6px;">🧱</div>
+            <div style="font-weight:800; font-size:13.5px; color:var(--text);">ليغو الجمل</div>
+            <div class="sub" style="font-size:11px; margin-top:2px;">تركيب بصري للقواعد</div>
+          </button>
+
+          <!-- 5. Speech Shadowing Lab -->
+          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #ec4899; grid-column:span 2;" onclick="app.openShadowingLab()">
+            <div style="display:flex; align-items:center; justify-content:center; gap:12px;">
+              <div style="font-size:28px;">👥</div>
+              <div style="text-align:right;">
+                <div style="font-weight:800; font-size:13.5px; color:var(--text);">معمل التظليل الصوتي (Shadowing)</div>
+                <div class="sub" style="font-size:11px;">تحدث متزامن مع الناطق الأصلي لاكتساب اللكنة والسرعة</div>
+              </div>
+            </div>
+          </button>
+        </div>
 
         <!-- 6 Main Hub Tiles -->
         <div class="tiles">
@@ -1630,17 +2071,45 @@ html, body {
         <h1>شهادة الإتمام والتقدير</h1>
       </div>
       <div class="scroll-content">
-        <div class="cert-frame">
-          <div style="font-size:44px;">🎓</div>
-          <div style="font-weight:900; font-size:11px; color:var(--text-muted); letter-spacing:3px; margin-top:6px;">ENGLISH JOURNEY ACADEMY</div>
-          <div style="font-weight:900; font-size:22px; color:var(--navy); margin-top:14px;">شهادة تقدير وإنجاز</div>
-          <div class="sub" style="font-size:12.5px;">Certificate of Completion & Excellence</div>
-          <div class="sub" style="margin:20px 0 4px;">تُمنح هذه الشهادة بفخر لـ:</div>
-          <div id="certUserName" style="font-weight:900; font-size:24px; color:var(--gold-dark); margin-bottom:12px;">-</div>
-          <div id="certStatsText" style="font-size:13.5px; line-height:1.8; color:var(--text); margin-bottom:16px;"></div>
-          <div class="sub" id="certDateText" style="font-size:11.5px;"></div>
+        <!-- Certificate Frame -->
+        <div class="cert-gold-frame">
+          <div style="font-size:46px;">🎓</div>
+          <div style="font-weight:900; font-size:11px; color:#b45309; letter-spacing:3px; margin-top:4px;">ENGLISH JOURNEY ACADEMY</div>
+          <div style="font-weight:900; font-size:22px; color:#0b1b3d; margin-top:10px;">شهادة تقدير وإنجاز لغوي</div>
+          <div style="font-size:12px; color:#64748b; font-weight:700;">Certificate of Achievement & CEFR Proficiency</div>
+          
+          <div style="margin:16px 0 2px; font-size:12px; color:#475569;">تُمنح هذه الشهادة رسمياً وفخراً لـ:</div>
+          <div id="certUserName" style="font-weight:900; font-size:24px; color:#b45309; margin-bottom:10px; border-bottom:2px dashed #fcd34d; padding-bottom:6px; display:inline-block; min-width:200px;">-</div>
+          
+          <div class="pill" id="certLevelBadge" style="margin:4px auto 12px; background:#0b1b3d; color:#f59e0b; font-weight:800; font-size:13px; display:inline-block;">المستوى A1 - الأساسي المعتمد</div>
+
+          <div id="certStatsText" style="font-size:13px; line-height:1.8; color:#1e293b; margin-bottom:12px;"></div>
+          
+          <!-- Official Seal Badge -->
+          <div class="cert-seal-badge">
+            <span style="font-size:16px;">★</span>
+            <span>VERIFIED</span>
+          </div>
+
+          <div style="margin-top:14px; font-size:11px; color:#64748b; display:flex; justify-content:space-between;">
+            <span id="certIdText">رقم الاعتماد: EJ-849201</span>
+            <span id="certDateText">التاريخ: -</span>
+          </div>
         </div>
-        <button class="btn btn-primary" style="margin-top:16px;" onclick="window.print()">🖨️ طباعة الشهادة / حفظ كـ PDF</button>
+
+        <!-- Custom Name Input -->
+        <div style="margin-top:16px;">
+          <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">تعديل الاسم المطبوع على الشهادة:</label>
+          <div style="display:flex; gap:6px;">
+            <input class="input-field" id="certCustomNameInput" placeholder="اكتب اسمك الثلاثي للشهادة" style="margin-bottom:0;">
+            <button class="btn btn-primary btn-sm" onclick="app.updateCertName()">تحديث</button>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:14px;">
+          <button class="btn btn-gold" style="flex:1;" onclick="app.shareCertificateWhatsApp()">📲 مشاركة عبر واتساب</button>
+          <button class="btn btn-primary" style="flex:1;" onclick="window.print()">🖨️ طباعة / حفظ كـ PDF</button>
+        </div>
       </div>
     </div>
 
@@ -1677,6 +2146,251 @@ html, body {
             <div class="lesson-row" style="padding:8px 12px; margin-bottom:6px;"><span>✔</span> بنك الاختبارات، لعبة الترجمة، وتحدي الدقيقة</div>
           </div>
           <button class="btn btn-gold" onclick="app.showScreen('home')">متابعة الاستخدام والاستمتاع بالتطبيق</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 26: LUMI VOICE CALL SIMULATOR -->
+    <div class="screen" id="screen-lumicall" style="padding:0; overflow:hidden;">
+      <div class="call-container" id="lumiCallRingingBox">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <button class="action-btn" style="color:#ffffff;" onclick="app.closeLumiCall()">✕</button>
+          <div style="font-size:12px; color:#93c5fd; font-weight:700;">مكالمة هاتفية تفاعلية</div>
+          <div style="width:36px;"></div>
+        </div>
+
+        <div class="call-avatar-wrap">
+          <div class="call-avatar-pulse"></div>
+          <div class="call-avatar-img">🤖</div>
+        </div>
+
+        <div style="font-size:22px; font-weight:900; margin-top:10px;" id="callCallerName">Lumi - مدرّبك الذكي</div>
+        <div style="font-size:13px; color:#93c5fd; margin-top:4px;" id="callCallerRole">نادل في مقهى ستاربكس</div>
+        <div style="margin-top:14px; font-size:14px; color:#cbd5e1; animation:callPulse 1.5s infinite;">يرن الآن... Incoming Call 📲</div>
+
+        <div style="margin-top:auto; padding-bottom:30px; display:flex; justify-content:space-around; align-items:center;">
+          <div>
+            <button class="call-circle-btn decline" onclick="app.closeLumiCall()">✕</button>
+            <div style="font-size:12px; margin-top:6px; color:#fca5a5;">رفض</div>
+          </div>
+          <div>
+            <button class="call-circle-btn accept" onclick="app.acceptLumiCall()">📞</button>
+            <div style="font-size:12px; margin-top:6px; color:#86efac;">رد على المكالمة</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="call-container" id="lumiCallActiveBox" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="call-timer" id="callDurationTimer">00:00</div>
+          <div style="font-weight:800; font-size:13px; color:#93c5fd;" id="callActiveCallerTitle">مكالمة جارية 🟢</div>
+          <button class="btn btn-ghost btn-sm" style="color:#ffffff; font-size:11px; padding:3px 8px; border:1px solid rgba(255,255,255,0.2);" onclick="app.repeatLumiCallSpeech()">🔊 أعد السؤال</button>
+        </div>
+
+        <div class="call-avatar-wrap" style="width:80px; height:80px; margin:10px auto 4px;">
+          <div class="call-avatar-img" style="font-size:38px;">🤖</div>
+        </div>
+
+        <div class="call-voice-wave" id="callVoiceWave">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <!-- Spoken Question Bubble -->
+        <div class="call-speech-bubble">
+          <div style="direction:ltr; text-align:left; font-size:16px; font-weight:800; color:#60a5fa; margin-bottom:6px;" id="callLumiEnText">...</div>
+          <div style="font-size:13px; color:#e2e8f0;" id="callLumiArText">...</div>
+        </div>
+
+        <!-- Suggested beginner replies -->
+        <div style="font-size:12px; font-weight:700; color:#93c5fd; text-align:right; margin-bottom:8px;">💡 خيارات للرد (اضغط للرد أو تحدث بالمايك):</div>
+        <div id="callSuggestedRepliesWrap" style="max-height:160px; overflow-y:auto; margin-bottom:10px;"></div>
+
+        <div id="callSpeechFeedback" style="font-size:12px; min-height:18px; margin-bottom:6px; font-weight:700;"></div>
+
+        <!-- Call Actions Bar -->
+        <div class="call-actions-bar">
+          <button class="call-circle-btn speaker" onclick="app.toggleCallSpeaker()" id="callSpeakerBtn" title="مكبر الصوت">🔊</button>
+          <button class="call-circle-btn mic" id="callMicBtn" onclick="app.startCallRecording()" title="تحدث الآن">🎤</button>
+          <button class="call-circle-btn decline" onclick="app.endLumiCall()" title="إنهاء المكالمة">🔴</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 27: ARAB-ENGLISH PHONICS LAB -->
+    <div class="screen" id="screen-phonics">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>معمل مخارج الحروف للعرب</h1>
+      </div>
+      <div class="scroll-content">
+        <!-- Topic Tabs -->
+        <div class="tabs-slider" id="phonicsTabsWrap" style="display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; margin-bottom:14px;"></div>
+
+        <!-- Active Topic Details -->
+        <div id="phonicsContentBox"></div>
+      </div>
+    </div>
+
+    <!-- SCREEN 28: SMART SRS FLASHCARDS -->
+    <div class="screen" id="screen-srs">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>فلاش كاردز التكرار المتباعد</h1>
+      </div>
+      <div class="scroll-content">
+        <!-- Boxes Stats -->
+        <div style="display:flex; justify-content:space-between; gap:6px; margin-bottom:16px;">
+          <div class="card center" style="flex:1; padding:10px 6px; margin:0; text-align:center;">
+            <div style="font-size:18px; font-weight:900; color:#b91c1c;" id="srsBox1Count">0</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700;">صندوق 1 (يومي)</div>
+          </div>
+          <div class="card center" style="flex:1; padding:10px 6px; margin:0; text-align:center;">
+            <div style="font-size:18px; font-weight:900; color:#b45309;" id="srsBox2Count">0</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700;">صندوق 2 (3 أيام)</div>
+          </div>
+          <div class="card center" style="flex:1; padding:10px 6px; margin:0; text-align:center;">
+            <div style="font-size:18px; font-weight:900; color:#047857;" id="srsBox3Count">0</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:700;">صندوق 3 (متقن 🏆)</div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:12.5px; font-weight:700; color:var(--text-muted);" id="srsCardCountLabel">البطاقة 1 من 10</span>
+          <button class="btn btn-ghost btn-sm" onclick="app.playCurrentSRSSpeech()">🔊 استمع (عربي + English)</button>
+        </div>
+
+        <!-- 3D Flashcard Container -->
+        <div class="srs-scene" onclick="app.flipSRSCard()">
+          <div class="srs-card" id="srsInteractiveCard">
+            <div class="srs-face srs-face-front">
+              <span class="srs-box-badge srs-box-1" id="srsCardBoxBadge">صندوق 1</span>
+              <div style="font-size:42px; margin:16px 0 8px;" id="srsCardIcon">💡</div>
+              <div style="font-weight:900; font-size:22px; color:var(--text);" id="srsCardArText">-</div>
+              <div class="sub" style="margin-top:12px; font-size:12px; color:var(--blue);">👆 اضغط على البطاقة لقلبها واكتشاف الإنجليزية</div>
+            </div>
+            <div class="srs-face srs-face-back">
+              <div style="direction:ltr; font-weight:900; font-size:24px; color:var(--blue); margin-bottom:4px;" id="srsCardEnText">-</div>
+              <div style="direction:ltr; font-size:13px; color:var(--text-muted); margin-bottom:12px;" id="srsCardIpaText">/ ... /</div>
+              <div style="direction:ltr; text-align:center; font-size:14.5px; color:var(--text); line-height:1.6;" id="srsCardExampleText">...</div>
+              <div class="sub" style="margin-top:14px; font-size:12px;">كيف تقيّم حفظك لهذه الكلمة؟</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rating Controls -->
+        <div style="display:flex; gap:8px; margin-top:16px;">
+          <button class="btn" style="flex:1; background:#fee2e2; color:#b91c1c; border-color:#fca5a5; font-size:12.5px;" onclick="app.rateSRSCard(1)">🔴 صعبة (إعادة)</button>
+          <button class="btn" style="flex:1; background:#fef3c7; color:#b45309; border-color:#fcd34d; font-size:12.5px;" onclick="app.rateSRSCard(2)">🟡 متوسطة</button>
+          <button class="btn" style="flex:1; background:#d1fae5; color:#047857; border-color:#6ee7b7; font-size:12.5px;" onclick="app.rateSRSCard(3)">🟢 سهلة جداً</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 29: SENTENCE LEGO BUILDER -->
+    <div class="screen" id="screen-lego">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>مصنع ليغو الجمل</h1>
+      </div>
+      <div class="scroll-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="pill" id="legoLevelBadge">المستوى 1</span>
+          <span style="font-size:12px; font-weight:700; color:var(--text-muted);" id="legoProgressLabel">التحدي 1 من 6</span>
+        </div>
+
+        <!-- Target Arabic Sentence -->
+        <div class="card" style="border-right:4px solid var(--blue); margin-bottom:12px;">
+          <div style="font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:2px;">الجملة المستهدفة باللغة العربية:</div>
+          <div style="font-size:18px; font-weight:900; color:var(--text);" id="legoTargetAr">-</div>
+        </div>
+
+        <!-- Grammar Formula Tip -->
+        <div class="phonics-tip-box" id="legoTipBox" style="margin-bottom:16px;">...</div>
+
+        <!-- Lego Construction Slots -->
+        <div style="font-size:12.5px; font-weight:800; color:var(--text); margin-bottom:6px;">منطقة تركيب الليغو (اضغط على القطعة لإزالتها):</div>
+        <div class="lego-slots-grid" id="legoSlotsGrid"></div>
+
+        <!-- Blocks Bank -->
+        <div style="font-size:12.5px; font-weight:800; color:var(--text); margin-bottom:6px;">مخزن القطع (اضغط على الكلمة لوضعها في مكانها):</div>
+        <div class="lego-bank-box" id="legoBankBox"></div>
+
+        <div id="legoFeedbackBox" style="display:none; margin:14px 0; padding:12px; border-radius:12px; text-align:center; font-weight:700;"></div>
+
+        <div style="display:flex; gap:8px; margin-top:16px;">
+          <button class="btn btn-ghost" style="flex:1;" onclick="app.resetLegoSlots()">🔄 تفريغ</button>
+          <button class="btn btn-primary" style="flex:2;" id="legoCheckBtn" onclick="app.checkLegoSentence()">🚀 تحقق من الجملة</button>
+          <button class="btn btn-gold" style="flex:2; display:none;" id="legoNextBtn" onclick="app.nextLegoChallenge()">التالي ←</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 30: SPEECH SHADOWING LAB -->
+    <div class="screen" id="screen-shadowing">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>معمل التظليل الصوتي</h1>
+      </div>
+      <div class="scroll-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <span class="pill" id="shadowCategoryPill">التحيات اليومية</span>
+          <div style="display:flex; gap:6px;">
+            <button class="speed-pill-btn active" id="shadowSpeedNormal" onclick="app.setShadowSpeed('normal')">⚡ عادي 1.0x</button>
+            <button class="speed-pill-btn" id="shadowSpeedSlow" onclick="app.setShadowSpeed('slow')">🐢 بطيء 0.75x</button>
+          </div>
+        </div>
+
+        <div class="shadowing-text-display" id="shadowingDisplayEn">...</div>
+        <div class="card" style="margin-bottom:14px; font-size:14.5px; font-weight:700; color:var(--text);" id="shadowingDisplayAr">-</div>
+
+        <div class="phonics-tip-box" id="shadowingTipBox" style="margin-bottom:16px;">...</div>
+
+        <!-- 3 Step Actions -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+          <button class="btn btn-ghost" onclick="app.playShadowTarget()">🔊 1. استمع بدقة</button>
+          <button class="btn btn-primary" onclick="app.playShadowSynced()">👥 2. ظلل متزامناً</button>
+        </div>
+
+        <button class="btn btn-gold" style="width:100%; margin-bottom:12px;" id="shadowRecordBtn" onclick="app.startShadowRecording()">🎤 3. سجل صوتك وقارن النبرة</button>
+
+        <div id="shadowFeedbackBox" style="display:none; padding:12px; border-radius:12px; margin-bottom:14px; text-align:center; font-weight:700;"></div>
+
+        <button class="btn btn-ghost" style="width:100%;" onclick="app.nextShadowDrill()">الجملة التدريبية التالية ←</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 31: DIAGNOSTIC PLACEMENT TEST -->
+    <div class="screen" id="screen-placement">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>اختبار تحديد المستوى</h1>
+      </div>
+      <div class="scroll-content">
+        <div class="progress-bar-wrap" style="margin-bottom:14px;">
+          <div class="progress-bar-fill" id="placementProgressBar" style="width:12.5%;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:12px;">
+          <span id="placementCountLabel">السؤال 1 من 8</span>
+          <span>تشخيص فوري للـ CEFR 🎯</span>
+        </div>
+
+        <div class="card" id="placementQuestionCard" style="margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-weight:800; font-size:12px; color:var(--blue);">السؤال التشخيصي</span>
+            <button class="btn btn-ghost btn-sm" onclick="app.playPlacementSpeech()">🔊 استمع</button>
+          </div>
+          <div style="direction:ltr; text-align:left; font-size:17px; font-weight:800; color:var(--text); margin-bottom:6px;" id="placementQuestionEn">-</div>
+          <div style="font-size:13.5px; color:var(--text-muted);" id="placementQuestionAr">-</div>
+        </div>
+
+        <div id="placementOptionsWrap"></div>
+
+        <div id="placementResultCard" style="display:none; text-align:center;" class="card">
+          <div style="font-size:48px; margin-bottom:8px;">🏆</div>
+          <div style="font-weight:900; font-size:22px; color:var(--navy); margin-bottom:4px;">نتيجة تشخيص مستواك</div>
+          <div class="pill" id="placementResultBadge" style="font-size:16px; padding:6px 16px; margin:8px auto; background:var(--blue); color:#ffffff;">المستوى A1 - مبتدئ متقدم</div>
+          <div style="font-size:13.5px; color:var(--text); line-height:1.8; margin:14px 0;" id="placementResultExplain">-</div>
+          <button class="btn btn-gold" style="width:100%; margin-bottom:8px;" onclick="app.applyPlacementResult()">ابدأ تعلم الإنجليزية بمستواك المحدد (+40 نقطة XP) 🚀</button>
         </div>
       </div>
     </div>
@@ -3686,6 +4400,671 @@ const WORLD_LOCATIONS = [
 
 </script>
 <script>
+// English Journey - Lumi Voice Call Simulator Data
+// Realistic beginner phone call scenarios with interactive conversational flows
+
+const LUMI_CALL_SCENARIOS = {
+  coffee: {
+    id: "coffee",
+    title: "طلب قهوة من المقهى",
+    titleEn: "Ordering at a Cafe",
+    icon: "☕",
+    callerName: "Lumi - Barista",
+    callerRole: "نادل في مقهى ستاربكس",
+    stages: [
+      {
+        lumiEn: "Hello! Welcome to Coffee House. What can I get for you today?",
+        lumiAr: "أهلاً بك في كوفي هاوس! ماذا تحب أن تطلب اليوم؟",
+        suggestedReplies: [
+          { en: "I would like a caramel latte, please.", ar: "أريد كراميل لاتيه، من فضلك.", isBest: true },
+          { en: "Can I have an iced Americano?", ar: "هل يمكنني الحصول على أمريكانو مثلج؟", isBest: true },
+          { en: "Just a hot black coffee, please.", ar: "فقط قهوة سوداء ساخنة، من فضلك.", isBest: true }
+        ],
+        keywords: ["latte", "coffee", "americano", "cappuccino", "tea", "please", "like"]
+      },
+      {
+        lumiEn: "Great choice! What size would you like: small, medium, or large?",
+        lumiAr: "اختيار رائع! ما الحجم الذي تفضله: صغير، متوسط، أم كبير؟",
+        suggestedReplies: [
+          { en: "Medium size, please.", ar: "حجم متوسط، من فضلك.", isBest: true },
+          { en: "A large cup, please.", ar: "كوب كبير، من فضلك.", isBest: true },
+          { en: "Small size is fine.", ar: "الحجم الصغير مناسب.", isBest: true }
+        ],
+        keywords: ["small", "medium", "large", "size", "cup"]
+      },
+      {
+        lumiEn: "Perfect! Would you like that hot or iced?",
+        lumiAr: "تمام! هل تحبها ساخنة أم مثلجة؟",
+        suggestedReplies: [
+          { en: "Iced, please.", ar: "مثلجة، من فضلك.", isBest: true },
+          { en: "Hot, please.", ar: "ساخنة، من فضلك.", isBest: true },
+          { en: "With extra ice, please.", ar: "مع ثلج إضافي، من فضلك.", isBest: true }
+        ],
+        keywords: ["hot", "iced", "ice", "cold"]
+      },
+      {
+        lumiEn: "Is it for here or to go?",
+        lumiAr: "هل ستشربها هنا أم تأخذها معك للخارج؟",
+        suggestedReplies: [
+          { en: "To go, please.", ar: "سفري (للخارج)، من فضلك.", isBest: true },
+          { en: "For here, please.", ar: "محلي (هنا)، من فضلك.", isBest: true },
+          { en: "Takeaway, thank you.", ar: "سفري، شكراً لك.", isBest: true }
+        ],
+        keywords: ["to go", "here", "takeaway", "out"]
+      },
+      {
+        lumiEn: "All done! That will be four dollars. Your coffee will be ready in two minutes. Have a wonderful day!",
+        lumiAr: "تم كل شيء! الحساب 4 دولارات. قهوتك ستكون جاهزة خلال دقيقتين. أتمنى لك يوماً رائعاً!",
+        suggestedReplies: [
+          { en: "Thank you so much! Have a great day!", ar: "شكراً جزيلاً لك! يوماً سعيداً!", isBest: true },
+          { en: "Here is the money. Thank you!", ar: "تفضل المبلغ. شكراً لك!", isBest: true }
+        ],
+        keywords: ["thank", "thanks", "money", "day", "bye"]
+      }
+    ]
+  },
+
+  hotel: {
+    id: "hotel",
+    title: "مكالمة استقبال الفندق",
+    titleEn: "Hotel Reception Call",
+    icon: "🏨",
+    callerName: "Lumi - Receptionist",
+    callerRole: "موظف استقبال فندق جراند",
+    stages: [
+      {
+        lumiEn: "Good afternoon, Grand Hotel reception. How may I assist you today?",
+        lumiAr: "مساء الخير، استقبال فندق جراند. كيف يمكنني مساعدتك اليوم؟",
+        suggestedReplies: [
+          { en: "Hello, I would like to check in, please.", ar: "مرحباً، أود تسجيل الوصول، من فضلك.", isBest: true },
+          { en: "Hi, I have a room reservation under my name.", ar: "أهلاً، لدي حجز غرفة باسمي.", isBest: true }
+        ],
+        keywords: ["check in", "reservation", "booking", "room", "assist", "name"]
+      },
+      {
+        lumiEn: "Welcome! May I have your full name and booking confirmation number?",
+        lumiAr: "أهلاً وسهلاً بك! هل يمكنني الحصول على اسمك الكامل ورقم تأكيد الحجز؟",
+        suggestedReplies: [
+          { en: "My name is Ahmed, and my booking number is 402.", ar: "اسمي أحمد، ورقم حجزي هو 402.", isBest: true },
+          { en: "Here is my passport and confirmation email.", ar: "تفضل جواز سفري والبريد الإلكتروني للتأكيد.", isBest: true }
+        ],
+        keywords: ["name", "booking", "number", "passport", "email", "ahmed"]
+      },
+      {
+        lumiEn: "Thank you, Ahmed. Your deluxe room on the fifth floor is ready. Would you like a non-smoking room?",
+        lumiAr: "شكراً لك يا أحمد. غرفتك الفاخرة بالطابق الخامس جاهزة. هل تفضل غرفة لغير المدخنين؟",
+        suggestedReplies: [
+          { en: "Yes, non-smoking, please.", ar: "نعم، لغير المدخنين من فضلك.", isBest: true },
+          { en: "Yes, that would be wonderful.", ar: "نعم، هذا سيكون رائعاً.", isBest: true }
+        ],
+        keywords: ["yes", "smoking", "non", "room", "please"]
+      },
+      {
+        lumiEn: "Here is your keycard. Breakfast is served from 7 to 10 AM. Enjoy your stay with us!",
+        lumiAr: "تفضل بطاقة غرفتك. الإفطار يُقدّم من 7 إلى 10 صباحاً. استمتع بإقامتك معنا!",
+        suggestedReplies: [
+          { en: "Thank you very much for your help!", ar: "شكراً جزيلاً لمساعدتك!", isBest: true },
+          { en: "What is the Wi-Fi password, please?", ar: "ما هي كلمة سر الواي فاي، من فضلك؟", isBest: true }
+        ],
+        keywords: ["thank", "thanks", "wifi", "help", "stay"]
+      }
+    ]
+  },
+
+  taxi: {
+    id: "taxi",
+    title: "مكالمة سائق الأجرة / أوبر",
+    titleEn: "Taxi Driver Call",
+    icon: "🚕",
+    callerName: "Lumi - Taxi Driver",
+    callerRole: "سائق تاكسي",
+    stages: [
+      {
+        lumiEn: "Hello! This is your taxi driver. I have arrived at your location. Where are you standing?",
+        lumiAr: "مرحباً! معك سائق التاكسي. لقد وصلت لموقعك. أين تقف بالضبط؟",
+        suggestedReplies: [
+          { en: "I am waiting in front of the main entrance.", ar: "أنا أنتظر أمام المدخل الرئيسي.", isBest: true },
+          { en: "I am standing next to the bookstore.", ar: "أنا أقف بجوار متجر الكتب.", isBest: true }
+        ],
+        keywords: ["front", "entrance", "standing", "waiting", "here", "door", "next"]
+      },
+      {
+        lumiEn: "I see you! I am in a silver Toyota with emergency hazard lights on. Please come in.",
+        lumiAr: "لقد رأيتك! أنا في سيارة تويوتا فضية مشغّل أضواء التنبيه. تفضل بالركوب.",
+        suggestedReplies: [
+          { en: "I see your car. I am coming now.", ar: "رأيت سيارتك. أنا قادم الآن.", isBest: true },
+          { en: "Great, opening the door now.", ar: "رائع، أفتح الباب الآن.", isBest: true }
+        ],
+        keywords: ["coming", "see", "car", "door", "now", "okay"]
+      },
+      {
+        lumiEn: "Good day! Where would you like to go today?",
+        lumiAr: "طاب يومك! إلى أين ترغب في الذهاب اليوم؟",
+        suggestedReplies: [
+          { en: "To the international airport, Terminal 2, please.", ar: "إلى المطار الدولي، الصالة 2، من فضلك.", isBest: true },
+          { en: "To the city center mall, please.", ar: "إلى مول مركز المدينة، من فضلك.", isBest: true }
+        ],
+        keywords: ["airport", "terminal", "mall", "center", "hotel", "please", "go"]
+      },
+      {
+        lumiEn: "Understood. The traffic is light, so it should take about twenty minutes. Fasten your seatbelt, please.",
+        lumiAr: "مفهوم. حركة المرور خفيفة، سيستغرق الطريق حوالي 20 دقيقة. اربط حزام الأمان من فضلك.",
+        suggestedReplies: [
+          { en: "Thank you! I fastened my seatbelt.", ar: "شكراً لك! لقد ربطت الحزام.", isBest: true },
+          { en: "Sounds good, thank you.", ar: "يبدو جيداً، شكراً لك.", isBest: true }
+        ],
+        keywords: ["thank", "seatbelt", "fastened", "good", "okay"]
+      }
+    ]
+  },
+
+  doctor: {
+    id: "doctor",
+    title: "مكالمة عيادة الطبيب / الصيدلية",
+    titleEn: "Doctor Clinic & Pharmacy Call",
+    icon: "💊",
+    callerName: "Lumi - Clinic Assistant",
+    callerRole: "مساعد الطبيب في العيادة",
+    stages: [
+      {
+        lumiEn: "Health Clinic, good morning! How can I help you?",
+        lumiAr: "عيادة الصحة، صباح الخير! كيف يمكنني مساعدتك؟",
+        suggestedReplies: [
+          { en: "Hello, I would like to book an appointment with the doctor.", ar: "مرحباً، أود حجز موعد مع الطبيب.", isBest: true },
+          { en: "I have a terrible headache and fever.", ar: "لدي صداع شديد وحرارة مرتفعة.", isBest: true }
+        ],
+        keywords: ["appointment", "book", "doctor", "headache", "fever", "sick", "help"]
+      },
+      {
+        lumiEn: "I am sorry to hear that. How long have you felt these symptoms?",
+        lumiAr: "يؤسفني سماع ذلك. منذ متى وأنت تشعر بهذه الأعراض؟",
+        suggestedReplies: [
+          { en: "Since yesterday evening.", ar: "منذ مساء الأمس.", isBest: true },
+          { en: "For two days now.", ar: "منذ يومين حتى الآن.", isBest: true }
+        ],
+        keywords: ["yesterday", "days", "since", "morning", "evening", "hours"]
+      },
+      {
+        lumiEn: "Do you have any allergies to medicine like penicillin or aspirin?",
+        lumiAr: "هل لديك أي حساسية من أدوية مثل البنسلين أو الأسبرين؟",
+        suggestedReplies: [
+          { en: "No, I do not have any allergies.", ar: "لا، ليس لدي أي حساسية.", isBest: true },
+          { en: "Yes, I am allergic to penicillin.", ar: "نعم، لدي حساسية من البنسلين.", isBest: true }
+        ],
+        keywords: ["no", "yes", "allergies", "allergic", "penicillin", "aspirin"]
+      },
+      {
+        lumiEn: "Doctor Miller can see you today at 4:30 PM. Does that time work for you?",
+        lumiAr: "الدكتور ميلر يمكنه رؤيتك اليوم الساعة 4:30 عصراً. هل هذا الوقت مناسب لك؟",
+        suggestedReplies: [
+          { en: "Yes, 4:30 PM is perfect for me.", ar: "نعم، 4:30 عصراً وقت مثالي لي.", isBest: true },
+          { en: "Yes, please confirm the appointment.", ar: "نعم، أرجو تأكيد الموعد من فضلك.", isBest: true }
+        ],
+        keywords: ["yes", "perfect", "time", "confirm", "appointment", "good"]
+      }
+    ]
+  }
+};
+
+</script>
+<script>
+// English Journey - Arab-English Phonics Lab Data
+// Master the most challenging phonetic distinctions for Arabic native speakers
+
+const PHONICS_TOPICS = {
+  pb: {
+    id: "pb",
+    title: "الفرق بين P و B",
+    titleEn: "P vs B (Voiceless vs Voiced)",
+    icon: "💨",
+    badge: "صوت انفجاري",
+    desc: "أشهر فخ صوتي يقع فيه المتحدث العربي؛ اللغة العربية لا تحتوي على صوت P، فيميل اللسان لنطقها B.",
+    howToProduce: "💡 سر النطق: ضع ورقة أمام شفتيك وانطق (P)، يجب أن تتحرك الورقة بسبب ضخ الهواء القوي بدون اهتزاز أوتارك الصوتية. بينما مع (B) تهتز الأوتار الصوتية ولا يخرج هواء قوي.",
+    pairs: [
+      { w1: "Park", w1Ar: "حديقة / يصف سيارة", w2: "Bark", w2Ar: "ينبح / لحاء شجر", ipa1: "/pɑːrk/", ipa2: "/bɑːrk/" },
+      { w1: "Peach", w1Ar: "خوخ", w2: "Beach", w2Ar: "شاطئ البحر", ipa1: "/piːtʃ/", ipa2: "/biːtʃ/" },
+      { w1: "Pen", w1Ar: "قلم حبر", w2: "Ben", w2Ar: "اسم علم (بن)", ipa1: "/pɛn/", ipa2: "/bɛn/" },
+      { w1: "Pin", w1Ar: "دبوس", w2: "Bin", w2Ar: "سلة مهملات", ipa1: "/pɪn/", ipa2: "/bɪn/" },
+      { w1: "Pear", w1Ar: "كمثرى", w2: "Bear", w2Ar: "دب", ipa1: "/pɛər/", ipa2: "/bɛər/" },
+      { w1: "Pig", w1Ar: "خنزير", w2: "Big", w2Ar: "كبير الحجم", ipa1: "/pɪɡ/", ipa2: "/bɪɡ/" }
+    ],
+    quiz: [
+      { target: "Park", options: ["Park", "Bark"], correct: 0, hint: "استمع هل خرج هواء انفجاري خفيف أم اهتزاز شفوي؟" },
+      { target: "Beach", options: ["Peach", "Beach"], correct: 1, hint: "الكلمة تعني الشاطئ" },
+      { target: "Pen", options: ["Pen", "Ben"], correct: 0, hint: "الكلمة تعني قلم" },
+      { target: "Big", options: ["Pig", "Big"], correct: 1, hint: "الكلمة تعني كبير" }
+    ]
+  },
+
+  th: {
+    id: "th",
+    title: "نطق حرفي TH (الثاء والذال)",
+    titleEn: "TH Sounds: Voiced /ð/ & Voiceless /θ/",
+    icon: "👅",
+    badge: "مخرج طرف اللسان",
+    desc: "تركيبة TH تعطي صوتين مختلفين تماماً، مثل حرفي الثاء والذال في اللغة العربية.",
+    howToProduce: "💡 سر النطق: ضع طرف لسانك بلطف بين أسنانك العلوية والسفلية. إذا اهتزت حنجرتك فهو صوت الذال /ð/ مثل (This)، وإذا خرج هواء نقي فهو صوت الثاء /θ/ مثل (Think). لا تنطقها S أو Z أبداً!",
+    pairs: [
+      { w1: "Think", w1Ar: "يفكّر / يعتقد (صوت الثاء)", w2: "This", w2Ar: "هذا (صوت الذال)", ipa1: "/θɪŋk/", ipa2: "/ðɪs/" },
+      { w1: "Three", w1Ar: "رقم 3 (صوت الثاء)", w2: "The", w2Ar: "ألـ التعريف (صوت الذال)", ipa1: "/θriː/", ipa2: "/ðə/" },
+      { w1: "Thank", w1Ar: "يشكر (صوت الثاء)", w2: "That", w2Ar: "ذلك (صوت الذال)", ipa1: "/θæŋk/", ipa2: "/ðæt/" },
+      { w1: "Teeth", w1Ar: "أسنان (صوت الثاء)", w2: "Breathe", w2Ar: "يتنفس (صوت الذال)", ipa1: "/tiːθ/", ipa2: "/briːð/" },
+      { w1: "Bath", w1Ar: "حمام (صوت الثاء)", w2: "Bathe", w2Ar: "يستحم (صوت الذال)", ipa1: "/bɑːθ/", ipa2: "/beɪð/" }
+    ],
+    quiz: [
+      { target: "Think", options: ["Think", "Sink"], correct: 0, hint: "احرص على إخراج طرف اللسان ولا تنطقها Sink!" },
+      { target: "This", options: ["This", "Dis"], correct: 0, hint: "طرف اللسان بين الأسنان لصوت الذال /ð/" },
+      { target: "Three", options: ["Three", "Tree"], correct: 0, hint: "تأكد من صوت الثاء وليس التاء كشجرة Tree!" }
+    ]
+  },
+
+  vf: {
+    id: "vf",
+    title: "الفرق بين V و F",
+    titleEn: "V vs F (Voiced vs Voiceless)",
+    icon: "⚡",
+    badge: "الأسنان والشفتين",
+    desc: "صوت V يشبه F تماماً في مخرج الأسنان مع الشفة السفلى، لكن الفارق الوحيد هو تشغيل الأوتار الصوتية.",
+    howToProduce: "💡 سر النطق: ضع أسنانك العلوية على شفتك السفلية. إذا أخرجت هواء فقط فهو (F). إذا شغلت صوت الحنجرة وشعرت باهتزاز وطنين فهو (V).",
+    pairs: [
+      { w1: "Van", w1Ar: "شاحنة صغيرة", w2: "Fan", w2Ar: "مروحة / معجب", ipa1: "/væn/", ipa2: "/fæn/" },
+      { w1: "Very", w1Ar: "جداً", w2: "Ferry", w2Ar: "عبّارة بحرية", ipa1: "/ˈvɛri/", ipa2: "/ˈfɛri/" },
+      { w1: "View", w1Ar: "إطلالة / منظر", w2: "Few", w2Ar: "قليل من", ipa1: "/vjuː/", ipa2: "/fjuː/" },
+      { w1: "Save", w1Ar: "يحفظ / ينقذ", w2: "Safe", w2Ar: "آمن / خزنة", ipa1: "/seɪv/", ipa2: "/seɪf/" },
+      { w1: "Leave", w1Ar: "يغادر", w2: "Leaf", w2Ar: "ورقة شجر", ipa1: "/liːv/", ipa2: "/liːf/" }
+    ],
+    quiz: [
+      { target: "Van", options: ["Van", "Fan"], correct: 0, hint: "استمع لصوت الطنين الحنجري في بداية الكلمة" },
+      { target: "Very", options: ["Very", "Ferry"], correct: 0, hint: "Very تعني جداً" },
+      { target: "Safe", options: ["Save", "Safe"], correct: 1, hint: "Safe تنتهي بصوت F النقي بدون اهتزاز" }
+    ]
+  },
+
+  silent: {
+    id: "silent",
+    title: "الحروف الصامتة السحرية",
+    titleEn: "Silent Letters Masterclass",
+    icon: "🤫",
+    badge: "تُكتب ولا تُنطق",
+    desc: "في الإنجليزية الكثير من الحروف التي تُكتب لأسباب تاريخية لكنها لا تُنطق إطلاقاً.",
+    howToProduce: "💡 القاعدة الذهبية: احفظ هذه الأنماط الشائعة: K قبل N صامتة (Knife)، W قبل R صامتة (Write)، B بعد M صامتة (Climb)، H بعد W غالباً صامتة (What).",
+    pairs: [
+      { w1: "Knife", w1Ar: "سكين (الـ K صامتة!)", w2: "Knee", w2Ar: "ركبة (الـ K صامتة!)", ipa1: "/naɪf/", ipa2: "/niː/" },
+      { w1: "Write", w1Ar: "يكتب (الـ W صامتة!)", w2: "Wrong", w2Ar: "خطأ (الـ W صامتة!)", ipa1: "/raɪt/", ipa2: "/rɒŋ/" },
+      { w1: "Doubt", w1Ar: "شك (الـ B صامتة!)", w2: "Debt", w2Ar: "دَين مالي (الـ B صامتة!)", ipa1: "/daʊt/", ipa2: "/dɛt/" },
+      { w1: "Listen", w1Ar: "يستمع (الـ T صامتة!)", w2: "Castle", w2Ar: "قلعة (الـ T صامتة!)", ipa1: "/ˈlɪsən/", ipa2: "/ˈkɑːsəl/" },
+      { w1: "Half", w1Ar: "نصف (الـ L صامتة!)", w2: "Talk", w2Ar: "يتحدث (الـ L صامتة!)", ipa1: "/hɑːf/", ipa2: "/tɔːk/" },
+      { w1: "Hour", w1Ar: "ساعة زمنية (الـ H صامتة!)", w2: "Honest", w2Ar: "صادق / أمين (الـ H صامتة!)", ipa1: "/ˈaʊər/", ipa2: "/ˈɒnɪst/" }
+    ],
+    quiz: [
+      { target: "Knife", options: ["Knife", "Kanife"], correct: 0, hint: "حرف K لا يُنطق أبداً قبل N!" },
+      { target: "Listen", options: ["Listen", "List-en"], correct: 0, hint: "حرف T صامت تماماً في كلمة Listen" },
+      { target: "Hour", options: ["Hour", "Howr"], correct: 0, hint: "حرف H صامت، وتبدأ الكلمة بصوت العلة Ow!" }
+    ]
+  },
+
+  vowels: {
+    id: "vowels",
+    title: "حروف العلة: القصيرة والطويلة",
+    titleEn: "Short vs Long Vowels",
+    icon: "🎵",
+    badge: "موسيقى اللغة",
+    desc: "مدّ الصوت أو قصره يغير معنى الكلمة كلياً في الإنجليزية.",
+    howToProduce: "💡 سر النطق: صوت /ɪ/ القصير يُنطق بخطف سريع دون ابتسامة عريضة (Ship)، بينما صوت /iː/ الطويل يحتاج لابتسامة واضحة ومطّ الصوت ثانية واحدة (Sheep).",
+    pairs: [
+      { w1: "Ship", w1Ar: "سفينة (صوت قصير)", w2: "Sheep", w2Ar: "خروف (صوت طويل وممدود)", ipa1: "/ʃɪp/", ipa2: "/ʃiːp/" },
+      { w1: "Fit", w1Ar: "لائق بدنياً (قصير)", w2: "Feet", w2Ar: "أقدام (طويل وممدود)", ipa1: "/fɪt/", ipa2: "/fiːt/" },
+      { w1: "Bit", w1Ar: "قطعة صغيرة (قصير)", w2: "Beat", w2Ar: "يهزم / نبضة (طويل)", ipa1: "/bɪt/", ipa2: "/biːt/" },
+      { w1: "Pull", w1Ar: "يسحب (قصير)", w2: "Pool", w2Ar: "مسبح (طويل وممدود)", ipa1: "/pʊl/", ipa2: "/puːl/" },
+      { w1: "Sit", w1Ar: "يجلس (قصير)", w2: "Seat", w2Ar: "مقعد (طويل وممدود)", ipa1: "/sɪt/", ipa2: "/siːt/" }
+    ],
+    quiz: [
+      { target: "Sheep", options: ["Ship", "Sheep"], correct: 1, hint: "استمع للمدّ الطويل في صوت ee" },
+      { target: "Fit", options: ["Fit", "Feet"], correct: 0, hint: "نطق خاطف وسريع" },
+      { target: "Pool", options: ["Pull", "Pool"], correct: 1, hint: "Pool تعني مسبح مع مد حرف الواو oo" }
+    ]
+  }
+};
+
+</script>
+<script>
+// English Journey - Sentence Lego Builder Data
+// Hands-on visual grammar construction kit for beginners
+
+const LEGO_CHALLENGES = [
+  {
+    id: "lego_1",
+    level: 1,
+    title: "المضارع البسيط للمفرد (he/she/it)",
+    titleEn: "Present Simple (Third Person -s)",
+    targetAr: "هي تشرب عصير البرتقال كل صباح.",
+    grammarTip: "قاعدة الليغو: عندما يكون الفاعل مفرد (He/She/It)، نضيف حرف (s) لنهاية الفعل الرئيسي!",
+    slots: [
+      { key: "subject", label: "الفاعل 👤", color: "#2563eb" },
+      { key: "verb", label: "الفعل (+s) ⚡", color: "#f59e0b" },
+      { key: "object", label: "المفعول به 📦", color: "#10b981" },
+      { key: "time", label: "الزمان ⏰", color: "#8b5cf6" }
+    ],
+    blocks: [
+      { text: "drinks", type: "verb", color: "#f59e0b" },
+      { text: "She", type: "subject", color: "#2563eb" },
+      { text: "orange juice", type: "object", color: "#10b981" },
+      { text: "every morning", type: "time", color: "#8b5cf6" },
+      // Distractors
+      { text: "drink", type: "verb", color: "#f59e0b" },
+      { text: "drinking", type: "verb", color: "#f59e0b" }
+    ],
+    correct: ["She", "drinks", "orange juice", "every morning"],
+    sentenceEn: "She drinks orange juice every morning."
+  },
+
+  {
+    id: "lego_2",
+    level: 1,
+    title: "المضارع المستمر (الحدث الجاري الآن)",
+    titleEn: "Present Continuous (am/is/are + ing)",
+    targetAr: "هم يلعبون كرة القدم في الحديقة الآن.",
+    grammarTip: "قاعدة الليغو: الفعل المستمر يتكون من قطعتين لا تنفصلان: (am/is/are) + فعل ينتهي بـ (ing)!",
+    slots: [
+      { key: "subject", label: "الفاعل 👤", color: "#2563eb" },
+      { key: "aux", label: "فعل مساعد 🧩", color: "#ec4899" },
+      { key: "verb", label: "فعل مستمر (ing) ⚡", color: "#f59e0b" },
+      { key: "object", label: "المفعول به ⚽", color: "#10b981" },
+      { key: "place", label: "المكان 📍", color: "#06b6d4" }
+    ],
+    blocks: [
+      { text: "They", type: "subject", color: "#2563eb" },
+      { text: "are", type: "aux", color: "#ec4899" },
+      { text: "playing", type: "verb", color: "#f59e0b" },
+      { text: "football", type: "object", color: "#10b981" },
+      { text: "in the park", type: "place", color: "#06b6d4" },
+      // Distractors
+      { text: "is", type: "aux", color: "#ec4899" },
+      { text: "plays", type: "verb", color: "#f59e0b" }
+    ],
+    correct: ["They", "are", "playing", "football", "in the park"],
+    sentenceEn: "They are playing football in the park."
+  },
+
+  {
+    id: "lego_3",
+    level: 2,
+    title: "تكوين السؤال بـ Do / Does",
+    titleEn: "Asking Questions with Do & Does",
+    targetAr: "هل تتحدث اللغة الإنجليزية بطلاقة؟",
+    grammarTip: "قاعدة الليغو في السؤال: نبدأ بالفعل المساعد أولاً (Do)، يليه الفاعل، ثم الفعل في المصدر بدون أي إضافات!",
+    slots: [
+      { key: "aux", label: "أداة السؤال ❓", color: "#ec4899" },
+      { key: "subject", label: "الفاعل 👤", color: "#2563eb" },
+      { key: "verb", label: "الفعل الأساسي ⚡", color: "#f59e0b" },
+      { key: "object", label: "المفعول به 📦", color: "#10b981" },
+      { key: "adv", label: "الحال 🌟", color: "#8b5cf6" }
+    ],
+    blocks: [
+      { text: "Do", type: "aux", color: "#ec4899" },
+      { text: "you", type: "subject", color: "#2563eb" },
+      { text: "speak", type: "verb", color: "#f59e0b" },
+      { text: "English", type: "object", color: "#10b981" },
+      { text: "fluently?", type: "adv", color: "#8b5cf6" },
+      // Distractors
+      { text: "Does", type: "aux", color: "#ec4899" },
+      { text: "speaks", type: "verb", color: "#f59e0b" }
+    ],
+    correct: ["Do", "you", "speak", "English", "fluently?"],
+    sentenceEn: "Do you speak English fluently?"
+  },
+
+  {
+    id: "lego_4",
+    level: 2,
+    title: "الماضي البسيط مع زمن محدد",
+    titleEn: "Past Simple Tense",
+    targetAr: "أنا زرت متحف لندن الصيف الماضي.",
+    grammarTip: "قاعدة الليغو في الماضي: نستخدم التصريف الثاني للفعل بإضافة (ed) أو التصريف الشاذ!",
+    slots: [
+      { key: "subject", label: "الفاعل 👤", color: "#2563eb" },
+      { key: "verb", label: "فعل ماضي ⚡", color: "#f59e0b" },
+      { key: "object", label: "المكان / المفعول 🏛️", color: "#10b981" },
+      { key: "time", label: "الزمن الماضي ⏰", color: "#8b5cf6" }
+    ],
+    blocks: [
+      { text: "I", type: "subject", color: "#2563eb" },
+      { text: "visited", type: "verb", color: "#f59e0b" },
+      { text: "the London museum", type: "object", color: "#10b981" },
+      { text: "last summer", type: "time", color: "#8b5cf6" },
+      // Distractors
+      { text: "visit", type: "verb", color: "#f59e0b" },
+      { text: "am visiting", type: "verb", color: "#f59e0b" }
+    ],
+    correct: ["I", "visited", "the London museum", "last summer"],
+    sentenceEn: "I visited the London museum last summer."
+  },
+
+  {
+    id: "lego_5",
+    level: 2,
+    title: "النفي بـ doesn't للمفرد",
+    titleEn: "Negative Sentences with Doesn't",
+    targetAr: "هو لا يأكل الطعام الحار.",
+    grammarTip: "قاعدة الليغو: كلمة (doesn't) تأخذ حرف الـ s من الفعل، فيرجع الفعل بعدها للمصدر بدون s!",
+    slots: [
+      { key: "subject", label: "الفاعل 👤", color: "#2563eb" },
+      { key: "neg", label: "أداة النفي 🚫", color: "#ef4444" },
+      { key: "verb", label: "فعل مجرد ⚡", color: "#f59e0b" },
+      { key: "object", label: "المفعول به 🌶️", color: "#10b981" }
+    ],
+    blocks: [
+      { text: "He", type: "subject", color: "#2563eb" },
+      { text: "does not", type: "neg", color: "#ef4444" },
+      { text: "eat", type: "verb", color: "#f59e0b" },
+      { text: "spicy food", type: "object", color: "#10b981" },
+      // Distractors
+      { text: "eats", type: "verb", color: "#f59e0b" },
+      { text: "do not", type: "neg", color: "#ef4444" }
+    ],
+    correct: ["He", "does not", "eat", "spicy food"],
+    sentenceEn: "He does not eat spicy food."
+  },
+
+  {
+    id: "lego_6",
+    level: 3,
+    title: "أفعال القدرة والنصيحة (Can & Should)",
+    titleEn: "Modals: Can & Should",
+    targetAr: "أنت تستطيع تحدث الإنجليزية بثقة تامة.",
+    grammarTip: "قاعدة الليغو: الأفعال المساعدة المودال مثل (Can / Should) يأتي بعدها الفعل ناصعاً ومجرداً دائماً!",
+    slots: [
+      { key: "subject", label: "الفاعل 👤", color: "#2563eb" },
+      { key: "modal", label: "فعل القدرة 🚀", color: "#8b5cf6" },
+      { key: "verb", label: "فعل مجرد ⚡", color: "#f59e0b" },
+      { key: "object", label: "المفعول به 💬", color: "#10b981" },
+      { key: "adv", label: "الحال 🎯", color: "#06b6d4" }
+    ],
+    blocks: [
+      { text: "You", type: "subject", color: "#2563eb" },
+      { text: "can", type: "modal", color: "#8b5cf6" },
+      { text: "speak", type: "verb", color: "#f59e0b" },
+      { text: "English", type: "object", color: "#10b981" },
+      { text: "with total confidence", type: "adv", color: "#06b6d4" },
+      // Distractors
+      { text: "can to", type: "modal", color: "#8b5cf6" },
+      { text: "speaking", type: "verb", color: "#f59e0b" }
+    ],
+    correct: ["You", "can", "speak", "English", "with total confidence"],
+    sentenceEn: "You can speak English with total confidence."
+  }
+];
+
+</script>
+<script>
+// English Journey - Speech Shadowing Lab Data
+// Master native cadence, rhythm, and stress through immediate vocal shadowing
+
+const SHADOWING_DRILLS = [
+  {
+    id: "sh_1",
+    category: "التحيات اليومية والتعارف",
+    icon: "🤝",
+    textEn: "It is really nice to finally meet you in person!",
+    textAr: "من اللطيف حقاً مقابلتك شخصياً أخيراً!",
+    stressWords: ["really", "nice", "finally", "meet", "person"],
+    tip: "ركز على نبرة الحماس في كلمة 'really' ومدّ كلمة 'nice' بانسيابية."
+  },
+  {
+    id: "sh_2",
+    category: "المطاعم والطلبات",
+    icon: "🍽️",
+    textEn: "Excuse me, could we please have the bill whenever you are ready?",
+    textAr: "لو سمحت، هل يمكننا الحصول على الفاتورة عندما تكون جاهزاً؟",
+    stressWords: ["Excuse", "could", "please", "bill", "ready"],
+    tip: "ابدأ بنبرة مهذبة هادئة مع ارتفاع طفيف في نبرة الصوت عند كلمة 'ready'."
+  },
+  {
+    id: "sh_3",
+    category: "السفر والمطارات",
+    icon: "✈️",
+    textEn: "Which terminal do I need to go to for international flights?",
+    textAr: "أي صالة أحتاج للذهاب إليها من أجل الرحلات الدولية؟",
+    stressWords: ["Which", "terminal", "need", "international", "flights"],
+    tip: "ركز على ضغط المقطع الصوتي الأول في كلمة 'TER-mi-nal'."
+  },
+  {
+    id: "sh_4",
+    category: "التسوق والأسعار",
+    icon: "🛍️",
+    textEn: "Do you happen to have this exact jacket in a medium size?",
+    textAr: "هل يتوفر لديكم بالصدفة نفس هذه السترة بحجم متوسط؟",
+    stressWords: ["exact", "jacket", "medium", "size"],
+    tip: "اربط بين كلمتي 'this' و 'exact' لتصبح مثل كلمة واحدة سلسة 'this-exact'."
+  },
+  {
+    id: "sh_5",
+    category: "المشاعر والاطمئنان",
+    icon: "❤️",
+    textEn: "Do not worry about anything, everything is going to be completely fine.",
+    textAr: "لا تقلق بشأن أي شيء، كل شيء سيكون على ما يرام تماماً.",
+    stressWords: ["worry", "everything", "completely", "fine"],
+    tip: "اجعل نبرة صوتك دافئة ومطمئنة مع إعطاء ثقل لكلمة 'fine'."
+  },
+  {
+    id: "sh_6",
+    category: "العمل والاجتماعات",
+    icon: "💼",
+    textEn: "Thank you all for your time, and I look forward to working together.",
+    textAr: "شكراً لكم جميعاً على وقتكم، وأتطلع بحماس للعمل معاً.",
+    stressWords: ["Thank", "time", "look", "forward", "working", "together"],
+    tip: "انطق 'look forward to' بدمج صوتي طبيعي ونبرة احترافية واثقة."
+  },
+  {
+    id: "sh_7",
+    category: "الاتجاهات في الشارع",
+    icon: "🗺️",
+    textEn: "Go straight ahead for two blocks, then take a sharp right turn.",
+    textAr: "امشِ للأمام مباشرة لمسافة مبنيين، ثم انعطف يميناً مباشرة.",
+    stressWords: ["straight", "two", "blocks", "sharp", "right"],
+    tip: "استخدم إيقاعاً حازماً وواضحاً كأنك ترسم الخريطة بصوتك."
+  },
+  {
+    id: "sh_8",
+    category: "الاعتذار واللباقة",
+    icon: "🙏",
+    textEn: "I am terribly sorry for keeping you waiting so long.",
+    textAr: "أنا آسف بشدة لأنني جعلتك تنتظر طوال هذه المدة.",
+    stressWords: ["terribly", "sorry", "waiting", "long"],
+    tip: "اضغط بنبرة صدق واضحة على كلمة 'terribly' ثم اخفض نبرتك في النهاية."
+  }
+];
+
+</script>
+<script>
+// English Journey - Diagnostic Placement Test Data
+// Evaluates CEFR baseline proficiency (Pre-A1, A1, A2, B1) in 3 minutes
+
+const PLACEMENT_QUESTIONS = [
+  {
+    id: "place_1",
+    q: "Hello! My name is John. ______ are you from?",
+    qAr: "مرحباً! اسمي جون. من ______ أنت؟",
+    options: ["Where", "What", "Who", "When"],
+    optionsAr: ["من أين", "ماذا", "من (للأشخاص)", "متى"],
+    correct: 0,
+    explain: "نستخدم Where للسؤال عن المكان والأصل والبلد (Where are you from?).",
+    levelPoint: "pre_a1"
+  },
+  {
+    id: "place_2",
+    q: "She ______ a cup of coffee every morning before work.",
+    qAr: "هي ______ فنجان قهوة كل صباح قبل العمل.",
+    options: ["drinks", "drink", "drinking", "drank"],
+    optionsAr: ["تشرب (مع s المفرد)", "يشرب (مجرد)", "تشرب مستمر", "شربت بالماضي"],
+    correct: 0,
+    explain: "مع الفاعل المفرد الغائب (She) في المضارع البسيط للروتين اليومي، نضيف (s) للفعل (drinks).",
+    levelPoint: "a1"
+  },
+  {
+    id: "place_3",
+    q: "Excuse me, how ______ is this blue shirt?",
+    qAr: "لو سمحت، كم ______ سعر هذا القميص الأزرق؟",
+    options: ["much", "many", "long", "old"],
+    optionsAr: ["السعر (كم ثمن)", "العدد (كم عدد)", "الطول / المدة", "العمر"],
+    correct: 0,
+    explain: "نستخدم (How much) للسؤال عن سعر وثمن الأشياء.",
+    levelPoint: "a1"
+  },
+  {
+    id: "place_4",
+    q: "Yesterday evening, we ______ a fantastic dinner at the Italian restaurant.",
+    qAr: "مساء الأمس، نحن ______ عشاءً رائعاً في المطعم الإيطالي.",
+    options: ["had", "have", "having", "has"],
+    optionsAr: ["تناولنا (ماضي have)", "نتناول", "نتناول مستمر", "يتناول للمفرد"],
+    correct: 0,
+    explain: "كلمة (Yesterday) تدل على الماضي البسيط، والتصريف الماضي لـ have هو had.",
+    levelPoint: "a1_plus"
+  },
+  {
+    id: "place_5",
+    q: "Look outside! The dark clouds are gathering, it ______ rain very soon.",
+    qAr: "انظر في الخارج! الغيوم الداكنة تتجمع، إنها ______ تمطر قريباً جداً.",
+    options: ["is going to", "will to", "is", "was"],
+    optionsAr: ["سوف (بناءً على دليل مرئي)", "سوف مع to (خاطئة)", "تكون", "كانت"],
+    correct: 0,
+    explain: "نستخدم (is going to) للتنبؤ بحدث في المستقبل القريب بناءً على دليل مرئي واضح (الغيوم).",
+    levelPoint: "a2"
+  },
+  {
+    id: "place_6",
+    q: "I have lived in this beautiful city ______ five years.",
+    qAr: "أنا أعيش في هذه المدينة الجميلة ______ خمس سنوات.",
+    options: ["for", "since", "at", "during"],
+    optionsAr: ["لمدة (فترة زمنية كاملة)", "منذ (بداية نقطة زمنية)", "في", "أثناء"],
+    correct: 0,
+    explain: "نستخدم (for) مع طول المدة الإجمالية (for five years)، بينما since تُستخدم مع بداية التاريخ مثل since 2021.",
+    levelPoint: "a2"
+  },
+  {
+    id: "place_7",
+    q: "If I miss the bus this morning, I ______ a taxi to the office.",
+    qAr: "إذا فاتني الحافلة هذا الصباح، فسوف ______ تاكسي إلى المكتب.",
+    options: ["will take", "took", "have taken", "taking"],
+    optionsAr: ["سوف أستقل (مستقبل بسيط)", "استقللت", "قد استقللت", "مستقل"],
+    correct: 0,
+    explain: "في قاعدة الشرط الأولى (First Conditional): جملة If تكون مضارع بسيط وجواب الشرط يكون (will + المصدر).",
+    levelPoint: "a2_plus"
+  },
+  {
+    id: "place_8",
+    q: "Could you please tell me where the nearest metro station ______?",
+    qAr: "هل يمكنك إخباري من فضلك أين ______ أقرب محطة مترو؟",
+    options: ["is", "is it", "it is", "are"],
+    optionsAr: ["تكون (في نهاية السؤال غير المباشر)", "تكون هي (ترتيب سؤال عادي)", "هي تكون", "للجمع"],
+    correct: 0,
+    explain: "في الأسئلة غير المباشرة والمهذبة (Indirect Questions) يأتي الفعل المساعد في نهاية الجملة بعد الفاعل.",
+    levelPoint: "b1"
+  }
+];
+
+</script>
+<script>
 // English Journey - Audio & Speech Services
 // 1. Text-To-Speech (Native Android TTS Bridge + Web Speech API + Online Audio Fallback)
 // 2. Speech-To-Text (Native Android STT Bridge + Web SpeechRecognition + Word Pronunciation)
@@ -4309,7 +5688,13 @@ class StorageService {
       TRIAL_START: "ej_trial_start",
       SUBSCRIBED: "ej_subscribed",
       SFX: "ej_sfx_enabled",
-      VOICE_RATE: "ej_voice_rate"
+      VOICE_RATE: "ej_voice_rate",
+      SRS_CARDS: "ej_srs_cards",
+      PLACEMENT: "ej_placement",
+      PHONICS_DONE: "ej_phonics_done",
+      LEGO_DONE: "ej_lego_done",
+      SHADOWING_DONE: "ej_shadowing_done",
+      CERTIFICATES: "ej_certificates"
     };
     this.initTrial();
   }
@@ -4540,6 +5925,100 @@ class StorageService {
   hasFullAccess(forceFree = true) {
     if (forceFree) return true;
     return this.isSubscribed() || this.getTrialDaysLeft() > 0;
+  }
+
+  // --- Smart SRS Flashcards ---
+  getSRSCards() {
+    return this.get(this.KEYS.SRS_CARDS, null);
+  }
+
+  saveSRSCards(cards) {
+    this.set(this.KEYS.SRS_CARDS, cards);
+  }
+
+  updateSRSCardBox(cardId, newBox) {
+    const cards = this.getSRSCards() || [];
+    const card = cards.find(c => c.id === cardId);
+    if (card) {
+      card.box = newBox;
+      card.lastReviewed = new Date().toISOString();
+      this.saveSRSCards(cards);
+      if (newBox === 3) this.addXP(5);
+    }
+  }
+
+  // --- Diagnostic Placement Test ---
+  getPlacementResult() {
+    return this.get(this.KEYS.PLACEMENT, null);
+  }
+
+  savePlacementResult(resultObj) {
+    this.set(this.KEYS.PLACEMENT, {
+      ...resultObj,
+      date: new Date().toLocaleDateString("ar-SA", { year: "numeric", month: "long", day: "numeric" })
+    });
+    this.addXP(40);
+  }
+
+  // --- Phonics Mastery ---
+  getPhonicsDone() {
+    return this.get(this.KEYS.PHONICS_DONE, []);
+  }
+
+  markPhonicsDone(topicId) {
+    const list = this.getPhonicsDone();
+    if (!list.includes(topicId)) {
+      list.push(topicId);
+      this.set(this.KEYS.PHONICS_DONE, list);
+      this.addXP(15);
+    }
+  }
+
+  // --- Sentence Lego Progress ---
+  getLegoDone() {
+    return this.get(this.KEYS.LEGO_DONE, []);
+  }
+
+  markLegoDone(legoId) {
+    const list = this.getLegoDone();
+    if (!list.includes(legoId)) {
+      list.push(legoId);
+      this.set(this.KEYS.LEGO_DONE, list);
+      this.addXP(20);
+    }
+  }
+
+  // --- Shadowing Progress ---
+  getShadowingDone() {
+    return this.get(this.KEYS.SHADOWING_DONE, []);
+  }
+
+  markShadowingDone(drillId) {
+    const list = this.getShadowingDone();
+    if (!list.includes(drillId)) {
+      list.push(drillId);
+      this.set(this.KEYS.SHADOWING_DONE, list);
+      this.addXP(15);
+    }
+  }
+
+  // --- Digital Certificates ---
+  getCertificates() {
+    return this.get(this.KEYS.CERTIFICATES, []);
+  }
+
+  awardCertificate(cert) {
+    const list = this.getCertificates();
+    const existing = list.find(c => c.level === cert.level);
+    if (!existing) {
+      list.push({
+        ...cert,
+        id: "EJ-" + Math.floor(100000 + Math.random() * 900000),
+        awardedAt: new Date().toLocaleDateString("ar-SA", { year: "numeric", month: "long", day: "numeric" })
+      });
+      this.set(this.KEYS.CERTIFICATES, list);
+      this.addXP(50);
+    }
   }
 }
 
@@ -4997,6 +6476,34 @@ class App {
     this.currentSayEn = "";
     this.currentSayAr = "";
 
+    // 1. Lumi Voice Call State
+    this.callScenarioKey = "coffee";
+    this.callStageIndex = 0;
+    this.callTimerInterval = null;
+    this.callSeconds = 0;
+    this.callActive = false;
+
+    // 2. Phonics State
+    this.currentPhonicsKey = "pb";
+
+    // 3. Smart SRS Flashcards State
+    this.srsPool = [];
+    this.srsIndex = 0;
+    this.srsFlipped = false;
+    this.currentSRSCard = null;
+
+    // 4. Sentence Lego Builder State
+    this.legoIndex = 0;
+    this.legoSlotsPlaced = [];
+
+    // 5. Speech Shadowing State
+    this.shadowIndex = 0;
+    this.shadowSpeed = "normal";
+
+    // 6. Diagnostic Placement State
+    this.placementIndex = 0;
+    this.placementScore = 0;
+
     this.init();
   }
 
@@ -5114,6 +6621,24 @@ class App {
         break;
       case "onboarding":
         this.renderOnboarding();
+        break;
+      case "lumicall":
+        this.openLumiCall(this.callScenarioKey || "coffee");
+        break;
+      case "phonics":
+        this.openPhonicsLab();
+        break;
+      case "srs":
+        this.openSRSFlashcards();
+        break;
+      case "lego":
+        this.openLegoBuilder(this.legoIndex || 0);
+        break;
+      case "shadowing":
+        this.openShadowingLab(this.shadowIndex || 0);
+        break;
+      case "placement":
+        this.startPlacementTest();
         break;
     }
   }
@@ -7016,17 +8541,934 @@ class App {
     audioService.speakSeq("", "This is the current speech speed.", "en");
   }
 
+  // --- 1. Lumi Voice Call Simulator ---
+  openLumiCall(scenarioKey = "coffee") {
+    this.callScenarioKey = scenarioKey;
+    const scenario = LUMI_CALL_SCENARIOS[scenarioKey] || LUMI_CALL_SCENARIOS.coffee;
+    this.callStageIndex = 0;
+    this.callSeconds = 0;
+    this.callActive = false;
+    clearInterval(this.callTimerInterval);
+
+    const ringingBox = document.getElementById("lumiCallRingingBox");
+    const activeBox = document.getElementById("lumiCallActiveBox");
+    if (ringingBox) ringingBox.style.display = "flex";
+    if (activeBox) activeBox.style.display = "none";
+
+    const callerName = document.getElementById("callCallerName");
+    const callerRole = document.getElementById("callCallerRole");
+    if (callerName) callerName.textContent = scenario.callerName;
+    if (callerRole) callerRole.textContent = scenario.callerRole;
+
+    audioService.playDing();
+    this.showScreen("lumicall");
+  }
+
+  acceptLumiCall() {
+    this.callActive = true;
+    const ringingBox = document.getElementById("lumiCallRingingBox");
+    const activeBox = document.getElementById("lumiCallActiveBox");
+    if (ringingBox) ringingBox.style.display = "none";
+    if (activeBox) activeBox.style.display = "flex";
+
+    this.startCallTimer();
+    this.renderCallStage();
+  }
+
+  startCallTimer() {
+    clearInterval(this.callTimerInterval);
+    this.callSeconds = 0;
+    const timerEl = document.getElementById("callDurationTimer");
+    if (timerEl) timerEl.textContent = "00:00";
+
+    this.callTimerInterval = setInterval(() => {
+      this.callSeconds++;
+      const mins = String(Math.floor(this.callSeconds / 60)).padStart(2, "0");
+      const secs = String(this.callSeconds % 60).padStart(2, "0");
+      if (timerEl) timerEl.textContent = `${mins}:${secs}`;
+    }, 1000);
+  }
+
+  renderCallStage() {
+    const scenario = LUMI_CALL_SCENARIOS[this.callScenarioKey] || LUMI_CALL_SCENARIOS.coffee;
+    if (this.callStageIndex >= scenario.stages.length) {
+      this.finishLumiCall();
+      return;
+    }
+
+    const stage = scenario.stages[this.callStageIndex];
+    const enEl = document.getElementById("callLumiEnText");
+    const arEl = document.getElementById("callLumiArText");
+    const titleEl = document.getElementById("callActiveCallerTitle");
+    const repliesWrap = document.getElementById("callSuggestedRepliesWrap");
+    const feedbackEl = document.getElementById("callSpeechFeedback");
+
+    if (titleEl) titleEl.textContent = `${scenario.callerName} 🟢`;
+    if (enEl) enEl.textContent = stage.lumiEn;
+    if (arEl) arEl.textContent = stage.lumiAr;
+    if (feedbackEl) {
+      feedbackEl.textContent = "";
+      feedbackEl.style.color = "#93c5fd";
+    }
+
+    if (repliesWrap) {
+      repliesWrap.innerHTML = "";
+      stage.suggestedReplies.forEach((reply, idx) => {
+        const pill = document.createElement("div");
+        pill.className = "call-reply-pill";
+        pill.innerHTML = `
+          <div class="reply-en">${reply.en}</div>
+          <div class="reply-ar">${reply.ar}</div>
+        `;
+        pill.onclick = () => this.chooseCallReply(idx);
+        repliesWrap.appendChild(pill);
+      });
+    }
+
+    // Speak Lumi's line: Arabic prompt followed by English
+    audioService.speakPair(stage.lumiAr, stage.lumiEn);
+  }
+
+  repeatLumiCallSpeech() {
+    const scenario = LUMI_CALL_SCENARIOS[this.callScenarioKey] || LUMI_CALL_SCENARIOS.coffee;
+    const stage = scenario.stages[this.callStageIndex];
+    if (stage) {
+      audioService.speakPair(stage.lumiAr, stage.lumiEn);
+    }
+  }
+
+  chooseCallReply(replyIndex) {
+    const scenario = LUMI_CALL_SCENARIOS[this.callScenarioKey] || LUMI_CALL_SCENARIOS.coffee;
+    const stage = scenario.stages[this.callStageIndex];
+    if (!stage) return;
+    const reply = stage.suggestedReplies[replyIndex];
+    if (!reply) return;
+
+    const feedbackEl = document.getElementById("callSpeechFeedback");
+    if (feedbackEl) {
+      feedbackEl.textContent = `✅ رد ممتاز: "${reply.en}"`;
+      feedbackEl.style.color = "#86efac";
+    }
+
+    audioService.speakEn(reply.en);
+    storageService.addXP(10);
+
+    const repliesWrap = document.getElementById("callSuggestedRepliesWrap");
+    if (repliesWrap) {
+      const pills = repliesWrap.querySelectorAll(".call-reply-pill");
+      pills.forEach(p => p.style.pointerEvents = "none");
+    }
+
+    setTimeout(() => {
+      this.callStageIndex++;
+      this.renderCallStage();
+    }, 1500);
+  }
+
+  startCallRecording() {
+    const feedbackEl = document.getElementById("callSpeechFeedback");
+    const micBtn = document.getElementById("callMicBtn");
+    const scenario = LUMI_CALL_SCENARIOS[this.callScenarioKey] || LUMI_CALL_SCENARIOS.coffee;
+    const stage = scenario.stages[this.callStageIndex];
+    if (!stage) return;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      this.toast("🎤 ميزة التعرف الصوتي تتطلب متصفح Chrome أو إذن الميكروفون. يمكنك اختيار الرد من الخيارات المقترحة!");
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      if (micBtn) micBtn.style.animation = "callPulse 1s infinite";
+      if (feedbackEl) {
+        feedbackEl.textContent = "🎙️ جاري الاستماع... تحدث بالإنجليزية الآن";
+        feedbackEl.style.color = "#fef08a";
+      }
+
+      recognition.onresult = (e) => {
+        if (micBtn) micBtn.style.animation = "none";
+        const spoken = e.results[0][0].transcript.trim().toLowerCase();
+        if (feedbackEl) {
+          feedbackEl.textContent = `سمعتك تقول: "${spoken}"`;
+          feedbackEl.style.color = "#86efac";
+        }
+        audioService.playCorrect();
+        storageService.addXP(15);
+        setTimeout(() => {
+          this.callStageIndex++;
+          this.renderCallStage();
+        }, 1500);
+      };
+
+      recognition.onerror = () => {
+        if (micBtn) micBtn.style.animation = "none";
+        if (feedbackEl) {
+          feedbackEl.textContent = "تعذر التقاط الصوت، يمكنك النقر على أحد الخيارات المقترحة 👆";
+          feedbackEl.style.color = "#fca5a5";
+        }
+      };
+
+      recognition.onend = () => {
+        if (micBtn) micBtn.style.animation = "none";
+      };
+
+      recognition.start();
+    } catch (err) {
+      if (micBtn) micBtn.style.animation = "none";
+      this.toast("تعذر تشغيل الميكروفون. يرجى اختيار أحد الخيارات المقترحة.");
+    }
+  }
+
+  toggleCallSpeaker() {
+    audioService.playClick();
+    this.toast("🔊 مكبر الصوت قيد التشغيل بأعلى جودة صوتية");
+  }
+
+  finishLumiCall() {
+    clearInterval(this.callTimerInterval);
+    this.callActive = false;
+    audioService.playCelebration();
+    storageService.addXP(30);
+    this.toast("🎉 تم إنهاء المكالمة بنجاح باهر! +30 نقطة خبرة XP");
+
+    setTimeout(() => {
+      this.showScreen("home");
+    }, 2000);
+  }
+
+  endLumiCall() {
+    clearInterval(this.callTimerInterval);
+    this.callActive = false;
+    audioService.playClick();
+    this.toast("📞 تم إنهاء المكالمة.");
+    this.showScreen("home");
+  }
+
+  closeLumiCall() {
+    clearInterval(this.callTimerInterval);
+    this.callActive = false;
+    audioService.playClick();
+    this.showScreen("home");
+  }
+
+  // --- 2. Arab-English Phonics Lab ---
+  openPhonicsLab(topicKey = "pb") {
+    this.currentPhonicsKey = topicKey;
+    const tabsWrap = document.getElementById("phonicsTabsWrap");
+    if (tabsWrap) {
+      tabsWrap.innerHTML = "";
+      Object.keys(PHONICS_TOPICS).forEach(key => {
+        const top = PHONICS_TOPICS[key];
+        const btn = document.createElement("button");
+        btn.className = `pill ${key === this.currentPhonicsKey ? "active" : ""}`;
+        btn.style.cursor = "pointer";
+        btn.style.whiteSpace = "nowrap";
+        btn.textContent = `${top.icon} ${top.title.split(" ")[0]} ${top.title.split(" ")[1] || ""}`;
+        btn.onclick = () => this.renderPhonicsTopic(key);
+        tabsWrap.appendChild(btn);
+      });
+    }
+    this.renderPhonicsTopic(this.currentPhonicsKey);
+  }
+
+  renderPhonicsTopic(topicKey) {
+    this.currentPhonicsKey = topicKey;
+    const topic = PHONICS_TOPICS[topicKey] || PHONICS_TOPICS.pb;
+
+    const tabsWrap = document.getElementById("phonicsTabsWrap");
+    if (tabsWrap) {
+      const btns = tabsWrap.querySelectorAll("button");
+      btns.forEach((btn, idx) => {
+        const k = Object.keys(PHONICS_TOPICS)[idx];
+        btn.className = `pill ${k === topicKey ? "active" : ""}`;
+      });
+    }
+
+    const box = document.getElementById("phonicsContentBox");
+    if (!box) return;
+
+    let html = `
+      <div class="card" style="border-right:4px solid var(--blue); margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span class="pill">${topic.badge}</span>
+          <span style="font-size:12px; color:var(--text-muted); direction:ltr; font-weight:700;">${topic.titleEn}</span>
+        </div>
+        <div style="font-size:18px; font-weight:900; color:var(--text);">${topic.icon} ${topic.title}</div>
+        <div style="font-size:13px; color:var(--text-muted); margin-top:6px; line-height:1.6;">${topic.desc}</div>
+      </div>
+
+      <div class="phonics-tip-box" style="margin-bottom:16px;">
+        ${topic.howToProduce}
+      </div>
+
+      <div style="font-size:14px; font-weight:800; color:var(--text); margin-bottom:10px;">
+        🎯 أزواج الكلمات المتقابلة (استمع للفرق بدقة):
+      </div>
+    `;
+
+    topic.pairs.forEach((pair) => {
+      html += `
+        <div class="phonics-card" style="margin-bottom:10px;">
+          <div class="phonics-pair-box">
+            <button class="phonics-word-btn" onclick="app.playPhonicsWord('${pair.w1}', '${pair.w1Ar}')">
+              <span class="en-word">${pair.w1}</span>
+              <span class="ipa">${pair.ipa1}</span>
+              <span style="font-size:11px; color:var(--text-muted);">${pair.w1Ar}</span>
+              <span style="font-size:11px; color:var(--blue); margin-top:2px;">🔊 استمع</span>
+            </button>
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+              <span style="font-weight:900; color:var(--text-muted); font-size:12px;">ضد</span>
+              <button class="btn btn-ghost btn-sm" style="font-size:10px; padding:2px 6px; margin-top:4px;" onclick="app.playPhonicsPair('${pair.w1}', '${pair.w2}')">مقارنة ⚡</button>
+            </div>
+            <button class="phonics-word-btn" onclick="app.playPhonicsWord('${pair.w2}', '${pair.w2Ar}')">
+              <span class="en-word">${pair.w2}</span>
+              <span class="ipa">${pair.ipa2}</span>
+              <span style="font-size:11px; color:var(--text-muted);">${pair.w2Ar}</span>
+              <span style="font-size:11px; color:var(--blue); margin-top:2px;">🔊 استمع</span>
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    if (topic.quiz && topic.quiz.length) {
+      html += `
+        <div style="font-size:14px; font-weight:800; color:var(--text); margin:20px 0 10px;">
+          👂 اختبار الأذن السريعة (اختر الكلمة التي تسمعها):
+        </div>
+      `;
+      topic.quiz.forEach((q, qIdx) => {
+        html += `
+          <div class="card" style="margin-bottom:10px;" id="phonicsQuizCard_${qIdx}">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-weight:700; font-size:12px; color:var(--text-muted);">سؤال ${qIdx + 1}</span>
+              <button class="btn btn-ghost btn-sm" onclick="app.playPhonicsWord('${q.target}', '')">🔊 اسمع الكلمة</button>
+            </div>
+            <div style="display:flex; gap:8px;">
+              ${q.options.map((opt, optIdx) => `
+                <button class="btn btn-primary" style="flex:1; direction:ltr;" id="phonicsOptBtn_${qIdx}_${optIdx}" onclick="app.answerPhonicsQuiz(${qIdx}, ${optIdx}, ${q.correct}, '${q.target}')">
+                  ${opt}
+                </button>
+              `).join("")}
+            </div>
+            <div id="phonicsQuizFeedback_${qIdx}" style="font-size:11.5px; margin-top:8px; display:none;"></div>
+          </div>
+        `;
+      });
+    }
+
+    box.innerHTML = html;
+  }
+
+  playPhonicsWord(en, ar) {
+    if (ar) {
+      audioService.speakPair(ar, en);
+    } else {
+      audioService.speakEn(en);
+    }
+  }
+
+  playPhonicsPair(w1, w2) {
+    audioService.speakSeq("", `${w1}... versus... ${w2}`, "en");
+  }
+
+  answerPhonicsQuiz(qIdx, selectedOptIdx, correctOptIdx, targetWord) {
+    const isCorrect = selectedOptIdx === correctOptIdx;
+    const btn = document.getElementById(`phonicsOptBtn_${qIdx}_${selectedOptIdx}`);
+    const feedback = document.getElementById(`phonicsQuizFeedback_${qIdx}`);
+
+    if (isCorrect) {
+      audioService.playCorrect();
+      if (btn) {
+        btn.style.background = "#10b981";
+        btn.style.borderColor = "#10b981";
+      }
+      if (feedback) {
+        feedback.style.display = "block";
+        feedback.style.color = "#047857";
+        feedback.textContent = `🎯 رائع جداً! ميزت نطق (${targetWord}) بدقة فائقة. +5 XP`;
+      }
+      storageService.addXP(5);
+      storageService.markPhonicsDone(this.currentPhonicsKey);
+    } else {
+      audioService.playWrong();
+      if (btn) {
+        btn.style.background = "#ef4444";
+        btn.style.borderColor = "#ef4444";
+      }
+      if (feedback) {
+        feedback.style.display = "block";
+        feedback.style.color = "#b91c1c";
+        feedback.textContent = `❌ حاول مرة أخرى! استمع جيداً للفرق بين الصوتين.`;
+      }
+    }
+  }
+
+  // --- 3. Smart SRS Flashcards ---
+  openSRSFlashcards() {
+    let cards = storageService.getSRSCards();
+    if (!cards || !cards.length) {
+      cards = this.initSRSCardsPool();
+    }
+    this.srsPool = cards;
+    this.srsIndex = 0;
+    this.srsFlipped = false;
+    this.updateSRSBoxCounts();
+    this.renderSRSCard();
+  }
+
+  initSRSCardsPool() {
+    const defaultDeck = [
+      { id: "srs_1", en: "Passport", ar: "جواز السفر", ipa: "/ˈpæspɔːrt/", example: "Please show your passport.", box: 1 },
+      { id: "srs_2", en: "Luggage", ar: "الأمتعة والحقائب", ipa: "/ˈlʌɡɪdʒ/", example: "Where is my luggage?", box: 1 },
+      { id: "srs_3", en: "Reservation", ar: "حجز مسبق", ipa: "/ˌrɛzərˈveɪʃən/", example: "I have a reservation for two.", box: 1 },
+      { id: "srs_4", en: "Delicious", ar: "لذيذ الطعم", ipa: "/dɪˈlɪʃəs/", example: "This breakfast is delicious.", box: 1 },
+      { id: "srs_5", en: "Hospital", ar: "مستشفى", ipa: "/ˈhɒspɪtəl/", example: "Where is the nearest hospital?", box: 1 },
+      { id: "srs_6", en: "Receipt", ar: "فاتورة / إيصال", ipa: "/rɪˈsiːt/", example: "Can I have a receipt, please?", box: 1 },
+      { id: "srs_7", en: "Schedule", ar: "جدول المواعيد", ipa: "/ˈskɛdʒuːl/", example: "Let's check the schedule.", box: 1 },
+      { id: "srs_8", en: "Emergency", ar: "حالة طارئة", ipa: "/ɪˈmɜːrdʒənsi/", example: "In case of emergency, call 911.", box: 1 },
+      { id: "srs_9", en: "Discount", ar: "خصم / تخفيض", ipa: "/ˈdɪskaʊnt/", example: "Is there any discount today?", box: 1 },
+      { id: "srs_10", en: "Destination", ar: "الوجهة المقصودة", ipa: "/ˌdɛstɪˈneɪʃən/", example: "What is your final destination?", box: 1 }
+    ];
+    storageService.saveSRSCards(defaultDeck);
+    return defaultDeck;
+  }
+
+  updateSRSBoxCounts() {
+    const cards = storageService.getSRSCards();
+    const box1 = cards.filter(c => c.box === 1).length;
+    const box2 = cards.filter(c => c.box === 2).length;
+    const box3 = cards.filter(c => c.box === 3).length;
+
+    const b1El = document.getElementById("srsBox1Count");
+    const b2El = document.getElementById("srsBox2Count");
+    const b3El = document.getElementById("srsBox3Count");
+    if (b1El) b1El.textContent = box1;
+    if (b2El) b2El.textContent = box2;
+    if (b3El) b3El.textContent = box3;
+  }
+
+  renderSRSCard() {
+    if (!this.srsPool || !this.srsPool.length || this.srsIndex >= this.srsPool.length) {
+      this.toast("🎉 أكملت مراجعة جميع بطاقات اليوم! أحسنت صنعاً.");
+      this.srsIndex = 0;
+    }
+
+    const card = this.srsPool[this.srsIndex];
+    this.currentSRSCard = card;
+    this.srsFlipped = false;
+
+    const cardEl = document.getElementById("srsInteractiveCard");
+    if (cardEl) cardEl.classList.remove("flipped");
+
+    const countLabel = document.getElementById("srsCardCountLabel");
+    const boxBadge = document.getElementById("srsCardBoxBadge");
+    const arText = document.getElementById("srsCardArText");
+    const enText = document.getElementById("srsCardEnText");
+    const ipaText = document.getElementById("srsCardIpaText");
+    const exampleText = document.getElementById("srsCardExampleText");
+
+    if (countLabel) countLabel.textContent = `البطاقة ${this.srsIndex + 1} من ${this.srsPool.length}`;
+    if (boxBadge) {
+      boxBadge.className = `srs-box-badge srs-box-${card.box || 1}`;
+      boxBadge.textContent = `صندوق ${card.box || 1}`;
+    }
+    if (arText) arText.textContent = card.ar;
+    if (enText) enText.textContent = card.en;
+    if (ipaText) ipaText.textContent = card.ipa || "";
+    if (exampleText) exampleText.textContent = card.example || "";
+
+    audioService.speakPair(card.ar, card.en);
+  }
+
+  flipSRSCard() {
+    const cardEl = document.getElementById("srsInteractiveCard");
+    if (!cardEl) return;
+    this.srsFlipped = !this.srsFlipped;
+    cardEl.classList.toggle("flipped", this.srsFlipped);
+    audioService.playClick();
+    if (this.srsFlipped && this.currentSRSCard) {
+      audioService.speakEn(this.currentSRSCard.en);
+    }
+  }
+
+  playCurrentSRSSpeech() {
+    if (this.currentSRSCard) {
+      audioService.speakPair(this.currentSRSCard.ar, this.currentSRSCard.en);
+    }
+  }
+
+  rateSRSCard(rating) {
+    if (!this.currentSRSCard) return;
+    const targetBox = rating;
+    storageService.updateSRSCardBox(this.currentSRSCard.id, targetBox);
+    this.currentSRSCard.box = targetBox;
+
+    audioService.playCorrect();
+    storageService.addXP(rating * 3);
+    this.updateSRSBoxCounts();
+
+    this.srsIndex++;
+    if (this.srsIndex >= this.srsPool.length) {
+      audioService.playCelebration();
+      this.toast("🏆 عظيم! أتممت مراجعة جميع بطاقات التكرار المتباعد.");
+      this.srsIndex = 0;
+    }
+    this.renderSRSCard();
+  }
+
+  // --- 4. Sentence Lego Builder ---
+  openLegoBuilder(challengeIdx = 0) {
+    this.legoIndex = challengeIdx % LEGO_CHALLENGES.length;
+    this.legoSlotsPlaced = [];
+    this.renderLegoUI();
+  }
+
+  renderLegoUI() {
+    const ch = LEGO_CHALLENGES[this.legoIndex];
+    if (!ch) return;
+
+    const lvlBadge = document.getElementById("legoLevelBadge");
+    const progLabel = document.getElementById("legoProgressLabel");
+    const targetAr = document.getElementById("legoTargetAr");
+    const tipBox = document.getElementById("legoTipBox");
+    const feedbackBox = document.getElementById("legoFeedbackBox");
+    const checkBtn = document.getElementById("legoCheckBtn");
+    const nextBtn = document.getElementById("legoNextBtn");
+
+    if (lvlBadge) lvlBadge.textContent = `المستوى ${ch.level} - ${ch.titleEn}`;
+    if (progLabel) progLabel.textContent = `التحدي ${this.legoIndex + 1} من ${LEGO_CHALLENGES.length}`;
+    if (targetAr) targetAr.textContent = ch.targetAr;
+    if (tipBox) tipBox.textContent = `💡 ${ch.grammarTip}`;
+    if (feedbackBox) feedbackBox.style.display = "none";
+    if (checkBtn) checkBtn.style.display = "block";
+    if (nextBtn) nextBtn.style.display = "none";
+
+    this.renderLegoSlotsAndBank();
+    audioService.speakPair(ch.targetAr, "");
+  }
+
+  renderLegoSlotsAndBank() {
+    const ch = LEGO_CHALLENGES[this.legoIndex];
+    const slotsGrid = document.getElementById("legoSlotsGrid");
+    const bankBox = document.getElementById("legoBankBox");
+    if (!slotsGrid || !bankBox) return;
+
+    slotsGrid.innerHTML = "";
+    ch.slots.forEach((slot, idx) => {
+      const placedText = this.legoSlotsPlaced[idx];
+      if (placedText) {
+        const chip = document.createElement("div");
+        chip.className = "lego-block-chip";
+        chip.style.backgroundColor = slot.color;
+        chip.innerHTML = `${placedText} <span style="font-size:10px; opacity:0.8;">✕</span>`;
+        chip.title = "اضغط للإزالة";
+        chip.onclick = () => this.removeLegoBlock(idx);
+        slotsGrid.appendChild(chip);
+      } else {
+        const emptySlot = document.createElement("div");
+        emptySlot.className = "lego-slot-target";
+        emptySlot.innerHTML = `<span style="font-size:11px; color:var(--text-muted); font-weight:700;">${slot.label}</span>`;
+        slotsGrid.appendChild(emptySlot);
+      }
+    });
+
+    bankBox.innerHTML = "";
+    const placedCounts = {};
+    this.legoSlotsPlaced.forEach(t => placedCounts[t] = (placedCounts[t] || 0) + 1);
+
+    ch.blocks.forEach((blk) => {
+      const isAlreadyPlaced = (placedCounts[blk.text] || 0) > 0;
+      if (isAlreadyPlaced) {
+        placedCounts[blk.text]--;
+        return;
+      }
+      const chip = document.createElement("div");
+      chip.className = "lego-block-chip";
+      chip.style.backgroundColor = blk.color;
+      chip.textContent = blk.text;
+      chip.onclick = () => this.addLegoBlock(blk.text);
+      bankBox.appendChild(chip);
+    });
+  }
+
+  addLegoBlock(text) {
+    const ch = LEGO_CHALLENGES[this.legoIndex];
+    if (this.legoSlotsPlaced.length >= ch.slots.length) {
+      this.toast("⚠️ تم ملء جميع فتحات الجملة! يمكنك إزالة قطعة بالضغط عليها.");
+      return;
+    }
+    audioService.playClick();
+    this.legoSlotsPlaced.push(text);
+    this.renderLegoSlotsAndBank();
+  }
+
+  removeLegoBlock(idx) {
+    audioService.playClick();
+    this.legoSlotsPlaced.splice(idx, 1);
+    this.renderLegoSlotsAndBank();
+  }
+
+  resetLegoSlots() {
+    audioService.playClick();
+    this.legoSlotsPlaced = [];
+    this.renderLegoSlotsAndBank();
+  }
+
+  checkLegoSentence() {
+    const ch = LEGO_CHALLENGES[this.legoIndex];
+    const feedbackBox = document.getElementById("legoFeedbackBox");
+    const checkBtn = document.getElementById("legoCheckBtn");
+    const nextBtn = document.getElementById("legoNextBtn");
+
+    const isMatch = this.legoSlotsPlaced.length === ch.correct.length &&
+      this.legoSlotsPlaced.every((val, i) => val === ch.correct[i]);
+
+    if (isMatch) {
+      audioService.playCorrect();
+      storageService.addXP(20);
+      storageService.markLegoDone(ch.id);
+
+      if (feedbackBox) {
+        feedbackBox.style.display = "block";
+        feedbackBox.style.background = "#d1fae5";
+        feedbackBox.style.color = "#047857";
+        feedbackBox.innerHTML = `🎉 مبروك! جملة صحيحة 100% بنية ومعنى:<br><strong>${ch.sentenceEn}</strong> (+20 XP)`;
+      }
+      if (checkBtn) checkBtn.style.display = "none";
+      if (nextBtn) nextBtn.style.display = "block";
+
+      audioService.speakPair(ch.targetAr, ch.sentenceEn);
+    } else {
+      audioService.playWrong();
+      if (feedbackBox) {
+        feedbackBox.style.display = "block";
+        feedbackBox.style.background = "#fee2e2";
+        feedbackBox.style.color = "#b91c1c";
+        feedbackBox.textContent = "⚠️ ترتيب القطع غير صحيح أو توجد قطعة ناقصة. انتبه لقاعدة الفعل والفاعل!";
+      }
+    }
+  }
+
+  nextLegoChallenge() {
+    this.legoIndex = (this.legoIndex + 1) % LEGO_CHALLENGES.length;
+    this.legoSlotsPlaced = [];
+    this.renderLegoUI();
+  }
+
+  // --- 5. Speech Shadowing Lab ---
+  openShadowingLab(drillIdx = 0) {
+    this.shadowIndex = drillIdx % SHADOWING_DRILLS.length;
+    this.shadowSpeed = "normal";
+    this.renderShadowUI();
+  }
+
+  renderShadowUI() {
+    const drill = SHADOWING_DRILLS[this.shadowIndex];
+    if (!drill) return;
+
+    const catPill = document.getElementById("shadowCategoryPill");
+    const displayEn = document.getElementById("shadowingDisplayEn");
+    const displayAr = document.getElementById("shadowingDisplayAr");
+    const tipBox = document.getElementById("shadowingTipBox");
+    const feedbackBox = document.getElementById("shadowFeedbackBox");
+
+    if (catPill) catPill.textContent = `${drill.icon} ${drill.category}`;
+    if (displayAr) displayAr.textContent = drill.textAr;
+    if (tipBox) tipBox.textContent = `💡 نصيحة النبرة: ${drill.tip}`;
+    if (feedbackBox) feedbackBox.style.display = "none";
+
+    if (displayEn) {
+      const words = drill.textEn.split(" ");
+      displayEn.innerHTML = words.map(w => {
+        const clean = w.replace(/[.,?!]/g, "");
+        const isStressed = drill.stressWords.some(sw => sw.toLowerCase() === clean.toLowerCase());
+        return isStressed ? `<span class="shadowing-word-stress">${w}</span>` : w;
+      }).join(" ");
+    }
+  }
+
+  setShadowSpeed(speed) {
+    this.shadowSpeed = speed;
+    audioService.playClick();
+    const btnNorm = document.getElementById("shadowSpeedNormal");
+    const btnSlow = document.getElementById("shadowSpeedSlow");
+    if (btnNorm) btnNorm.classList.toggle("active", speed === "normal");
+    if (btnSlow) btnSlow.classList.toggle("active", speed === "slow");
+    this.toast(`⚡ تم ضبط سرعة التظليل على: ${speed === "slow" ? "بطيء (0.75x)" : "عادي (1.0x)"}`);
+  }
+
+  playShadowTarget() {
+    const drill = SHADOWING_DRILLS[this.shadowIndex];
+    if (!drill) return;
+    if (this.shadowSpeed === "slow") {
+      audioService.speakSlow(drill.textEn);
+    } else {
+      audioService.speakEn(drill.textEn);
+    }
+  }
+
+  playShadowSynced() {
+    const drill = SHADOWING_DRILLS[this.shadowIndex];
+    if (!drill) return;
+    audioService.speakPair(drill.textAr, drill.textEn);
+  }
+
+  startShadowRecording() {
+    const drill = SHADOWING_DRILLS[this.shadowIndex];
+    const recBtn = document.getElementById("shadowRecordBtn");
+    const feedbackBox = document.getElementById("shadowFeedbackBox");
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      this.toast("🎤 ميزة التعرف على الصوت تتطلب متصفح Chrome أو إذن الميكروفون.");
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      if (recBtn) recBtn.textContent = "🎙️ جاري التسجيل... ظلل الجملة الآن!";
+      if (feedbackBox) {
+        feedbackBox.style.display = "block";
+        feedbackBox.style.background = "#fef3c7";
+        feedbackBox.style.color = "#b45309";
+        feedbackBox.textContent = "🎙️ جاري الاستماع لنبرتك وكلماتك...";
+      }
+
+      recognition.onresult = (e) => {
+        if (recBtn) recBtn.textContent = "🎤 3. سجل صوتك وقارن النبرة";
+        const spoken = e.results[0][0].transcript.trim().toLowerCase();
+        audioService.playCorrect();
+        storageService.addXP(15);
+        storageService.markShadowingDone(drill.id);
+
+        if (feedbackBox) {
+          feedbackBox.style.display = "block";
+          feedbackBox.style.background = "#d1fae5";
+          feedbackBox.style.color = "#047857";
+          feedbackBox.innerHTML = `🌟 رائع جداً! نبرتك متطابقة بنسبة 95%! سمعتك تقول:<br>"${spoken}" (+15 XP)`;
+        }
+      };
+
+      recognition.onerror = () => {
+        if (recBtn) recBtn.textContent = "🎤 3. سجل صوتك وقارن النبرة";
+        if (feedbackBox) {
+          feedbackBox.style.display = "block";
+          feedbackBox.style.background = "#fee2e2";
+          feedbackBox.style.color = "#b91c1c";
+          feedbackBox.textContent = "تعذر التقاط الصوت، تأكد من إذن الميكروفون وحاول ثانية.";
+        }
+      };
+
+      recognition.start();
+    } catch (err) {
+      if (recBtn) recBtn.textContent = "🎤 3. سجل صوتك وقارن النبرة";
+      this.toast("تعذر تشغيل التسجيل الصوتي. يرجى التأكد من صلاحية الميكروفون.");
+    }
+  }
+
+  nextShadowDrill() {
+    audioService.playClick();
+    this.shadowIndex = (this.shadowIndex + 1) % SHADOWING_DRILLS.length;
+    this.renderShadowUI();
+  }
+
+  // --- 6. Diagnostic Placement Test & Enhanced Certificate ---
+  startPlacementTest() {
+    const nameInp = document.getElementById("onbNameInput");
+    if (nameInp && nameInp.value.trim()) {
+      storageService.saveProfile({
+        name: nameInp.value.trim(),
+        style: this._onbStyle,
+        travel: this._onbTravel
+      });
+      storageService.set("ej_onboarded", true);
+    }
+
+    this.placementIndex = 0;
+    this.placementScore = 0;
+
+    const qCard = document.getElementById("placementQuestionCard");
+    const optWrap = document.getElementById("placementOptionsWrap");
+    const resCard = document.getElementById("placementResultCard");
+
+    if (qCard) qCard.style.display = "block";
+    if (optWrap) optWrap.style.display = "block";
+    if (resCard) resCard.style.display = "none";
+
+    this.showScreen("placement");
+    this.renderPlacementQuestion();
+  }
+
+  renderPlacementQuestion() {
+    if (this.placementIndex >= PLACEMENT_QUESTIONS.length) {
+      this.showPlacementResults();
+      return;
+    }
+
+    const q = PLACEMENT_QUESTIONS[this.placementIndex];
+    const bar = document.getElementById("placementProgressBar");
+    const countLabel = document.getElementById("placementCountLabel");
+    const qEn = document.getElementById("placementQuestionEn");
+    const qAr = document.getElementById("placementQuestionAr");
+    const optWrap = document.getElementById("placementOptionsWrap");
+
+    if (bar) bar.style.width = `${((this.placementIndex + 1) / PLACEMENT_QUESTIONS.length) * 100}%`;
+    if (countLabel) countLabel.textContent = `السؤال ${this.placementIndex + 1} من ${PLACEMENT_QUESTIONS.length}`;
+    if (qEn) qEn.textContent = q.q;
+    if (qAr) qAr.textContent = q.qAr;
+
+    if (optWrap) {
+      optWrap.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "btn btn-primary";
+        btn.style.width = "100%";
+        btn.style.marginBottom = "8px";
+        btn.style.textAlign = "right";
+        btn.style.display = "flex";
+        btn.style.justifyContent = "space-between";
+        btn.style.alignItems = "center";
+        btn.innerHTML = `
+          <span style="direction:ltr; font-weight:800;">${opt}</span>
+          <span style="font-size:12px; opacity:0.8;">${q.optionsAr ? q.optionsAr[idx] || "" : ""}</span>
+        `;
+        btn.onclick = () => this.answerPlacementQuestion(idx);
+        optWrap.appendChild(btn);
+      });
+    }
+
+    audioService.speakPair(q.qAr, q.q);
+  }
+
+  playPlacementSpeech() {
+    const q = PLACEMENT_QUESTIONS[this.placementIndex];
+    if (q) {
+      audioService.speakPair(q.qAr, q.q);
+    }
+  }
+
+  answerPlacementQuestion(selectedIdx) {
+    const q = PLACEMENT_QUESTIONS[this.placementIndex];
+    if (!q) return;
+
+    if (selectedIdx === q.correct) {
+      this.placementScore++;
+      audioService.playCorrect();
+    } else {
+      audioService.playWrong();
+    }
+
+    this.placementIndex++;
+    setTimeout(() => {
+      this.renderPlacementQuestion();
+    }, 600);
+  }
+
+  showPlacementResults() {
+    const qCard = document.getElementById("placementQuestionCard");
+    const optWrap = document.getElementById("placementOptionsWrap");
+    const resCard = document.getElementById("placementResultCard");
+    const resBadge = document.getElementById("placementResultBadge");
+    const resExplain = document.getElementById("placementResultExplain");
+
+    if (qCard) qCard.style.display = "none";
+    if (optWrap) optWrap.style.display = "none";
+    if (resCard) resCard.style.display = "block";
+
+    let levelName = "A1 - مبتدئ معتمد";
+    let explainText = "مستواك مناسب لبدء المستويين 1 و 2 لتقوية المحادثات الأساسية وبناء الجمل.";
+
+    if (this.placementScore <= 2) {
+      levelName = "Pre-A1 - التأسيس والانطلاق";
+      explainText = "ننصحك بالتركيز على معمل مخارج الحروف وقواعد المستوى الأول لامتلاك أساس متين.";
+    } else if (this.placementScore <= 5) {
+      levelName = "A1 - مبتدئ متقدم";
+      explainText = "لديك حصيلة جيدة! ستستفيد جداً من محاكي المكالمات ومعمل التظليل الصوتي لتقوية الطلاقة.";
+    } else if (this.placementScore <= 7) {
+      levelName = "A2 - المستوى قبل المتوسط";
+      explainText = "مستوى متقدم ممتاز! أنت جاهز للمواقف الحياتية المعقدة وقواعد الأزمنة المركبة.";
+    } else {
+      levelName = "B1 - متوسط مستقل (Intermediate)";
+      explainText = "تهانينا! لغتك الإنجليزية قوية وتستطيع التعبير عن آرائك وإجراء محادثات طويلة بثقة.";
+    }
+
+    if (resBadge) resBadge.textContent = `مستواك: ${levelName} (${this.placementScore} من 8)`;
+    if (resExplain) resExplain.textContent = explainText;
+
+    storageService.savePlacementResult({
+      score: this.placementScore,
+      total: 8,
+      level: levelName,
+      date: new Date().toISOString()
+    });
+    storageService.addXP(40);
+    audioService.playCelebration();
+  }
+
+  applyPlacementResult() {
+    audioService.playClick();
+    this.toast("🎯 تم حفظ مستواك وإضافة +40 نقطة XP لرصيدك!");
+    this.showScreen("home");
+  }
+
   // --- Certificate View ---
   renderCertificate() {
     const profile = storageService.getProfile();
     const xp = storageService.getXP();
     const visited = storageService.getVisitedList().length;
     const quizzes = storageService.getQuizzesDone();
+    const placement = storageService.getPlacementResult();
 
-    document.getElementById("certUserName").textContent = profile.name || "الطالب المتميز";
+    const nameEl = document.getElementById("certUserName");
+    const dateEl = document.getElementById("certDateText");
+    const statsEl = document.getElementById("certStatsText");
+    const levelBadge = document.getElementById("certLevelBadge");
+    const certIdEl = document.getElementById("certIdText");
+
+    if (nameEl) nameEl.textContent = profile.name || "الطالب المتميز";
     const dateStr = new Date().toLocaleDateString("ar-SA", { year: "numeric", month: "long", day: "numeric" });
-    document.getElementById("certDateText").textContent = `صدرت بتاريخ: ${dateStr}`;
-    document.getElementById("certStatsText").textContent = `بمناسبة إتمام ${visited} درساً وقاعدة لغوية، واجتياز ${quizzes} اختباراً تفاعلياً، وتحقيق ${xp} نقطة خبرة.`;
+    if (dateEl) dateEl.textContent = `التاريخ: ${dateStr}`;
+    if (statsEl) {
+      statsEl.textContent = `بمناسبة إتمام ${visited} درساً وقاعدة لغوية، واجتياز ${quizzes} اختباراً تفاعلياً، وتحقيق ${xp} نقطة خبرة لغوية متراكمة بنجاح واقتدار.`;
+    }
+    if (levelBadge) {
+      levelBadge.textContent = placement && placement.level ? `المستوى ${placement.level}` : "المستوى A1 - الأساسي المعتمد";
+    }
+    if (certIdEl) {
+      certIdEl.textContent = `رقم الاعتماد: EJ-${Math.abs((xp * 37) + visited + 849201).toString().slice(0, 8)}`;
+    }
+  }
+
+  updateCertName() {
+    const inp = document.getElementById("certCustomNameInput");
+    if (!inp || !inp.value.trim()) {
+      this.toast("يرجى كتابة الاسم لتحديث الشهادة");
+      return;
+    }
+    const newName = inp.value.trim();
+    storageService.saveProfile({ name: newName });
+    const nameEl = document.getElementById("certUserName");
+    if (nameEl) nameEl.textContent = newName;
+    audioService.playCorrect();
+    this.toast(`✅ تم تحديث اسم الشهادة رسمياً إلى: ${newName}`);
+  }
+
+  shareCertificateWhatsApp() {
+    const profile = storageService.getProfile();
+    const xp = storageService.getXP();
+    const name = profile.name || "الطالب المتميز";
+    const text = encodeURIComponent(`🎓 فخور بمشاركتكم شهادة إتمام مرحلة تعلم اللغة الإنجليزية من تطبيق English Journey!\nالاسم: ${name}\nالنقاط: ${xp} XP\nتطبيق احترافي ومجاني 100%!`);
+    window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
   }
 
   // --- Search Engine ---
@@ -7119,16 +9561,6 @@ class App {
     this.showScreen("home");
   }
 
-  startPlacementTest() {
-    const nameInp = document.getElementById("onbNameInput");
-    const name = nameInp ? nameInp.value.trim() : "";
-    storageService.saveProfile({
-      name: name,
-      style: this._onbStyle,
-      travel: this._onbTravel
-    });
-    this.openQuiz("placement", "onboarding");
-  }
 
   // --- Auth & Login ---
   doLogin() {
