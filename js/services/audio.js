@@ -482,6 +482,17 @@ class AudioService {
     });
   }
 
+  playDing() {
+    if (!this.sfxEnabled) return;
+    this.unlockAudio();
+    this.playTone(880, 0.15, "sine", 0.15, 0);
+    this.playTone(1318.5, 0.35, "sine", 0.12, 0.08);
+  }
+
+  playCelebration() {
+    this.playFanfare();
+  }
+
   // --- Speech Recognition (STT) Manager ---
   startSpeechRecognition({ lang = "en-US", onListening, onResult, onError }) {
     this._sttCallbacks = { onListening, onResult, onError };

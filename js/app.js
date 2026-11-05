@@ -193,22 +193,23 @@ class App {
         this.renderOnboarding();
         break;
       case "lumicall":
-        this.openLumiCall(this.callScenarioKey || "coffee");
         break;
       case "phonics":
-        this.openPhonicsLab();
+        this.renderPhonicsTabs();
+        this.renderPhonicsTopic(this.currentPhonicsKey || "pb");
         break;
       case "srs":
-        this.openSRSFlashcards();
+        this.updateSRSBoxCounts();
+        this.renderSRSCard();
         break;
       case "lego":
-        this.openLegoBuilder(this.legoIndex || 0);
+        this.renderLegoUI();
         break;
       case "shadowing":
-        this.openShadowingLab(this.shadowIndex || 0);
+        this.renderShadowUI();
         break;
       case "placement":
-        this.startPlacementTest();
+        this.renderPlacementQuestion();
         break;
     }
   }
@@ -2329,6 +2330,12 @@ class App {
   // --- 2. Arab-English Phonics Lab ---
   openPhonicsLab(topicKey = "pb") {
     this.currentPhonicsKey = topicKey;
+    this.showScreen("phonics");
+    this.renderPhonicsTabs();
+    this.renderPhonicsTopic(this.currentPhonicsKey);
+  }
+
+  renderPhonicsTabs() {
     const tabsWrap = document.getElementById("phonicsTabsWrap");
     if (tabsWrap) {
       tabsWrap.innerHTML = "";
@@ -2343,7 +2350,6 @@ class App {
         tabsWrap.appendChild(btn);
       });
     }
-    this.renderPhonicsTopic(this.currentPhonicsKey);
   }
 
   renderPhonicsTopic(topicKey) {
@@ -2488,6 +2494,7 @@ class App {
     this.srsPool = cards;
     this.srsIndex = 0;
     this.srsFlipped = false;
+    this.showScreen("srs");
     this.updateSRSBoxCounts();
     this.renderSRSCard();
   }
@@ -2596,6 +2603,7 @@ class App {
   openLegoBuilder(challengeIdx = 0) {
     this.legoIndex = challengeIdx % LEGO_CHALLENGES.length;
     this.legoSlotsPlaced = [];
+    this.showScreen("lego");
     this.renderLegoUI();
   }
 
@@ -2735,6 +2743,7 @@ class App {
   openShadowingLab(drillIdx = 0) {
     this.shadowIndex = drillIdx % SHADOWING_DRILLS.length;
     this.shadowSpeed = "normal";
+    this.showScreen("shadowing");
     this.renderShadowUI();
   }
 
@@ -2855,7 +2864,7 @@ class App {
   // --- 6. Diagnostic Placement Test & Enhanced Certificate ---
   startPlacementTest() {
     const nameInp = document.getElementById("onbNameInput");
-    if (nameInp && nameInp.value.trim()) {
+    if (nameInp && typeof nameInp.value === "string" && nameInp.value.trim()) {
       storageService.saveProfile({
         name: nameInp.value.trim(),
         style: this._onbStyle,

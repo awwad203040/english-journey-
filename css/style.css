@@ -289,6 +289,17 @@ html, body {
   box-shadow: var(--shadow-md);
 }
 
+button.card {
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button.card:active {
+  transform: scale(0.98);
+}
+
 .card-hero {
   background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
   color: #ffffff;
