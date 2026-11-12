@@ -192,6 +192,8 @@ class App {
       case "onboarding":
         this.renderOnboarding();
         break;
+      case "labs":
+        break;
       case "lumicall":
         break;
       case "phonics":
@@ -256,7 +258,7 @@ class App {
 
     const pillEl = document.getElementById("homeLevelPill");
     if (pillEl) {
-      pillEl.innerHTML = `${userLvl.badge} ${userLvl.name} (${xp} XP)`;
+      pillEl.innerHTML = `${userLvl.badge} ${userLvl.name}`;
     }
 
     const streakEl = document.getElementById("homeStreakBadge");
@@ -264,9 +266,27 @@ class App {
       streakEl.textContent = `🔥 ${streak} يوم`;
     }
 
-    // Continue Card
-    const continueCard = document.getElementById("homeContinueCard");
+    const xpEl = document.getElementById("homeXpBadge");
+    if (xpEl) {
+      xpEl.textContent = `⚡ ${xp} XP`;
+    }
+
+    // Modern One-touch Continue Button
     const lastKey = storageService.getLastLesson();
+    const continueBtn = document.getElementById("homeContinueBtn");
+    const continueLabel = document.getElementById("homeContinueLabel");
+    if (continueBtn && continueLabel) {
+      if (lastKey && LESSONS[lastKey]) {
+        continueLabel.textContent = `تابع من حيث توقفت: ${LESSONS[lastKey].title} — ${LESSONS[lastKey].sub}`;
+        continueBtn.onclick = () => this.openLesson(lastKey, "home");
+      } else {
+        continueLabel.textContent = "ابدأ رحلتك: الدرس 1 - التحية والتعارف";
+        continueBtn.onclick = () => this.openLesson("greet", "home");
+      }
+    }
+
+    // Continue Card (backwards compatibility)
+    const continueCard = document.getElementById("homeContinueCard");
     if (continueCard) {
       if (lastKey && LESSONS[lastKey]) {
         continueCard.style.display = "block";
@@ -276,6 +296,22 @@ class App {
         continueCard.style.display = "none";
       }
     }
+  }
+
+  filterHomeSection(category, btn) {
+    audioService.playClick();
+    document.querySelectorAll(".cat-pill").forEach(p => p.classList.remove("active"));
+    if (btn) btn.classList.add("active");
+
+    const sections = document.querySelectorAll(".home-section-group");
+    sections.forEach(sec => {
+      const secCat = sec.getAttribute("data-category");
+      if (category === "all" || secCat === category) {
+        sec.style.display = "block";
+      } else {
+        sec.style.display = "none";
+      }
+    });
   }
 
   continueLastLesson() {

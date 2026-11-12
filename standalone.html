@@ -1333,6 +1333,265 @@ button.card:active {
   box-shadow: 0 6px 18px rgba(180, 83, 9, 0.4);
 }
 
+/* ==========================================================================
+   7. MODERN SIMPLIFIED DASHBOARD & CATEGORY FILTERING SYSTEM
+   ========================================================================== */
+
+/* Category Filter Bar */
+.category-filter-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px 14px;
+  margin-bottom: 6px;
+  -webkit-overflow-scrolling: touch;
+}
+.category-filter-bar::-webkit-scrollbar {
+  display: none;
+}
+.cat-pill {
+  flex: none;
+  padding: 8px 16px;
+  border-radius: 24px;
+  font-size: 12.5px;
+  font-weight: 800;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: var(--shadow-sm);
+}
+.cat-pill:hover {
+  border-color: var(--blue);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+.cat-pill.active {
+  background: var(--blue);
+  color: #ffffff;
+  border-color: var(--blue);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Learner Hero Card */
+.learner-hero {
+  background: linear-gradient(135deg, #0b1b3d 0%, #152c61 55%, #1d4ed8 100%);
+  color: #ffffff;
+  border-radius: 20px;
+  padding: 18px 18px 16px;
+  box-shadow: 0 10px 28px rgba(11, 27, 61, 0.22);
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.learner-hero::after {
+  content: "";
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.14) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.learner-stats-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 12px 0 14px;
+}
+.learner-stat-pill {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 8px 6px;
+  text-align: center;
+  font-size: 11.5px;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.learner-stat-val {
+  font-size: 14px;
+  font-weight: 900;
+  color: #fef08a;
+}
+.learner-cta-btn {
+  width: 100%;
+  background: #ffffff;
+  color: #0b1b3d;
+  font-weight: 900;
+  font-size: 13.5px;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  font-family: inherit;
+  outline: none;
+}
+.learner-cta-btn:hover {
+  background: #f8fafc;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+.learner-cta-btn:active {
+  transform: scale(0.98);
+}
+
+/* Section Group & Header */
+.home-section-group {
+  margin-bottom: 22px;
+  transition: opacity 0.25s ease;
+}
+.home-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 10px;
+  padding: 0 2px;
+}
+.home-section-title {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.home-section-sub {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.home-section-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background: var(--card-subtle);
+  color: var(--blue);
+  border: 1px solid var(--border);
+}
+
+/* Standardized 2-Column Hub Grid */
+.hub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.hub-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: right;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  font-family: inherit;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+}
+.hub-card:hover {
+  border-color: var(--blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.hub-card:active {
+  transform: scale(0.97);
+}
+.hub-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+}
+.hub-card-title {
+  font-weight: 900;
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.35;
+  margin-bottom: 3px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.hub-card-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Color Accent Variations */
+.c-emerald .hub-card-icon { background: #ecfdf5; border-color: #a7f3d0; }
+.c-blue .hub-card-icon { background: #eff6ff; border-color: #bfdbfe; }
+.c-purple .hub-card-icon { background: #f5f3ff; border-color: #ddd6fe; }
+.c-amber .hub-card-icon { background: #fffbeb; border-color: #fde68a; }
+.c-pink .hub-card-icon { background: #fdf2f8; border-color: #fbcfe8; }
+.c-indigo .hub-card-icon { background: #eef2ff; border-color: #c7d2fe; }
+.c-orange .hub-card-icon { background: #fff7ed; border-color: #fed7aa; }
+.c-teal .hub-card-icon { background: #f0fdfa; border-color: #99f6e4; }
+.c-green .hub-card-icon { background: #f0fdf4; border-color: #bbf7d0; }
+.c-yellow .hub-card-icon { background: #fefce8; border-color: #fef08a; }
+.c-violet .hub-card-icon { background: #faf5ff; border-color: #e9d5ff; }
+.c-cyan .hub-card-icon { background: #ecfeff; border-color: #a5f3fc; }
+.c-rose .hub-card-icon { background: #fff1f2; border-color: #fecdd3; }
+.c-red .hub-card-icon { background: #fef2f2; border-color: #fecaca; }
+
+/* Dark Mode Icon Adjustments */
+[data-theme="dark"] .hub-card-icon {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+[data-theme="dark"] .cat-pill {
+  background: #162544;
+  border-color: #243b6a;
+  color: #94a3b8;
+}
+[data-theme="dark"] .cat-pill.active {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #3b82f6;
+}
+[data-theme="dark"] .learner-cta-btn {
+  background: #ffffff;
+  color: #0b1b3d;
+}
+
+
 
 </style>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
@@ -1415,180 +1674,205 @@ button.card:active {
           <div class="subtitle">رحلتي للإنجليزية</div>
         </div>
         <button class="action-btn" onclick="app.showScreen('search')" title="بحث شامل">🔍</button>
+        <button class="action-btn" onclick="app.showScreen('profile')" title="إعدادات الصوت والملف">⚙️</button>
         <button class="action-btn" onclick="app.toggleTheme()" title="تبديل المظهر">🌓</button>
       </div>
+
       <div class="scroll-content">
-        <!-- Top Stats Row -->
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <div id="homeGreeting" style="font-weight:800; font-size:15px; color:var(--text);">أهلاً بك 👋</div>
-          <div style="display:flex; gap:8px;">
-            <span class="pill" id="homeStreakBadge">🔥 1 يوم</span>
-            <span class="pill" id="homeLevelPill">🌱 مبتدئ</span>
-          </div>
-        </div>
-
-        <!-- Continue Card (Conditional) -->
-        <div class="card card-hero" id="homeContinueCard" style="display:none; cursor:pointer;" onclick="app.continueLastLesson()">
-          <div style="font-size:12px; opacity:0.9; font-weight:700;">↩️ تابع من حيث توقفت</div>
-          <div style="font-weight:800; font-size:15px; margin-top:4px;" id="homeContinueTitle">-</div>
-        </div>
-
-        <!-- Hero Card -->
-        <div class="card card-hero">
-          <div style="font-size:18px; font-weight:900; margin-bottom:6px;">تعلّم الإنجليزية بثقة 🎓</div>
-          <div style="font-size:13px; opacity:0.92; line-height:1.6; margin-bottom:16px;">
-            منهج متكامل يغطي 6 مستويات CEFR، محادثات سفر واقعية، وقصص تفاعلية ومدرّب ذكي يدعمك خطوة بخطوة.
-          </div>
-          <button class="btn btn-gold" onclick="app.openLesson('greet', 'home')">ابدأ رحلتك الآن</button>
-        </div>
-
-        <!-- Diagnostic Placement Test Banner -->
-        <button class="card card-interactive" style="border:1.5px solid var(--gold); background:linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.04));" onclick="app.startPlacementTest()">
-          <div class="icon-box" style="background:#fef3c7; color:var(--gold-dark); font-size:26px;">🎯</div>
-          <div class="grow">
-            <div style="font-weight:900; font-size:14.5px; color:var(--gold-dark);">اختبار تحديد المستوى وتشخيص المهارات</div>
-            <div class="sub">8 أسئلة ذكية في 3 دقائق لتحديد مستواك وبدء خطتك المناسبة</div>
-          </div>
-          <span class="pill" style="background:var(--gold); color:#ffffff; font-size:11px;">ابدأ الآن</span>
-        </button>
-
-        <!-- AI Tutor Lumi Banner -->
-        <button class="card card-interactive" onclick="app.showScreen('lumi')">
-          <div class="icon-box" style="background:#e0e7ff; color:var(--blue); font-size:26px;">🤖</div>
-          <div class="grow">
-            <div style="font-weight:800; font-size:14.5px; color:var(--text);">تحدث مع لومي الآن</div>
-            <div class="sub">مدرّبك الشخصي بالذكاء الاصطناعي — اسأل أو تدرّب على محادثة حية</div>
-          </div>
-          <div class="arrow-icon">‹</div>
-        </button>
-
-        <!-- Travel Scenarios Banner -->
-        <button class="card card-interactive" onclick="app.showScreen('travelhub')">
-          <div class="icon-box" style="background:#fef3c7; color:var(--gold-dark); font-size:26px;">✈️</div>
-          <div class="grow">
-            <div style="font-weight:800; font-size:14.5px; color:var(--text);">عِش الموقف قبل أن تسافر</div>
-            <div class="sub">تدرّب على مواقف السفر: المطار، الفندق، المطعم، والطوارئ</div>
-          </div>
-          <div class="arrow-icon">‹</div>
-        </button>
-
-        <!-- Personalized Plan Banner -->
-        <button class="card card-interactive" onclick="app.showScreen('lumiplan')">
-          <div class="icon-box" style="background:#dbeafe; color:var(--blue); font-size:26px;">📅</div>
-          <div class="grow">
-            <div style="font-weight:800; font-size:14.5px; color:var(--text);">خطة لومي الأسبوعية</div>
-            <div class="sub">جدول تعلّم مخصص لهدفك ووقتك اليومي المتاح</div>
-          </div>
-          <div class="arrow-icon">‹</div>
-        </button>
-
-        <!-- What to Say Now Banner -->
-        <button class="card card-interactive" onclick="app.showScreen('whatsay')">
-          <div class="icon-box" style="background:#fce7f3; color:#db2777; font-size:26px;">💬</div>
-          <div class="grow">
-            <div style="font-weight:800; font-size:14.5px; color:var(--text);">ماذا أقول الآن؟</div>
-            <div class="sub">صف موقفك بالعربي واحصل على الجملة الإنجليزية الأنسب فوراً</div>
-          </div>
-          <div class="arrow-icon">‹</div>
-        </button>
-
-        <!-- Error Memory Banner -->
-        <button class="card card-interactive" onclick="app.showScreen('errors')">
-          <div class="icon-box" style="background:#ede9fe; color:#7c3aed; font-size:26px;">🧠</div>
-          <div class="grow">
-            <div style="font-weight:800; font-size:14.5px; color:var(--text);">ذاكرة أخطائي</div>
-            <div class="sub">تكرار متباعد للأسئلة التي تعثرت بها لتثبيتها نهائياً</div>
-          </div>
-          <div class="arrow-icon">‹</div>
-        </button>
-
-        <!-- One Minute Challenge Banner -->
-        <button class="card card-interactive" onclick="app.showScreen('challenge')">
-          <div class="icon-box" style="background:#ccfbf1; color:#0f766e; font-size:26px;">⏱️</div>
-          <div class="grow">
-            <div style="font-weight:800; font-size:14.5px; color:var(--text);">تحدي الدقيقة الواحدة</div>
-            <div class="sub">تحدي كتابة سريع لمدة 60 ثانية مع تقييم فوري للطلاقة</div>
-          </div>
-          <div class="arrow-icon">‹</div>
-        </button>
-
-        <!-- Speaking & Listening Banner -->
-        <button class="card card-interactive" onclick="app.startSpeakListen()">
-          <div class="icon-box" style="background:#e0f2fe; color:#0284c7; font-size:26px;">🗣️</div>
-          <div class="grow">
-            <div style="font-weight:800; font-size:14.5px; color:var(--text);">التحدث والاستماع</div>
-            <div class="sub">استمع واختر الجملة، ثم تحدّث وقارن دقة نطقك الصوتي</div>
-          </div>
-          <div class="arrow-icon">‹</div>
-        </button>
-
-        <!-- Pro Beginner Labs Section -->
-        <div style="margin:20px 0 10px;">
-          <div style="font-weight:900; font-size:15px; color:var(--text); margin-bottom:4px;">✨ مختبرات الاحتراف للمبتدئين</div>
-          <div class="sub" style="font-size:12px;">أدوات حصرية مصممة خصيصاً للمتعلم العربي لكسر حاجز الخوف والطلاقة</div>
-        </div>
-
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px;">
-          <!-- 1. Lumi Voice Call -->
-          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #10b981;" onclick="app.openLumiCall()">
-            <div style="font-size:28px; margin-bottom:6px;">📞</div>
-            <div style="font-weight:800; font-size:13.5px; color:var(--text);">مكالمة لومي</div>
-            <div class="sub" style="font-size:11px; margin-top:2px;">محاكاة مكالمة هاتفية حية</div>
-          </button>
-
-          <!-- 2. Arab Phonics Lab -->
-          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #3b82f6;" onclick="app.openPhonicsLab()">
-            <div style="font-size:28px; margin-bottom:6px;">🔤</div>
-            <div style="font-weight:800; font-size:13.5px; color:var(--text);">مخارج الحروف</div>
-            <div class="sub" style="font-size:11px; margin-top:2px;">علاج فخ P و B و TH</div>
-          </button>
-
-          <!-- 3. Smart SRS Flashcards -->
-          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #8b5cf6;" onclick="app.openSRSFlashcards()">
-            <div style="font-size:28px; margin-bottom:6px;">🧠</div>
-            <div style="font-weight:800; font-size:13.5px; color:var(--text);">فلاش كاردز SRS</div>
-            <div class="sub" style="font-size:11px; margin-top:2px;">تكرار متباعد للذاكرة الدائمة</div>
-          </button>
-
-          <!-- 4. Sentence Lego Builder -->
-          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #f59e0b;" onclick="app.openLegoBuilder()">
-            <div style="font-size:28px; margin-bottom:6px;">🧱</div>
-            <div style="font-weight:800; font-size:13.5px; color:var(--text);">ليغو الجمل</div>
-            <div class="sub" style="font-size:11px; margin-top:2px;">تركيب بصري للقواعد</div>
-          </button>
-
-          <!-- 5. Speech Shadowing Lab -->
-          <button class="card" style="padding:14px 12px; text-align:center; cursor:pointer; margin-bottom:0; transition:var(--transition); border-top:3px solid #ec4899; grid-column:span 2;" onclick="app.openShadowingLab()">
-            <div style="display:flex; align-items:center; justify-content:center; gap:12px;">
-              <div style="font-size:28px;">👥</div>
-              <div style="text-align:right;">
-                <div style="font-weight:800; font-size:13.5px; color:var(--text);">معمل التظليل الصوتي (Shadowing)</div>
-                <div class="sub" style="font-size:11px;">تحدث متزامن مع الناطق الأصلي لاكتساب اللكنة والسرعة</div>
-              </div>
+        <!-- Modern Learner Hero Card -->
+        <div class="learner-hero">
+          <div class="learner-stats-row">
+            <div>
+              <div id="homeGreeting" style="font-weight:900; font-size:16px; color:#ffffff;">أهلاً بك 👋</div>
+              <div style="font-size:11.5px; opacity:0.88; margin-top:3px; color:#ffffff;">واجهتك السلسة لإتقان الإنجليزية خطوة بخطوة</div>
             </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <div class="learner-stat-pill">🔥 <span class="learner-stat-val" id="homeStreakBadge">1 يوم</span></div>
+              <div class="learner-stat-pill">⭐ <span class="learner-stat-val" id="homeXpBadge">0 XP</span></div>
+              <div class="learner-stat-pill">🌱 <span class="learner-stat-val" id="homeLevelPill">مبتدئ</span></div>
+            </div>
+          </div>
+
+          <!-- Dynamic 1-touch CTA -->
+          <button class="learner-cta-btn" id="homeContinueBtn" onclick="app.continueLastLesson()">
+            <span id="homeContinueLabel">🚀 تابع من حيث توقفت: الدروس التأسيسية</span>
+            <span style="font-size:16px;">←</span>
           </button>
         </div>
 
-        <!-- 6 Main Hub Tiles -->
-        <div class="tiles">
-          <button class="tile" style="background:#2563eb;" onclick="app.showScreen('lessons')">
-            <span class="tile-icon">📖</span>الدروس والمحادثات
-          </button>
-          <button class="tile" style="background:#f97316;" onclick="app.showScreen('grammar')">
-            <span class="tile-icon">📘</span>شجرة القواعد
-          </button>
-          <button class="tile" style="background:#10b981;" onclick="app.showScreen('world')">
-            <span class="tile-icon">🌍</span>عالم الإنجليزية
-          </button>
-          <button class="tile" style="background:#8b5cf6;" onclick="app.showScreen('storyhub')">
-            <span class="tile-icon">📚</span>القصص التفاعلية
-          </button>
-          <button class="tile" style="background:#ef4444;" onclick="app.showScreen('games')">
-            <span class="tile-icon">🎮</span>ألعاب لغوية
-          </button>
-          <button class="tile" style="background:#06b6d4;" onclick="app.showScreen('quizhub')">
-            <span class="tile-icon">📝</span>الاختبار والتقييم
-          </button>
+        <!-- Interactive Category Filter Bar -->
+        <div class="category-filter-bar">
+          <button class="cat-pill active" onclick="app.filterHomeSection('all', this)">🌟 الكل</button>
+          <button class="cat-pill" onclick="app.filterHomeSection('labs', this)">🚀 مختبرات الاحتراف</button>
+          <button class="cat-pill" onclick="app.filterHomeSection('curriculum', this)">📖 المنهج والقواعد</button>
+          <button class="cat-pill" onclick="app.filterHomeSection('fluency', this)">🗣️ المحادثة والطلاقة</button>
+          <button class="cat-pill" onclick="app.filterHomeSection('lumi', this)">🤖 مدرّب لومي</button>
+          <button class="cat-pill" onclick="app.filterHomeSection('games', this)">🎮 الألعاب والتحديات</button>
+        </div>
+
+        <!-- SECTION 1: PRO LABS (data-category="labs") -->
+        <div class="home-section-group" data-category="labs">
+          <div class="home-section-header">
+            <div>
+              <div class="home-section-title">🚀 مختبرات الاحتراف التفاعلية</div>
+              <div class="home-section-sub">أدوات حصرية لتجاوز صعوبات النطق والحفظ وتراكيب الجمل</div>
+            </div>
+            <span class="home-section-badge">6 أدوات</span>
+          </div>
+          <div class="hub-grid">
+            <button class="hub-card c-emerald" onclick="app.openLumiCall()">
+              <div class="hub-icon-wrap">📞</div>
+              <div class="hub-card-title">مكالمة لومي</div>
+              <div class="hub-card-sub">محاكاة مكالمة هاتفية حية مع المعلم الذكي</div>
+            </button>
+            <button class="hub-card c-blue" onclick="app.openPhonicsLab()">
+              <div class="hub-icon-wrap">🔤</div>
+              <div class="hub-card-title">مخارج الحروف</div>
+              <div class="hub-card-sub">علاج فخ P و B و TH مع أصوات ونطق واضح</div>
+            </button>
+            <button class="hub-card c-purple" onclick="app.openSRSFlashcards()">
+              <div class="hub-icon-wrap">🧠</div>
+              <div class="hub-card-title">فلاش كاردز SRS</div>
+              <div class="hub-card-sub">تكرار متباعد ذكي للذاكرة طويلة المدى</div>
+            </button>
+            <button class="hub-card c-amber" onclick="app.openLegoBuilder()">
+              <div class="hub-icon-wrap">🧱</div>
+              <div class="hub-card-title">ليغو الجمل</div>
+              <div class="hub-card-sub">بناء الجمل الإنجليزية بصرياً كقطع الليغو</div>
+            </button>
+            <button class="hub-card c-pink" onclick="app.openShadowingLab()">
+              <div class="hub-icon-wrap">👥</div>
+              <div class="hub-card-title">التظليل الصوتي</div>
+              <div class="hub-card-sub">Shadowing: تحدث متزامن لاكتساب اللكنة</div>
+            </button>
+            <button class="hub-card c-indigo" onclick="app.startPlacementTest()">
+              <div class="hub-icon-wrap">🎯</div>
+              <div class="hub-card-title">تحديد المستوى</div>
+              <div class="hub-card-sub">تشخيص شامل في 3 دقائق وتحديد مسارك</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION 2: CURRICULUM & GRAMMAR (data-category="curriculum") -->
+        <div class="home-section-group" data-category="curriculum">
+          <div class="home-section-header">
+            <div>
+              <div class="home-section-title">📖 المنهج والقواعد التعليمية</div>
+              <div class="home-section-sub">منهج CEFR المتكامل من المستوى التأسيسي حتى الاحتراف</div>
+            </div>
+            <span class="home-section-badge">منهج كامل</span>
+          </div>
+          <div class="hub-grid">
+            <button class="hub-card c-blue" onclick="app.showScreen('lessons')">
+              <div class="hub-icon-wrap">📖</div>
+              <div class="hub-card-title">الدروس والمحادثات</div>
+              <div class="hub-card-sub">30 درساً مقسمة على 6 مستويات تفاعلية</div>
+            </button>
+            <button class="hub-card c-orange" onclick="app.showScreen('grammar')">
+              <div class="hub-icon-wrap">📘</div>
+              <div class="hub-card-title">شجرة القواعد</div>
+              <div class="hub-card-sub">21 قاعدة مع التراكيب والشرح الصوتي الواضح</div>
+            </button>
+            <button class="hub-card c-teal" onclick="app.showScreen('quizhub')">
+              <div class="hub-icon-wrap">📝</div>
+              <div class="hub-card-title">مركز الاختبارات</div>
+              <div class="hub-card-sub">اختبارات فورية لكل مستوى لقياس تقدمك</div>
+            </button>
+            <button class="hub-card c-green" onclick="app.showScreen('world')">
+              <div class="hub-icon-wrap">🌍</div>
+              <div class="hub-card-title">عالم الإنجليزية</div>
+              <div class="hub-card-sub">خريطة الدول الناطقة واللكنات والثقافات</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION 3: REAL-WORLD FLUENCY (data-category="fluency") -->
+        <div class="home-section-group" data-category="fluency">
+          <div class="home-section-header">
+            <div>
+              <div class="home-section-title">🗣️ المحادثة والطلاقة العملية</div>
+              <div class="home-section-sub">تطبيقات ومواقف حقيقية تعيشها وتتحدثها بصوتك</div>
+            </div>
+            <span class="home-section-badge">مواقف واقعية</span>
+          </div>
+          <div class="hub-grid">
+            <button class="hub-card c-amber" onclick="app.showScreen('travelhub')">
+              <div class="hub-icon-wrap">✈️</div>
+              <div class="hub-card-title">عِش موقف السفر</div>
+              <div class="hub-card-sub">المطار، الفندق، المطعم، التسوق، والطوارئ</div>
+            </button>
+            <button class="hub-card c-violet" onclick="app.showScreen('storyhub')">
+              <div class="hub-icon-wrap">📚</div>
+              <div class="hub-card-title">القصص التفاعلية</div>
+              <div class="hub-card-sub">قصص مشوقة بقرارات تحدد مجريات الأحداث</div>
+            </button>
+            <button class="hub-card c-cyan" onclick="app.startSpeakListen()">
+              <div class="hub-icon-wrap">🗣️</div>
+              <div class="hub-card-title">التحدث والاستماع</div>
+              <div class="hub-card-sub">تدريب النطق بالمايكروفون وتقييم الدقة الذاتي</div>
+            </button>
+            <button class="hub-card c-pink" onclick="app.showScreen('whatsay')">
+              <div class="hub-icon-wrap">💬</div>
+              <div class="hub-card-title">ماذا أقول الآن؟</div>
+              <div class="hub-card-sub">اكتب موقفك بالعربي لتأخذ التعبير الإنجليزي المناسب</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION 4: LUMI AI ASSISTANT (data-category="lumi") -->
+        <div class="home-section-group" data-category="lumi">
+          <div class="home-section-header">
+            <div>
+              <div class="home-section-title">🤖 مدرّب لومي بالذكاء الاصطناعي</div>
+              <div class="home-section-sub">رفيقك الذكي الذي يصحح أخطاءك ويضع لك خطتك</div>
+            </div>
+            <span class="home-section-badge">AI Tutor</span>
+          </div>
+          <div class="hub-grid">
+            <button class="hub-card c-indigo" onclick="app.showScreen('lumi')">
+              <div class="hub-icon-wrap">🤖</div>
+              <div class="hub-card-title">محادثة لومي الفورية</div>
+              <div class="hub-card-sub">تحدث بالإنجليزية مع تصحيح فوري وشرح عربي</div>
+            </button>
+            <button class="hub-card c-blue" onclick="app.showScreen('lumiplan')">
+              <div class="hub-icon-wrap">📅</div>
+              <div class="hub-card-title">خطة لومي الأسبوعية</div>
+              <div class="hub-card-sub">جدول دراسي ذكي مصمم حسب وقتك وهدفك</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION 5: SPEED GAMES & ACHIEVEMENTS (data-category="games") -->
+        <div class="home-section-group" data-category="games">
+          <div class="home-section-header">
+            <div>
+              <div class="home-section-title">🎮 الألعاب والتحديات والشهادة</div>
+              <div class="home-section-sub">تثبيت المعلومات بالمنافسة ومراجعة الأخطاء</div>
+            </div>
+            <span class="home-section-badge">مرح وتعلم</span>
+          </div>
+          <div class="hub-grid">
+            <button class="hub-card c-teal" onclick="app.showScreen('challenge')">
+              <div class="hub-icon-wrap">⏱️</div>
+              <div class="hub-card-title">تحدي الـ 60 ثانية</div>
+              <div class="hub-card-sub">اختبار سرعة بديهة وترجمة سريعة تحت الضغط</div>
+            </button>
+            <button class="hub-card c-red" onclick="app.showScreen('games')">
+              <div class="hub-icon-wrap">🎮</div>
+              <div class="hub-card-title">لعبة الكلمات السريعة</div>
+              <div class="hub-card-sub">تخمين المعنى الصحيح وجمع نقاط الـ XP</div>
+            </button>
+            <button class="hub-card c-purple" onclick="app.showScreen('errors')">
+              <div class="hub-icon-wrap">🧠</div>
+              <div class="hub-card-title">ذاكرة أخطائي</div>
+              <div class="hub-card-sub">مراجعة الأسئلة التي تعثرت بها لتثبيتها نهائياً</div>
+            </button>
+            <button class="hub-card c-amber" onclick="app.showScreen('certificate')">
+              <div class="hub-icon-wrap">🏅</div>
+              <div class="hub-card-title">شهادة الإتمام</div>
+              <div class="hub-card-sub">شهادة رسمية معتمدة قابلة للطباعة والحفظ</div>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1603,8 +1887,87 @@ button.card:active {
         <button class="nav-item" data-target="grammar" onclick="app.showScreen('grammar')">
           <span class="nav-icon">📘</span>القواعد
         </button>
-        <button class="nav-item" data-target="sub" onclick="app.showScreen('sub')">
-          <span class="nav-icon">👑</span>الاشتراك
+        <button class="nav-item" data-target="labs" onclick="app.showScreen('labs')">
+          <span class="nav-icon">🚀</span>المختبرات
+        </button>
+        <button class="nav-item" data-target="profile" onclick="app.showScreen('profile')">
+          <span class="nav-icon">👤</span>حسابي
+        </button>
+      </div>
+    </div>
+
+    <!-- SCREEN 4B: PRACTICE & PRO LABS HUB -->
+    <div class="screen" id="screen-labs">
+      <div class="topbar">
+        <button class="action-btn" onclick="app.showScreen('home')">→</button>
+        <h1>مختبرات الاحتراف والتدريب</h1>
+        <button class="action-btn" onclick="app.toggleTheme()" title="تبديل المظهر">🌓</button>
+      </div>
+      <div class="scroll-content">
+        <div class="card card-hero" style="background:linear-gradient(135deg, #1e1b4b, #312e81); margin-bottom:16px;">
+          <div style="font-size:18px; font-weight:900; margin-bottom:6px;">استوديو التدريب المكثف 🚀</div>
+          <div style="font-size:13px; opacity:0.92; line-height:1.6;">
+            أدوات تفاعلية مخصصة لتطوير النطق، محاكاة المكالمات، وبناء الجمل الإنجليزية بثقة وسهولة.
+          </div>
+        </div>
+
+        <div class="hub-grid">
+          <button class="hub-card c-emerald" onclick="app.openLumiCall()">
+            <div class="hub-icon-wrap">📞</div>
+            <div class="hub-card-title">مكالمة لومي الصوتية</div>
+            <div class="hub-card-sub">محاكاة هاتفية واقعية للتحدث مع الذكاء الاصطناعي</div>
+          </button>
+          <button class="hub-card c-blue" onclick="app.openPhonicsLab()">
+            <div class="hub-icon-wrap">🔤</div>
+            <div class="hub-card-title">معمل مخارج الحروف</div>
+            <div class="hub-card-sub">تدريب النطق الصحيح وفك تشابك الحروف المحيرة</div>
+          </button>
+          <button class="hub-card c-purple" onclick="app.openSRSFlashcards()">
+            <div class="hub-icon-wrap">🧠</div>
+            <div class="hub-card-title">بطاقات التكرار المتباعد</div>
+            <div class="hub-card-sub">SRS Flashcards لتثبيت المفردات في الذاكرة الدائمة</div>
+          </button>
+          <button class="hub-card c-amber" onclick="app.openLegoBuilder()">
+            <div class="hub-icon-wrap">🧱</div>
+            <div class="hub-card-title">ليغو الجمل الإنجليزية</div>
+            <div class="hub-card-sub">تركيب الجمل وترتيب الكلمات بطريقة بصرية ممتعة</div>
+          </button>
+          <button class="hub-card c-pink" onclick="app.openShadowingLab()">
+            <div class="hub-icon-wrap">👥</div>
+            <div class="hub-card-title">التظليل الصوتي (Shadowing)</div>
+            <div class="hub-card-sub">التحدث المتزامن لكسر رهبة الحديث واكتساب الطلاقة</div>
+          </button>
+          <button class="hub-card c-cyan" onclick="app.startSpeakListen()">
+            <div class="hub-icon-wrap">🗣️</div>
+            <div class="hub-card-title">التحدث والاستماع الذكي</div>
+            <div class="hub-card-sub">سجل صوتك وقارن دقة نطقك مع تقييم فوري</div>
+          </button>
+          <button class="hub-card c-indigo" onclick="app.startPlacementTest()">
+            <div class="hub-icon-wrap">🎯</div>
+            <div class="hub-card-title">اختبار تحديد المستوى</div>
+            <div class="hub-card-sub">تشخيص مستواك اللغوي في 6 مهارات أساسية</div>
+          </button>
+          <button class="hub-card c-teal" onclick="app.showScreen('challenge')">
+            <div class="hub-icon-wrap">⏱️</div>
+            <div class="hub-card-title">تحدي الـ 60 ثانية</div>
+            <div class="hub-card-sub">اختبار سرعة البديهة والترجمة السريعة</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <button class="nav-item" data-target="home" onclick="app.showScreen('home')">
+          <span class="nav-icon">🏠</span>الرئيسية
+        </button>
+        <button class="nav-item" data-target="lessons" onclick="app.showScreen('lessons')">
+          <span class="nav-icon">📖</span>الدروس
+        </button>
+        <button class="nav-item" data-target="grammar" onclick="app.showScreen('grammar')">
+          <span class="nav-icon">📘</span>القواعد
+        </button>
+        <button class="nav-item active" data-target="labs" onclick="app.showScreen('labs')">
+          <span class="nav-icon">🚀</span>المختبرات
         </button>
         <button class="nav-item" data-target="profile" onclick="app.showScreen('profile')">
           <span class="nav-icon">👤</span>حسابي
@@ -1629,6 +1992,24 @@ button.card:active {
         </div>
         <div id="lessonsListContainer"></div>
       </div>
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <button class="nav-item" data-target="home" onclick="app.showScreen('home')">
+          <span class="nav-icon">🏠</span>الرئيسية
+        </button>
+        <button class="nav-item" data-target="lessons" onclick="app.showScreen('lessons')">
+          <span class="nav-icon">📖</span>الدروس
+        </button>
+        <button class="nav-item" data-target="grammar" onclick="app.showScreen('grammar')">
+          <span class="nav-icon">📘</span>القواعد
+        </button>
+        <button class="nav-item" data-target="labs" onclick="app.showScreen('labs')">
+          <span class="nav-icon">🚀</span>المختبرات
+        </button>
+        <button class="nav-item" data-target="profile" onclick="app.showScreen('profile')">
+          <span class="nav-icon">👤</span>حسابي
+        </button>
+      </div>
     </div>
 
     <!-- SCREEN 6: GRAMMAR HUB -->
@@ -1638,6 +2019,24 @@ button.card:active {
         <h1>شجرة القواعد اللغوية</h1>
       </div>
       <div class="scroll-content" id="grammarContainer"></div>
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <button class="nav-item" data-target="home" onclick="app.showScreen('home')">
+          <span class="nav-icon">🏠</span>الرئيسية
+        </button>
+        <button class="nav-item" data-target="lessons" onclick="app.showScreen('lessons')">
+          <span class="nav-icon">📖</span>الدروس
+        </button>
+        <button class="nav-item" data-target="grammar" onclick="app.showScreen('grammar')">
+          <span class="nav-icon">📘</span>القواعد
+        </button>
+        <button class="nav-item" data-target="labs" onclick="app.showScreen('labs')">
+          <span class="nav-icon">🚀</span>المختبرات
+        </button>
+        <button class="nav-item" data-target="profile" onclick="app.showScreen('profile')">
+          <span class="nav-icon">👤</span>حسابي
+        </button>
+      </div>
     </div>
 
     <!-- SCREEN 7: LESSON DETAIL VIEW -->
@@ -2072,6 +2471,24 @@ button.card:active {
             <button class="icon-btn" onclick="app.toggleTheme()">🌓 تبديل المظهر (ليلي / نهاري)</button>
           </div>
         </div>
+      </div>
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <button class="nav-item" data-target="home" onclick="app.showScreen('home')">
+          <span class="nav-icon">🏠</span>الرئيسية
+        </button>
+        <button class="nav-item" data-target="lessons" onclick="app.showScreen('lessons')">
+          <span class="nav-icon">📖</span>الدروس
+        </button>
+        <button class="nav-item" data-target="grammar" onclick="app.showScreen('grammar')">
+          <span class="nav-icon">📘</span>القواعد
+        </button>
+        <button class="nav-item" data-target="labs" onclick="app.showScreen('labs')">
+          <span class="nav-icon">🚀</span>المختبرات
+        </button>
+        <button class="nav-item active" data-target="profile" onclick="app.showScreen('profile')">
+          <span class="nav-icon">👤</span>حسابي
+        </button>
       </div>
     </div>
 
@@ -6644,6 +7061,8 @@ class App {
       case "onboarding":
         this.renderOnboarding();
         break;
+      case "labs":
+        break;
       case "lumicall":
         break;
       case "phonics":
@@ -6708,7 +7127,7 @@ class App {
 
     const pillEl = document.getElementById("homeLevelPill");
     if (pillEl) {
-      pillEl.innerHTML = `${userLvl.badge} ${userLvl.name} (${xp} XP)`;
+      pillEl.innerHTML = `${userLvl.badge} ${userLvl.name}`;
     }
 
     const streakEl = document.getElementById("homeStreakBadge");
@@ -6716,9 +7135,27 @@ class App {
       streakEl.textContent = `🔥 ${streak} يوم`;
     }
 
-    // Continue Card
-    const continueCard = document.getElementById("homeContinueCard");
+    const xpEl = document.getElementById("homeXpBadge");
+    if (xpEl) {
+      xpEl.textContent = `⚡ ${xp} XP`;
+    }
+
+    // Modern One-touch Continue Button
     const lastKey = storageService.getLastLesson();
+    const continueBtn = document.getElementById("homeContinueBtn");
+    const continueLabel = document.getElementById("homeContinueLabel");
+    if (continueBtn && continueLabel) {
+      if (lastKey && LESSONS[lastKey]) {
+        continueLabel.textContent = `تابع من حيث توقفت: ${LESSONS[lastKey].title} — ${LESSONS[lastKey].sub}`;
+        continueBtn.onclick = () => this.openLesson(lastKey, "home");
+      } else {
+        continueLabel.textContent = "ابدأ رحلتك: الدرس 1 - التحية والتعارف";
+        continueBtn.onclick = () => this.openLesson("greet", "home");
+      }
+    }
+
+    // Continue Card (backwards compatibility)
+    const continueCard = document.getElementById("homeContinueCard");
     if (continueCard) {
       if (lastKey && LESSONS[lastKey]) {
         continueCard.style.display = "block";
@@ -6728,6 +7165,22 @@ class App {
         continueCard.style.display = "none";
       }
     }
+  }
+
+  filterHomeSection(category, btn) {
+    audioService.playClick();
+    document.querySelectorAll(".cat-pill").forEach(p => p.classList.remove("active"));
+    if (btn) btn.classList.add("active");
+
+    const sections = document.querySelectorAll(".home-section-group");
+    sections.forEach(sec => {
+      const secCat = sec.getAttribute("data-category");
+      if (category === "all" || secCat === category) {
+        sec.style.display = "block";
+      } else {
+        sec.style.display = "none";
+      }
+    });
   }
 
   continueLastLesson() {
